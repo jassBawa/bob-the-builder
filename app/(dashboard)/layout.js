@@ -1,6 +1,6 @@
-import "../globals.css";
 import Sidebar from "@/components/Sidebar";
 import { Inter } from "next/font/google";
+import "../globals.css";
 
 export const metadata = {
   title: "Create Next App",
@@ -8,20 +8,16 @@ export const metadata = {
 };
 const inter = Inter({ subsets: ["latin"] });
 
-export default function RootLayout({ children }) {
+export default function DashboardLayout({ children }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
-        <div className="flex h-full">
-          <Sidebar />
-          <main className="flex-1 h-full overflow-scroll bg-[#EBEDF6]">
-            <nav className="bg-white py-4 px-8">
-              <div className="hamburger">=</div>
-            </nav>
-            {children}
-          </main>
-        </div>
-      </body>
-    </html>
+    <div className="flex h-full">
+      <Sidebar />
+      <main className="flex-1 h-full overflow-scroll bg-[#EBEDF6]">
+        <nav className="bg-white py-4 px-8">
+          <div className="hamburger">=</div>
+        </nav>
+        {children}
+      </main>
+    </div>
   );
 }

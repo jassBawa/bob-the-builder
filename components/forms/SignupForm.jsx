@@ -16,8 +16,12 @@ import {
   FormLabel,
   FormMessage,
 } from "../ui/form";
+import { signup } from "@/services/apiService";
+import { useRouter } from "next/navigation";
 
 function SignupForm() {
+  const router = useRouter();
+
   const { handleSubmit, ...form } = useForm({
     resolver: zodResolver(signupSchema),
     defaultValues: {
@@ -28,8 +32,24 @@ function SignupForm() {
     },
   });
 
-  const onSubmit = (values) => {
+  const onSubmit = async (values) => {
     console.log({ values });
+
+    try {
+      const response = await signup(values);
+      toast.success("Successfully signed up in!");
+
+      //  verify this code
+      // await login(values)
+      //   .then(() => {
+      //     toast.success("Successfully logged in!");
+      //   })
+      //   .catch((err) => {
+      //     console.log(err);
+      //   });
+    } catch (error) {
+      toast.error(error);
+    }
   };
 
   // const onInvalid = (errors) => console.error(errors);
