@@ -93,7 +93,7 @@ export default function LoginForm() {
           Submit
         </Button>
 
-        <Link href="/login" className="opacity-80 text-center mt-6 block">
+        <Link href="/signup" className="opacity-80 text-center mt-6 block">
           Already have an account?
           <span className="opacity-100 underline"> Sign In</span>
         </Link>
