@@ -10,45 +10,47 @@ import {
   FormLabel,
   FormMessage,
 } from "../ui/form";
-import { createOrganization, login } from "@/services/apiService";
+import useProfile from "@/hooks/useProfile";
+import { updateProfile } from "@/services/apiService";
 import { toast } from "sonner";
 
-function GettingStartedForm() {
+function ProfileForm({ isEditMode, setIsEditMode }) {
+  const { profile } = useProfile();
+
   const form = useForm({
     // resolver: zodResolver({}),
     defaultValues: {
-      buildingName: "",
-      officerNumber: "",
-      officeAddress: "",
-      alterateNumber: "",
-      city: "",
-      country: "",
-      pincode: "",
+      companyName: profile?.building_name || " ",
+      officeNumber: profile?.office_number || "",
+      officeAddress: profile?.building_address || "",
+      alternateNumber: profile?.alternate_number || "",
+      city: profile?.city || "",
+      country: profile?.country || "",
+      pincode: profile?.pincode || "",
     },
   });
 
   const onSubmit = async (values) => {
-    console.log({ values });
-
+    console.log(values);
     try {
-      const response = await createOrganization({
-        building_name: values.buildingName,
-        office_number: values.officerNumber,
+      const response = await updateProfile({
+        building_name: values.companyName,
+        office_number: values.officeNumber,
         building_address: values.officeAddress,
-        alternate_number: values.alterateNumber,
+        alternate_number: values.alternateNumber,
         city: values.city,
         country: values.country,
         pincode: values.pincode,
       });
-      // toast.success("Successfully Logged in!");
+      toast.success("Successfully Update details!");
       console.log(response);
       if (response.message === "success") {
-        // router.push("/dashboard");
-      } else {
-        toast.error(response.message);
+        console.log(response);
       }
     } catch (error) {
       toast.error(error);
+    } finally {
+      setIsEditMode(false);
     }
   };
   return (
@@ -57,13 +59,17 @@ function GettingStartedForm() {
         <div className="mt-4 grid gap-4 grid-cols-3">
           <FormField
             control={form.control}
-            name="buildingName"
+            name="companyName"
             render={({ field }) => {
               return (
                 <FormItem className="col-span-2">
-                  <FormLabel>Building Name</FormLabel>
+                  <FormLabel>Company Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="Building Name" {...field} />
+                    <Input
+                      placeholder="Company Name"
+                      {...field}
+                      disabled={!isEditMode}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -72,13 +78,17 @@ function GettingStartedForm() {
           />
           <FormField
             control={form.control}
-            name="officerNumber"
+            name="officeNumber"
             render={({ field }) => {
               return (
                 <FormItem>
                   <FormLabel>Office Number</FormLabel>
                   <FormControl>
-                    <Input placeholder="98787XXX" {...field} />
+                    <Input
+                      placeholder="98787XXX"
+                      {...field}
+                      disabled={!isEditMode}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -93,7 +103,11 @@ function GettingStartedForm() {
                 <FormItem className="col-span-2">
                   <FormLabel>Enter office address</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter office addres" {...field} />
+                    <Input
+                      placeholder="Enter office addres"
+                      {...field}
+                      disabled={!isEditMode}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -102,13 +116,17 @@ function GettingStartedForm() {
           />
           <FormField
             control={form.control}
-            name="alterateNumber"
+            name="alternateNumber"
             render={({ field }) => {
               return (
                 <FormItem>
                   <FormLabel>Alternate Office Number</FormLabel>
                   <FormControl>
-                    <Input placeholder="98787XXX" {...field} />
+                    <Input
+                      placeholder="98787XXX"
+                      {...field}
+                      disabled={!isEditMode}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -123,7 +141,11 @@ function GettingStartedForm() {
                 <FormItem>
                   <FormLabel>City</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter your city here" {...field} />
+                    <Input
+                      placeholder="Enter your city here"
+                      {...field}
+                      disabled={!isEditMode}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -138,7 +160,11 @@ function GettingStartedForm() {
                 <FormItem>
                   <FormLabel>Country</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter country here" {...field} />
+                    <Input
+                      placeholder="Enter country here"
+                      {...field}
+                      disabled={!isEditMode}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -153,7 +179,11 @@ function GettingStartedForm() {
                 <FormItem>
                   <FormLabel>Pincode</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter your pincode here" {...field} />
+                    <Input
+                      placeholder="Enter your pincode here"
+                      {...field}
+                      disabled={!isEditMode}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -161,12 +191,14 @@ function GettingStartedForm() {
             }}
           />
         </div>
-        <Button type="submit" className="mt-8 px-8">
-          Submit
-        </Button>
+        {isEditMode && (
+          <Button type="submit" className="mt-4 mb-4 px-8">
+            Update Information
+          </Button>
+        )}
       </form>
     </Form>
   );
 }
 
-export default GettingStartedForm;
+export default ProfileForm;

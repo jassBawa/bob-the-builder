@@ -1,6 +1,7 @@
 import Sidebar from "@/components/Sidebar";
 import { Inter } from "next/font/google";
 import "../globals.css";
+import { Dialog } from "@/components/ui/dialog";
 
 export const metadata = {
   title: "Create Next App",
@@ -13,10 +14,12 @@ export default function DashboardLayout({ children }) {
     <div className="flex h-full">
       <Sidebar />
       <main className="flex-1 h-full overflow-scroll bg-[#EBEDF6]">
-        <nav className="bg-white py-4 px-8">
-          <div className="hamburger">=</div>
-        </nav>
-        {children}
+        <Dialog>
+          <nav className="bg-white py-4 px-8">
+            <div className="hamburger">=</div>
+          </nav>
+          {children}
+        </Dialog>
       </main>
     </div>
   );

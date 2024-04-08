@@ -1,62 +1,54 @@
-import { Button } from "@/components/ui/Button";
-import InputField from "@/components/ui/InputField";
-import { DeleteIcon, Edit2Icon, EditIcon, Trash2 } from "lucide-react";
-import React from "react";
+"use client";
+import ProfileForm from "@/components/forms/ProfileForm";
+import { DialogDemo } from "@/components/modals/DialogDemo";
+import useBuildings from "@/hooks/useBuildings";
+import useProfile from "@/hooks/useProfile";
+import { getOrganisationInfo } from "@/services/apiService";
+import { Edit2Icon, Trash2 } from "lucide-react";
+import { useEffect, useState } from "react";
 
 function Page() {
-  const list = [1, 2, 3, 4];
+  const [isEditMode, setIsEditMode] = useState(false);
+  const { buildings, isLoading } = useBuildings();
+  console.log(buildings);
+
+  const list = [1, 1, 2];
+
+  const toggleEditMode = () => {
+    setIsEditMode((val) => !val);
+  };
+
   return (
     <div className="mt-8 mx-8 p-12 rounded bg-white h-full">
-      <h3 className="text-3xl font-semibold">Profile</h3>
+      <h3 className="relative group text-3xl font-semibold flex gap-2">
+        Profile
+        <Edit2Icon
+          onClick={toggleEditMode}
+          className="hover:opacity-100 opacity-10 cursor-pointer w-5 h-5"
+        />
+      </h3>
 
-      <div className="mt-12 grid gap-4 grid-cols-3">
-        <InputField
-          label={"Company name"}
-          name={"companyName"}
-          placeholder={"Company name"}
-          className={"col-span-2"}
-        />
-        <InputField
-          label={"Office Number"}
-          name={"officeNumber"}
-          placeholder={"Enter Office Number"}
-          className={""}
-        />
-        <InputField
-          label={"Registred Office Address"}
-          name={"officeAddress"}
-          placeholder={"Enter office address"}
-          className={"col-span-2"}
-        />
-        <InputField
-          label={"Alternative office number"}
-          name={"alternativeOfficeNumber"}
-          placeholder={"91 XXXX XXXX"}
-          className={""}
-        />
-        <InputField label={"City"} name="city" placeholder={"City"} />
-        <InputField
-          label={"Country"}
-          name={"country"}
-          className={""}
-          placeholder={"Country"}
-        />
-      </div>
+      <ProfileForm isEditMode={isEditMode} setIsEditMode={setIsEditMode} />
+
       <div className="mt-4">
         <p className="">Name of the buildings</p>
+        {isLoading ? (
+          <div>loading</div>
+        ) : (
+          <ul className="building__container mt-4 rounded-lg max-w-lg w-full border">
+            {list.map((item, index) => (
+              <li key={index} className="flex items-center border-b py-2 px-4">
+                <span>lorem Epsum</span>
+                <div className="ml-auto flex gap-4">
+                  <Edit2Icon className="opacity-40 w-5 h-5" />
+                  <Trash2 className="opacity-40 w-5 h-5" />
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
 
-        <ul className="building__container mt-4 rounded-lg max-w-lg w-full border">
-          {list.map((item, index) => (
-            <li key={index} className="flex items-center border-b py-2 px-4">
-              <span>lorem Epsum</span>
-              <div className="ml-auto flex gap-4">
-                <Edit2Icon className="opacity-40 w-5 h-5" />
-                <Trash2 className="opacity-40 w-5 h-5" />
-              </div>
-            </li>
-          ))}
-        </ul>
-        <Button className="mt-4 px-12">Edit</Button>
+        <DialogDemo />
       </div>
     </div>
   );

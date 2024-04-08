@@ -1,5 +1,8 @@
 "use client";
+import useBuildings from "@/hooks/useBuildings";
+import { createBuilding } from "@/services/apiService";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { Input } from "../ui/Input";
 import { Button } from "../ui/button";
 import {
@@ -10,20 +13,19 @@ import {
   FormLabel,
   FormMessage,
 } from "../ui/form";
-import { createOrganization, login } from "@/services/apiService";
-import { toast } from "sonner";
 
-function GettingStartedForm() {
+function AddBuildingForm({ onClose }) {
+  const { refetchBuildings } = useBuildings();
+
   const form = useForm({
     // resolver: zodResolver({}),
     defaultValues: {
-      buildingName: "",
-      officerNumber: "",
-      officeAddress: "",
-      alterateNumber: "",
+      registeredAddress: "",
       city: "",
       country: "",
-      pincode: "",
+      building_use: "",
+      file1: null,
+      file2: null,
     },
   });
 
@@ -31,14 +33,11 @@ function GettingStartedForm() {
     console.log({ values });
 
     try {
-      const response = await createOrganization({
-        building_name: values.buildingName,
-        office_number: values.officerNumber,
-        building_address: values.officeAddress,
-        alternate_number: values.alterateNumber,
-        city: values.city,
-        country: values.country,
-        pincode: values.pincode,
+      const response = await createBuilding({
+        registeredAddress: "",
+        city: "",
+        country: "",
+        building_use: "",
       });
       // toast.success("Successfully Logged in!");
       console.log(response);
@@ -50,6 +49,10 @@ function GettingStartedForm() {
     } catch (error) {
       toast.error(error);
     }
+
+    // close modal
+    onClose();
+    refetchBuildings();
   };
   return (
     <Form {...form} className="mt-12">
@@ -57,58 +60,13 @@ function GettingStartedForm() {
         <div className="mt-4 grid gap-4 grid-cols-3">
           <FormField
             control={form.control}
-            name="buildingName"
+            name="registeredAddress"
             render={({ field }) => {
               return (
                 <FormItem className="col-span-2">
-                  <FormLabel>Building Name</FormLabel>
+                  <FormLabel>Registred Address</FormLabel>
                   <FormControl>
-                    <Input placeholder="Building Name" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              );
-            }}
-          />
-          <FormField
-            control={form.control}
-            name="officerNumber"
-            render={({ field }) => {
-              return (
-                <FormItem>
-                  <FormLabel>Office Number</FormLabel>
-                  <FormControl>
-                    <Input placeholder="98787XXX" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              );
-            }}
-          />
-          <FormField
-            control={form.control}
-            name="officeAddress"
-            render={({ field }) => {
-              return (
-                <FormItem className="col-span-2">
-                  <FormLabel>Enter office address</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Enter office addres" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              );
-            }}
-          />
-          <FormField
-            control={form.control}
-            name="alterateNumber"
-            render={({ field }) => {
-              return (
-                <FormItem>
-                  <FormLabel>Alternate Office Number</FormLabel>
-                  <FormControl>
-                    <Input placeholder="98787XXX" {...field} />
+                    <Input placeholder="Registred Address" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -123,7 +81,52 @@ function GettingStartedForm() {
                 <FormItem>
                   <FormLabel>City</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter your city here" {...field} />
+                    <Input placeholder="City" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              );
+            }}
+          />
+          <FormField
+            control={form.control}
+            name="country"
+            render={({ field }) => {
+              return (
+                <FormItem className="col-span-2">
+                  <FormLabel>Country</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Country" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              );
+            }}
+          />
+          <FormField
+            control={form.control}
+            name="building_use"
+            render={({ field }) => {
+              return (
+                <FormItem>
+                  <FormLabel>Building Use</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Building Usage" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              );
+            }}
+          />
+          <FormField
+            control={form.control}
+            name="city"
+            render={({ field }) => {
+              return (
+                <FormItem>
+                  <FormLabel>Structural Drawings</FormLabel>
+                  <FormControl>
+                    <Input type="file" placeholder="" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -169,4 +172,4 @@ function GettingStartedForm() {
   );
 }
 
-export default GettingStartedForm;
+export default AddBuildingForm;

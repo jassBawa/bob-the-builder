@@ -19,9 +19,20 @@ import {
   FormMessage,
 } from "../ui/form";
 import { useRouter } from "next/navigation";
+import { useAuthStore } from "@/state/auth";
+import { useEffect } from "react";
 
 export default function LoginForm() {
   const router = useRouter();
+  const {
+    login: loginStore,
+    token,
+    isLoggedIn,
+  } = useAuthStore((state) => state);
+
+  useEffect(() => {
+    if (isLoggedIn) router.push("/dashboard");
+  }, [isLoggedIn, router]);
 
   const { handleSubmit, ...form } = useForm({
     resolver: zodResolver(loginSchema),
@@ -39,9 +50,11 @@ export default function LoginForm() {
       toast.success("Successfully Logged in!");
       console.log(response);
       if (response.message === "success") {
-        router.push("/dashboard");
+        console.log(response);
+        loginStore(response.token, response.data.name);
+        // router.push("/dashboard");
       } else {
-        toast.error(response.message);
+        // toast.error(response.message);
       }
     } catch (error) {
       toast.error(error);

@@ -1,6 +1,9 @@
+"use client";
 import Link from "next/link";
 import React from "react";
 import { HistoryIcon, LogoIcon, ProfileIcon } from "./ui/icons";
+import { useAuthStore } from "@/state/auth";
+import { useRouter } from "next/navigation";
 
 function Sidebar() {
   const sideLinks = [
@@ -20,6 +23,14 @@ function Sidebar() {
       href: "/profile",
     },
   ];
+
+  const { logout } = useAuthStore();
+  const router = useRouter();
+
+  const handleLogout = () => {
+    router.push("/login");
+    logout();
+  };
 
   return (
     <div className="hidden md:flex bg-[#0E0E22] text-white py-5 flex-col pl-4 pr-6 w-full max-w-[15rem] ">
@@ -41,6 +52,14 @@ function Sidebar() {
             {link.title}
           </Link>
         ))}
+      </div>
+      <div className="mt-auto">
+        <div
+          onClick={handleLogout}
+          className="flex items-center px-2 gap-4 transition cursor-pointer hover:active-sidelink hover:bg-gray-700 py-2 rounded font-semibold"
+        >
+          Logout
+        </div>
       </div>
     </div>
   );
