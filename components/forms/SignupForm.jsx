@@ -18,9 +18,16 @@ import {
 } from "../ui/form";
 import { signup } from "@/services/apiService";
 import { useRouter } from "next/navigation";
+import { useAuthStore } from "@/state/auth";
+import { toast } from "sonner";
 
 function SignupForm() {
   const router = useRouter();
+  const {
+    login: loginStore,
+    token,
+    isLoggedIn,
+  } = useAuthStore((state) => state);
 
   const { handleSubmit, ...form } = useForm({
     resolver: zodResolver(signupSchema),
@@ -37,16 +44,13 @@ function SignupForm() {
 
     try {
       const response = await signup(values);
-      toast.success("Successfully signed up in!");
 
-      //  verify this code
-      // await login(values)
-      //   .then(() => {
-      //     toast.success("Successfully logged in!");
-      //   })
-      //   .catch((err) => {
-      //     console.log(err);
-      //   });
+      if (response.message === "success") {
+        toast.success("Successfully signed up !");
+        console.log(response);
+        router.push("/login");
+        // router.push("/dashboard");
+      }
     } catch (error) {
       toast.error(error);
     }
@@ -114,7 +118,7 @@ function SignupForm() {
                 );
               }}
             />
-            <FormField
+            {/* <FormField
               control={form.control}
               name="isOrg"
               render={({ field }) => {
@@ -134,7 +138,7 @@ function SignupForm() {
                   </FormItem>
                 );
               }}
-            />
+            /> */}
           </div>
           <Button type="submit" className="mt-8 w-full">
             Submit

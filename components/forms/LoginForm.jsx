@@ -52,6 +52,7 @@ export default function LoginForm() {
       if (response.message === "success") {
         console.log(response);
         loginStore(response.token, response.data.name);
+        router.push("/getting-started");
         // router.push("/dashboard");
       } else {
         // toast.error(response.message);

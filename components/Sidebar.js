@@ -4,6 +4,7 @@ import React from "react";
 import { HistoryIcon, LogoIcon, ProfileIcon } from "./ui/icons";
 import { useAuthStore } from "@/state/auth";
 import { useRouter } from "next/navigation";
+import useProfile from "@/hooks/useProfile";
 
 function Sidebar() {
   const sideLinks = [
@@ -11,18 +12,25 @@ function Sidebar() {
       title: "Home",
       icon: <LogoIcon />,
       href: "/dashboard",
+      isAdmin: true,
     },
     {
       title: "History",
       icon: <HistoryIcon />,
       href: "/history",
+      isAdmin: true,
     },
     {
       title: "Profile",
       icon: <ProfileIcon />,
       href: "/profile",
+      isAdmin: true,
     },
   ];
+
+  // const { profile } = useProfile();
+  // console.log(profile);
+  // const isUserAdmin = profile?.admin_id ? true : false;
 
   const { logout } = useAuthStore();
   const router = useRouter();

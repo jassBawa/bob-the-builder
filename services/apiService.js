@@ -32,7 +32,7 @@ export const login = async (userData) => {
 
 export const signup = async (userData) => {
   try {
-    const response = await axios.post(baseURL + "/signup", userData);
+    const response = await axios.post(baseURL + "/register", userData);
     return response.data; // Assuming successful response contains data
   } catch (error) {
     console.log(error);

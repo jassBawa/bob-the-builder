@@ -12,8 +12,22 @@ import {
 } from "../ui/form";
 import { createOrganization, login } from "@/services/apiService";
 import { toast } from "sonner";
+import useProfile from "@/hooks/useProfile";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 function GettingStartedForm() {
+  const { profile } = useProfile();
+  const router = useRouter();
+
+  useEffect(() => {
+    console.log(profile);
+    if (profile?.admin_id) {
+      router.push("/dashboard");
+      toast.success("You have already submitted the details");
+    }
+  }, [profile, router]);
+
   const form = useForm({
     // resolver: zodResolver({}),
     defaultValues: {

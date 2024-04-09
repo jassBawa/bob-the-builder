@@ -147,6 +147,14 @@ function AddBuildingForm({ onClose }) {
             <Input type="file" onChange={handleChange2}></Input>
           </FormItem>
         </div>
+        <Button
+          type="button"
+          variant="outline"
+          className="mt-8 mr-4 px-8"
+          onClick={() => onClose()}
+        >
+          Cancel
+        </Button>
         <Button type="submit" className="mt-8 px-8">
           Submit
         </Button>

@@ -31,6 +31,7 @@ export function DialogDemo() {
             Make changes to your profile here. Click save when you're done.
           </DialogDescription>
         </DialogHeader>
+
         <AddBuildingForm onClose={handleClose} />
         {/* <DialogFooter></DialogFooter> */}
       </DialogContent>
