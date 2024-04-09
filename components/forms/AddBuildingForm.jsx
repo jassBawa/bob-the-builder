@@ -13,38 +13,57 @@ import {
   FormLabel,
   FormMessage,
 } from "../ui/form";
+import { useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { BuildingSchema } from "@/lib/formValidations";
+// import { BuildingSchema } from "@/lib/formValidations";
+// import { zodResolver } from "@hookform/resolvers/zod";
 
 function AddBuildingForm({ onClose }) {
   const { refetchBuildings } = useBuildings();
 
+  const [file1, setFile1] = useState(null);
+  const [file2, setFile2] = useState(null);
+
+  const handleChange1 = (event) => {
+    setFile1(event.target.files[0]);
+  };
+
+  const handleChange2 = (event) => {
+    setFile2(event.target.files[0]);
+  };
+
   const form = useForm({
-    // resolver: zodResolver({}),
+    resolver: zodResolver(BuildingSchema),
     defaultValues: {
       registeredAddress: "",
       city: "",
       country: "",
       building_use: "",
-      file1: null,
-      file2: null,
     },
   });
 
   const onSubmit = async (values) => {
-    console.log({ values });
+    console.log(values);
 
+    const formData = new FormData();
+    formData.append("file1", file1);
+    formData.append("file2", file2);
+    formData.append("registeredAddress", values.registeredAddress);
+    formData.append("city", values.city);
+    formData.append("country", values.country);
+    formData.append("building_use", values.building_use);
+
+    // console.log(formData);
     try {
-      const response = await createBuilding({
-        registeredAddress: "",
-        city: "",
-        country: "",
-        building_use: "",
-      });
+      const response = await createBuilding(formData);
+
+      //   const response = true;
       // toast.success("Successfully Logged in!");
       console.log(response);
-      if (response.message === "success") {
+      if (response === "Success") {
+        toast.success("Successfully added building details");
         // router.push("/dashboard");
-      } else {
-        toast.error(response.message);
       }
     } catch (error) {
       toast.error(error);
@@ -118,51 +137,15 @@ function AddBuildingForm({ onClose }) {
               );
             }}
           />
-          <FormField
-            control={form.control}
-            name="city"
-            render={({ field }) => {
-              return (
-                <FormItem>
-                  <FormLabel>Structural Drawings</FormLabel>
-                  <FormControl>
-                    <Input type="file" placeholder="" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              );
-            }}
-          />
-          <FormField
-            control={form.control}
-            name="country"
-            render={({ field }) => {
-              return (
-                <FormItem>
-                  <FormLabel>Country</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Enter country here" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              );
-            }}
-          />
-          <FormField
-            control={form.control}
-            name="pincode"
-            render={({ field }) => {
-              return (
-                <FormItem>
-                  <FormLabel>Pincode</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Enter your pincode here" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              );
-            }}
-          />
+
+          <FormItem>
+            <FormLabel>File 1</FormLabel>
+            <Input type="file" onChange={handleChange1}></Input>
+          </FormItem>
+          <FormItem>
+            <FormLabel>File 2</FormLabel>
+            <Input type="file" onChange={handleChange2}></Input>
+          </FormItem>
         </div>
         <Button type="submit" className="mt-8 px-8">
           Submit

@@ -80,7 +80,8 @@ export const updateProfile = async (values) => {
   }
 };
 
-export const buildingFetcher = async () => {
+// Get all
+export const buildingsFetcher = async () => {
   try {
     const response = await axios.get(baseURL + "/getBuildings");
     return response.data; // Assuming successful response contains data
@@ -90,9 +91,22 @@ export const buildingFetcher = async () => {
   }
 };
 
-export const createBuilding = async () => {
+// Get single
+export const buildingFetcher = async (buildingId) => {
   try {
-    const response = await axios.post(baseURL + "/buildingForm");
+    const response = await axios.get(
+      baseURL + "/BuildingDetails/" + buildingId
+    );
+    return response.data; // Assuming successful response contains data
+  } catch (error) {
+    console.log(error);
+    throw error.response?.data.message || error; // Re-throw for handling in the component
+  }
+};
+
+export const createBuilding = async (data) => {
+  try {
+    const response = await axios.post(baseURL + "/buildingForm", data);
     return response.data; // Assuming successful response contains data
   } catch (error) {
     console.log(error);

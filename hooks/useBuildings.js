@@ -1,10 +1,10 @@
-import { buildingFetcher } from "@/services/apiService";
+import { buildingsFetcher } from "@/services/apiService";
 import useSWR from "swr";
 
 function useBuildings() {
-  const { data, error, mutate } = useSWR("/api/buildings", buildingFetcher);
+  const { data, error, mutate } = useSWR("/api/buildings", buildingsFetcher);
 
-  const buildings = data?.data || []; // Handle potential missing data
+  const buildings = data || []; // Handle potential missing data
 
   return {
     buildings,
