@@ -1,7 +1,7 @@
-"use client";
-import { useForm } from "react-hook-form";
-import { Input } from "../ui/Input";
-import { Button } from "../ui/button";
+'use client';
+import { useForm } from 'react-hook-form';
+import { Input } from '../ui/Input';
+import { Button } from '../ui/button';
 import {
   Form,
   FormControl,
@@ -9,64 +9,69 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "../ui/form";
-import useProfile from "@/hooks/useProfile";
-import { updateProfile } from "@/services/apiService";
-import { toast } from "sonner";
+} from '../ui/form';
+import { toast } from 'sonner';
+import useCurrentUser from '@/hooks/useCurrentUser';
+import { doc, updateDoc } from 'firebase/firestore';
+import { db } from '@/firebase';
 
-function ProfileForm({ isEditMode, setIsEditMode }) {
-  const { profile } = useProfile();
+function ProfileForm({ profile, isEditMode, setIsEditMode }) {
+  // const profile = useCurrentUser();
+  // console.log(profile);
+  console.log(profile);
 
   const form = useForm({
     // resolver: zodResolver({}),
     defaultValues: {
-      companyName: profile?.building_name || " ",
-      officeNumber: profile?.office_number || "",
-      officeAddress: profile?.building_address || "",
-      alternateNumber: profile?.alternate_number || "",
-      city: profile?.city || "",
-      country: profile?.country || "",
-      pincode: profile?.pincode || "",
+      organisationName: profile?.organisationName || ' ',
+      organisationNumber: profile?.organisationNumber || '',
+      organisationAddress: profile?.organisationAddress || '',
+      alternateNumber: profile?.alterateNumber || '',
+      city: profile?.city || '',
+      country: profile?.country || '',
+      pincode: profile?.pincode || '',
     },
   });
 
   const onSubmit = async (values) => {
     console.log(values);
     try {
-      const response = await updateProfile({
-        building_name: values.companyName,
-        office_number: values.officeNumber,
-        building_address: values.officeAddress,
-        alternate_number: values.alternateNumber,
-        city: values.city,
-        country: values.country,
-        pincode: values.pincode,
+      const userDoc = doc(db, 'users', profile.uid);
+      await updateDoc(userDoc, {
+        ...values,
+      }).then(() => {
+        toast.success('Details updated!');
       });
-      toast.success("Successfully Update details!");
-      console.log(response);
-      if (response.message === "success") {
-        console.log(response);
-      }
+      // const response = await updateProfile({
+      //   building_name: values.companyName,
+      //   office_number: values.officeNumber,
+      //   building_address: values.officeAddress,
+      //   alternate_number: values.alternateNumber,
+      //   city: values.city,
+      //   country: values.country,
+      //   pincode: values.pincode,
+      // });
     } catch (error) {
       toast.error(error);
     } finally {
       setIsEditMode(false);
     }
   };
+
   return (
     <Form {...form} className="mt-12">
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <div className="mt-4 grid gap-4 grid-cols-3">
           <FormField
             control={form.control}
-            name="companyName"
+            name="organisationName"
             render={({ field }) => {
               return (
                 <FormItem className="col-span-2">
-                  <FormLabel>Company Name</FormLabel>
+                  <FormLabel>Ogranisation Name</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="Company Name"
+                      placeholder="Organisation Name"
                       {...field}
                       disabled={!isEditMode}
                     />
@@ -78,7 +83,7 @@ function ProfileForm({ isEditMode, setIsEditMode }) {
           />
           <FormField
             control={form.control}
-            name="officeNumber"
+            name="organisationNumber"
             render={({ field }) => {
               return (
                 <FormItem>
@@ -97,14 +102,14 @@ function ProfileForm({ isEditMode, setIsEditMode }) {
           />
           <FormField
             control={form.control}
-            name="officeAddress"
+            name="organisationAddress"
             render={({ field }) => {
               return (
                 <FormItem className="col-span-2">
-                  <FormLabel>Enter office address</FormLabel>
+                  <FormLabel>Enter Organisation address</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="Enter office addres"
+                      placeholder="Enter Organisation addres"
                       {...field}
                       disabled={!isEditMode}
                     />

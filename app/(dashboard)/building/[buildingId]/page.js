@@ -1,8 +1,6 @@
-"use client";
-import PdfViewer from "@/components/dashboard/PdfViewer";
-import useBuilding from "@/hooks/useBuilding";
-import useProfile from "@/hooks/useProfile";
-import { useAuthStore } from "@/state/auth";
+'use client';
+import PdfViewer from '@/components/dashboard/PdfViewer';
+import useBuilding from '@/hooks/useBuilding';
 
 function Page({ params }) {
   const { buildingId } = params;
@@ -14,7 +12,7 @@ function Page({ params }) {
     <>
       <div className="mt-16 mx-8 p-8 rounded bg-white">
         <h2 className="text-2xl font-semibold">
-          Building Id, {building?._id}{" "}
+          Building Id, {building?._id}{' '}
         </h2>
         <p className="text-sm">Track and Manage your information</p>
       </div>

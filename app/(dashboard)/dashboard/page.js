@@ -1,11 +1,19 @@
-"use client";
-import useProfile from "@/hooks/useProfile";
-import { useAuthStore } from "@/state/auth";
+'use client';
+import useCurrentUser from '@/hooks/useCurrentUser';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 function Page() {
-  const { profile } = useProfile();
-  const { token, name } = useAuthStore();
-  console.log(name);
+  const router = useRouter();
+  const currentUser = useCurrentUser();
+  console.log(currentUser);
+
+  useEffect(() => {
+    // if (!currentUser) {
+    //   router.push('/login');
+    // }
+  }, [currentUser, router]);
+
   return (
     <>
       <div className="mt-16 mx-8 p-8 rounded bg-white">
@@ -13,8 +21,8 @@ function Page() {
         <p className="text-sm">Track and Manage your information</p>
       </div>
       <div className="mt-4 mx-8 p-8 rounded bg-white">
-        <div className="max-w-sm overflow-hidden">{token}</div>
-        <h1 className="text-4xl font-bold">{name}</h1>
+        <div className="max-w-sm overflow-hidden">{currentUser?.name}</div>
+        <h1 className="text-4xl font-bold">{currentUser?.email}</h1>
         Generate code
       </div>
     </>

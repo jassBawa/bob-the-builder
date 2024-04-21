@@ -1,15 +1,18 @@
-"use client";
-import { loginSchema } from "@/lib/formValidations";
-import { zodResolver } from "@hookform/resolvers/zod";
+'use client';
+import { loginSchema } from '@/lib/formValidations';
+import { zodResolver } from '@hookform/resolvers/zod';
 
-import { useForm } from "react-hook-form";
+import { useForm } from 'react-hook-form';
 
-import Link from "next/link";
-import { toast } from "sonner";
+import Link from 'next/link';
+import { toast } from 'sonner';
 
-import { login } from "@/services/apiService";
-import { Input } from "../ui/Input";
-import { Button } from "../ui/button";
+import { auth } from '@/firebase';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
+import { Input } from '../ui/Input';
+import { Button } from '../ui/button';
 import {
   Form,
   FormControl,
@@ -17,46 +20,46 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "../ui/form";
-import { useRouter } from "next/navigation";
-import { useAuthStore } from "@/state/auth";
-import { useEffect } from "react";
+} from '../ui/form';
+import useCurrentUser from '@/hooks/useCurrentUser';
 
 export default function LoginForm() {
   const router = useRouter();
-  const {
-    login: loginStore,
-    token,
-    isLoggedIn,
-  } = useAuthStore((state) => state);
-
-  useEffect(() => {
-    if (isLoggedIn) router.push("/dashboard");
-  }, [isLoggedIn, router]);
+  const currentUser = useCurrentUser();
+  console.log(currentUser);
+  // useEffect(() => {
+  //   if (currentUser) router.push('/dashboard');
+  // }, [currentUser, router]);
 
   const { handleSubmit, ...form } = useForm({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      email: "",
-      password: "",
+      email: '',
+      password: '',
     },
   });
 
   const onSubmit = async (values) => {
     console.log({ values });
+    const { email, password } = values;
 
     try {
-      const response = await login(values);
-      toast.success("Successfully Logged in!");
-      console.log(response);
-      if (response.message === "success") {
-        console.log(response);
-        loginStore(response.token, response.data.name);
-        router.push("/getting-started");
-        // router.push("/dashboard");
-      } else {
-        // toast.error(response.message);
+      // const response = await login(values);
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+      if (userCredential) {
+        console.log(userCredential.user);
+
+        toast.success('Successfully Logged in!');
       }
+
+      router.push(
+        `${currentUser.role === 'officer' ? '/officer' : '/dashboard'}`
+      );
     } catch (error) {
       toast.error(error);
     }

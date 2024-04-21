@@ -1,13 +1,14 @@
-"use client";
-import { signupSchema } from "@/lib/formValidations";
-import { zodResolver } from "@hookform/resolvers/zod";
+'use client';
+import { signupSchema } from '@/lib/formValidations';
+import { zodResolver } from '@hookform/resolvers/zod';
 
-import { useForm } from "react-hook-form";
+import { useForm } from 'react-hook-form';
 
-import Link from "next/link";
-import { Input } from "../ui/Input";
-import { Button } from "../ui/button";
-import { Checkbox } from "../ui/checkbox";
+import { auth, db } from '@/firebase';
+import Link from 'next/link';
+import { toast } from 'sonner';
+import { Input } from '../ui/Input';
+import { Button } from '../ui/button';
 import {
   Form,
   FormControl,
@@ -15,26 +16,21 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "../ui/form";
-import { signup } from "@/services/apiService";
-import { useRouter } from "next/navigation";
-import { useAuthStore } from "@/state/auth";
-import { toast } from "sonner";
+} from '../ui/form';
+// import { initializeApp } from "firebase/app";
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { collection, setDoc } from 'firebase/firestore';
+import { Checkbox } from '../ui/checkbox';
 
 function SignupForm() {
-  const router = useRouter();
-  const {
-    login: loginStore,
-    token,
-    isLoggedIn,
-  } = useAuthStore((state) => state);
+  // const router = useRouter();
 
   const { handleSubmit, ...form } = useForm({
     resolver: zodResolver(signupSchema),
     defaultValues: {
-      name: "",
-      email: "",
-      password: "",
+      name: '',
+      email: '',
+      password: '',
       isOrg: false,
     },
   });
@@ -43,16 +39,32 @@ function SignupForm() {
     console.log({ values });
 
     try {
-      const response = await signup(values);
+      // handle signup with name addition
+      const { email, password, name, isOrg } = values; // Destructure name from values
 
-      if (response.message === "success") {
-        toast.success("Successfully signed up !");
-        console.log(response);
-        router.push("/login");
-        // router.push("/dashboard");
-      }
+      // const userCred = createUserWithEmailAndPassword(auth, email, password);
+      createUserWithEmailAndPassword(auth, email, password).then(
+        (userCredential) => {
+          const user = userCredential.user;
+          const uid = user.uid; // Get the current user's unique identifier (uid)
+
+          // Create a new document in the "users" collection with the user's uid as the document ID
+          const userRef = collection(db, 'users', uid);
+          console.log(userRef);
+          return setDoc(userRef, {
+            name, // Add the name property to the user data
+            email, // Add other relevant user data as needed (e.g., isOrg)
+            // ... other user properties
+            role: isOrg ? 'Organization' : 'officer',
+          });
+        }
+      );
+
+      // toast.success('Successfully signed up!');
+      console.log(user); // Log the created user object
+      router.push(`${isOrg ? '/dashboard' : '/officer'}`);
     } catch (error) {
-      toast.error(error);
+      toast.error(error.message || 'An error occurred during signup.'); // Provide a more user-friendly error message
     }
   };
 
@@ -118,7 +130,7 @@ function SignupForm() {
                 );
               }}
             />
-            {/* <FormField
+            <FormField
               control={form.control}
               name="isOrg"
               render={({ field }) => {
@@ -138,7 +150,7 @@ function SignupForm() {
                   </FormItem>
                 );
               }}
-            /> */}
+            />
           </div>
           <Button type="submit" className="mt-8 w-full">
             Submit

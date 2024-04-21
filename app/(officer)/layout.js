@@ -1,4 +1,4 @@
-import Sidebar from '@/components/layout/Sidebar';
+import Sidebar from '@/components/layout/OfficerSidebar';
 import { Inter } from 'next/font/google';
 import '../globals.css';
 import { Dialog } from '@/components/ui/dialog';

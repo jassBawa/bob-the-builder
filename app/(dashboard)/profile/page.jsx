@@ -1,13 +1,15 @@
-"use client";
-import BuildingList from "@/components/dashboard/BuildingList";
-import ProfileForm from "@/components/forms/ProfileForm";
-import { DialogDemo } from "@/components/modals/DialogDemo";
-import useBuildings from "@/hooks/useBuildings";
-import { Edit2Icon, Trash2 } from "lucide-react";
-import { useEffect, useState } from "react";
+'use client';
+import BuildingList from '@/components/dashboard/BuildingList';
+import ProfileForm from '@/components/forms/ProfileForm';
+import { Button } from '@/components/ui/button';
+import useCurrentUser from '@/hooks/useCurrentUser';
+import { Edit2Icon } from 'lucide-react';
+import Link from 'next/link';
+import { useState } from 'react';
 
 function Page() {
   const [isEditMode, setIsEditMode] = useState(false);
+  const profile = useCurrentUser();
 
   const toggleEditMode = () => {
     setIsEditMode((val) => !val);
@@ -23,12 +25,23 @@ function Page() {
         />
       </h3>
 
-      <ProfileForm isEditMode={isEditMode} setIsEditMode={setIsEditMode} />
+      {profile ? (
+        <ProfileForm
+          profile={profile}
+          isEditMode={isEditMode}
+          setIsEditMode={setIsEditMode}
+        />
+      ) : (
+        <h3>loading</h3>
+      )}
 
       <div className="mt-4">
-        <BuildingList />
+        {/* <BuildingList /> */}
 
-        <DialogDemo />
+        <Link passHref href={'/addBuilding'}>
+          <Button className="mt-4">Add building</Button>
+        </Link>
+        {/* <DialogDemo /> */}
       </div>
     </div>
   );

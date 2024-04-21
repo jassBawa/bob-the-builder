@@ -1,29 +1,28 @@
-"use client";
-import Link from "next/link";
-import React from "react";
-import { HistoryIcon, LogoIcon, ProfileIcon } from "./ui/icons";
-import { useAuthStore } from "@/state/auth";
-import { useRouter } from "next/navigation";
-import useProfile from "@/hooks/useProfile";
+'use client';
+import { signOut } from 'firebase/auth';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { HistoryIcon, LogoIcon, ProfileIcon } from '../ui/icons';
+import { auth } from '@/firebase';
 
-function Sidebar() {
+function OfficerSidebar() {
   const sideLinks = [
     {
-      title: "Home",
+      title: 'Home',
       icon: <LogoIcon />,
-      href: "/dashboard",
+      href: '/dashboard',
       isAdmin: true,
     },
     {
-      title: "History",
+      title: 'History',
       icon: <HistoryIcon />,
-      href: "/history",
+      href: '/history',
       isAdmin: true,
     },
     {
-      title: "Profile",
+      title: 'Profile',
       icon: <ProfileIcon />,
-      href: "/profile",
+      href: '/profile',
       isAdmin: true,
     },
   ];
@@ -32,12 +31,11 @@ function Sidebar() {
   // console.log(profile);
   // const isUserAdmin = profile?.admin_id ? true : false;
 
-  const { logout } = useAuthStore();
   const router = useRouter();
 
   const handleLogout = () => {
-    router.push("/login");
-    logout();
+    signOut(auth);
+    router.push('/login');
   };
 
   return (
@@ -73,4 +71,4 @@ function Sidebar() {
   );
 }
 
-export default Sidebar;
+export default OfficerSidebar;

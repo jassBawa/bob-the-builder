@@ -1,7 +1,13 @@
-"use client";
-import { useForm } from "react-hook-form";
-import { Input } from "../ui/Input";
-import { Button } from "../ui/button";
+'use client';
+// import { createOrganization } from '@/services/apiService';
+import { db } from '@/firebase';
+import useCurrentUser from '@/hooks/useCurrentUser';
+import { doc, setDoc, updateDoc } from 'firebase/firestore';
+import { useRouter } from 'next/navigation';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+import { Input } from '../ui/Input';
+import { Button } from '../ui/button';
 import {
   Form,
   FormControl,
@@ -9,58 +15,44 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "../ui/form";
-import { createOrganization, login } from "@/services/apiService";
-import { toast } from "sonner";
-import useProfile from "@/hooks/useProfile";
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+} from '../ui/form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { OrganisationFormSchema } from '@/lib/formValidations';
 
 function GettingStartedForm() {
-  const { profile } = useProfile();
   const router = useRouter();
-
-  useEffect(() => {
-    console.log(profile);
-    if (profile?.admin_id) {
-      router.push("/dashboard");
-      toast.success("You have already submitted the details");
-    }
-  }, [profile, router]);
-
+  const currentUser = useCurrentUser();
+  console.log(currentUser);
   const form = useForm({
-    // resolver: zodResolver({}),
+    resolver: zodResolver(OrganisationFormSchema),
     defaultValues: {
-      buildingName: "",
-      officerNumber: "",
-      officeAddress: "",
-      alterateNumber: "",
-      city: "",
-      country: "",
-      pincode: "",
+      organisationName: '',
+      organisationNumber: '',
+      organisationAddress: '',
+      alternateNumber: '',
+      city: '',
+      country: '',
+      pincode: '',
     },
   });
 
   const onSubmit = async (values) => {
-    console.log({ values });
+    console.log(values);
+
+    // working code
+    // await setDoc(doc(db, 'users', currentUser.uid), {
+    //   ...values,
+    //   ...currentUser,
+    // })
 
     try {
-      const response = await createOrganization({
-        building_name: values.buildingName,
-        office_number: values.officerNumber,
-        building_address: values.officeAddress,
-        alternate_number: values.alterateNumber,
-        city: values.city,
-        country: values.country,
-        pincode: values.pincode,
+      const userDoc = doc(db, 'users', currentUser.uid);
+      await updateDoc(userDoc, {
+        ...values,
+      }).then(() => {
+        toast.success('Information updated!');
+        router.push('/dashboard');
       });
-      // toast.success("Successfully Logged in!");
-      console.log(response);
-      if (response.message === "success") {
-        // router.push("/dashboard");
-      } else {
-        toast.error(response.message);
-      }
     } catch (error) {
       toast.error(error);
     }
@@ -71,13 +63,13 @@ function GettingStartedForm() {
         <div className="mt-4 grid gap-4 grid-cols-3">
           <FormField
             control={form.control}
-            name="buildingName"
+            name="organisationName"
             render={({ field }) => {
               return (
                 <FormItem className="col-span-2">
-                  <FormLabel>Building Name</FormLabel>
+                  <FormLabel>Organisation Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="Building Name" {...field} />
+                    <Input placeholder="Organisation Name" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -86,11 +78,11 @@ function GettingStartedForm() {
           />
           <FormField
             control={form.control}
-            name="officerNumber"
+            name="organisationNumber"
             render={({ field }) => {
               return (
                 <FormItem>
-                  <FormLabel>Office Number</FormLabel>
+                  <FormLabel>Organisation Number</FormLabel>
                   <FormControl>
                     <Input placeholder="98787XXX" {...field} />
                   </FormControl>
@@ -101,13 +93,13 @@ function GettingStartedForm() {
           />
           <FormField
             control={form.control}
-            name="officeAddress"
+            name="organisationAddress"
             render={({ field }) => {
               return (
                 <FormItem className="col-span-2">
-                  <FormLabel>Enter office address</FormLabel>
+                  <FormLabel>Enter organisation address</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter office addres" {...field} />
+                    <Input placeholder="Gill Park Ludhiana" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -116,11 +108,11 @@ function GettingStartedForm() {
           />
           <FormField
             control={form.control}
-            name="alterateNumber"
+            name="alternateNumber"
             render={({ field }) => {
               return (
                 <FormItem>
-                  <FormLabel>Alternate Office Number</FormLabel>
+                  <FormLabel>Alternate Organisation Number</FormLabel>
                   <FormControl>
                     <Input placeholder="98787XXX" {...field} />
                   </FormControl>

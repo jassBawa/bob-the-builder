@@ -1,18 +1,18 @@
-import useBuildings from "@/hooks/useBuildings";
-import Link from "next/link";
-import React from "react";
+import useBuildings from '@/hooks/useBuildings';
+import Link from 'next/link';
+import React from 'react';
 
 function BuildingList() {
-  const { buildings, isLoading } = useBuildings();
+  // const { buildings, isLoading } = useBuildings();
 
   return (
     <div className="mt-4">
       <p className="">Name of the buildings</p>
-      {isLoading ? (
+      {false ? (
         <div>loading</div>
       ) : (
         <ul className="building__container mt-4 rounded-lg max-w-xl w-full border">
-          {buildings.map((building, index) => (
+          {[0].map((building, index) => (
             <div
               key={index}
               className="flex gap-8 items-center border-b py-2 px-4"
