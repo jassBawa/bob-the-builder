@@ -24,7 +24,7 @@ function GettingStartedForm() {
   const currentUser = useCurrentUser();
   console.log(currentUser);
   const form = useForm({
-    resolver: zodResolver(OrganisationFormSchema),
+    // resolver: zodResolver(OrganisationFormSchema),
     defaultValues: {
       organisationName: '',
       organisationNumber: '',
@@ -39,12 +39,6 @@ function GettingStartedForm() {
   const onSubmit = async (values) => {
     console.log(values);
 
-    // working code
-    // await setDoc(doc(db, 'users', currentUser.uid), {
-    //   ...values,
-    //   ...currentUser,
-    // })
-
     try {
       const userDoc = doc(db, 'users', currentUser.uid);
       await updateDoc(userDoc, {
@@ -57,9 +51,13 @@ function GettingStartedForm() {
       toast.error(error);
     }
   };
+
+  const onError = (vl) => {
+    console.log(vl);
+  };
   return (
     <Form {...form} className="mt-12">
-      <form onSubmit={form.handleSubmit(onSubmit)}>
+      <form onSubmit={form.handleSubmit(onSubmit, onError)}>
         <div className="mt-4 grid gap-4 grid-cols-3">
           <FormField
             control={form.control}

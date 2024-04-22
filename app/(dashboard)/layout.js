@@ -11,9 +11,9 @@ const inter = Inter({ subsets: ['latin'] });
 
 export default function DashboardLayout({ children }) {
   return (
-    <div className="flex h-full">
+    <div className="flex h-full ">
       <Sidebar />
-      <main className="flex-1 h-full overflow-scroll bg-[#EBEDF6]">
+      <main className="flex-1 h-full bg-[#EBEDF6] overflow-y-scroll">
         <Dialog>
           <nav className="bg-white py-4 px-8">
             <div className="hamburger">=</div>

@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -14,18 +15,30 @@ import {
 } from '@/components/ui/form';
 
 import { Input } from '@/components/ui/Input';
+import { Checkbox } from '@/components/ui/checkbox';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
 import { db, storage } from '@/firebase';
 import useCurrentUser from '@/hooks/useCurrentUser';
 import { uploadFile } from '@/lib/uploadToFirebase';
 import { addDoc, collection, doc } from 'firebase/firestore';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 function Addbuilding() {
   const currentUser = useCurrentUser();
-  console.log(currentUser);
+  // console.log(currentUser);
+  const router = useRouter();
 
   const [file1, setFile1] = useState(null);
   const [file2, setFile2] = useState(null);
+  const [file3, setFile3] = useState(null);
 
   const handleChange1 = (event) => {
     setFile1(event.target.files[0]);
@@ -34,13 +47,15 @@ function Addbuilding() {
   const handleChange2 = (event) => {
     setFile2(event.target.files[0]);
   };
+  const handleChange3 = (event) => {
+    setFile3(event.target.files[0]);
+  };
 
   const form = useForm({
     // resolver: zodResolver(BuildingSchema),
     defaultValues: {
-      registeredAddress: '',
-      city: '',
-      country: '',
+      buildingName: '',
+      noOfStories: '',
       buildingUse: '',
       storyHeights: '',
       yearOfConstruction: '',
@@ -48,10 +63,14 @@ function Addbuilding() {
       groundCoverageArea: '',
       buildingStructuralSystem: '',
       foundationType: '',
+      otherInformation: '',
+      dampnessCracks: false,
     },
   });
 
   const onSubmit = async (values) => {
+    console.log(values);
+    toast.loading('Submitting data');
     try {
       const date = new Date();
       const pdf1Url = await uploadFile(
@@ -68,7 +87,6 @@ function Addbuilding() {
         'georeport',
         date
       );
-
       // Create a new building document reference
       const buildingsRef = collection(
         doc(db, 'users', currentUser.uid),
@@ -79,10 +97,10 @@ function Addbuilding() {
         structuralReportUrl: pdf1Url,
         georeportUrl: pdf2Url,
       }).then(() => {
-        toast.success('Building added ');
+        toast.success('Data added successfully ');
+        router.push('/dashbaord');
       });
-
-      console.log(newBuildingRef);
+      // console.log(newBuildingRef);
     } catch (error) {
       toast.error(error);
     }
@@ -91,7 +109,7 @@ function Addbuilding() {
   };
   return (
     <>
-      <div className="mt-16 mx-8 p-8 rounded bg-white">
+      <div className="mt-16 mx-8 p-8 rounded bg-white overflow-y-scroll">
         <h2 className="text-2xl font-semibold">
           Please add building data here
         </h2>
@@ -100,43 +118,29 @@ function Addbuilding() {
             <div className="mt-4 grid gap-4 grid-cols-3">
               <FormField
                 control={form.control}
-                name="registeredAddress"
+                name="buildingName"
                 render={({ field }) => {
                   return (
                     <FormItem className="col-span-2">
-                      <FormLabel>Registred Address</FormLabel>
+                      <FormLabel>Building Name</FormLabel>
                       <FormControl>
-                        <Input placeholder="Registred Address" {...field} />
+                        <Input placeholder="Sports Complex" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   );
                 }}
               />
+
               <FormField
                 control={form.control}
-                name="city"
+                name="noOfStories"
                 render={({ field }) => {
                   return (
-                    <FormItem>
-                      <FormLabel>City</FormLabel>
+                    <FormItem className="col-span-1">
+                      <FormLabel>Number of Stories</FormLabel>
                       <FormControl>
-                        <Input placeholder="City" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  );
-                }}
-              />
-              <FormField
-                control={form.control}
-                name="country"
-                render={({ field }) => {
-                  return (
-                    <FormItem className="col-span-2">
-                      <FormLabel>Country</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Country" {...field} />
+                        <Input placeholder="4" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -164,7 +168,7 @@ function Addbuilding() {
                 render={({ field }) => {
                   return (
                     <FormItem>
-                      <FormLabel>Story Heights</FormLabel>
+                      <FormLabel>Story Heights (In Feet)</FormLabel>
                       <FormControl>
                         <Input placeholder="Building Usage" {...field} />
                       </FormControl>
@@ -181,7 +185,7 @@ function Addbuilding() {
                     <FormItem>
                       <FormLabel>Year of Construction</FormLabel>
                       <FormControl>
-                        <Input placeholder="year of construction" {...field} />
+                        <Input placeholder="May 2024" {...field} />
 
                         {/* <DatePicker date={''} setDate={() => {}} /> */}
                       </FormControl>
@@ -198,7 +202,7 @@ function Addbuilding() {
                     <FormItem>
                       <FormLabel>Total built-up Area (in Sqm)</FormLabel>
                       <FormControl>
-                        <Input placeholder="DD//" {...field} />
+                        <Input placeholder="100" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -207,13 +211,13 @@ function Addbuilding() {
               />
               <FormField
                 control={form.control}
-                name="GroundCoverageArea"
+                name="groundCoverageArea"
                 render={({ field }) => {
                   return (
                     <FormItem>
                       <FormLabel>Ground Coverage Area (in Sqm)</FormLabel>
                       <FormControl>
-                        <Input placeholder="..." {...field} />
+                        <Input placeholder="100" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -224,18 +228,44 @@ function Addbuilding() {
               <FormField
                 control={form.control}
                 name="buildingStructuralSystem"
-                render={({ field }) => {
-                  return (
-                    <FormItem>
-                      <FormLabel>Building Structural System </FormLabel>
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Strcutural system</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
                       <FormControl>
-                        <Input placeholder=".." {...field} />
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select strucutral system for building" />
+                        </SelectTrigger>
                       </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  );
-                }}
+                      <SelectContent>
+                        <SelectItem value="Moment Frame (beam-column System)">
+                          Moment Frame (beam-column System)
+                        </SelectItem>
+                        <SelectItem value="Braced Frame">
+                          Braced Frame
+                        </SelectItem>
+                        <SelectItem value="Dual System (Frame+ strctural wall)">
+                          Dual System (Frame+ strctural wall)
+                        </SelectItem>
+                        <SelectItem value="Pre-cast">Pre-cast</SelectItem>
+                        <SelectItem value="Flat Slab-Structural wall/frame">
+                          Flat Slab-Structural wall/frame
+                        </SelectItem>
+                        <SelectItem value="Load bearing masonry">
+                          Load bearing Masonry
+                        </SelectItem>
+                        <SelectItem value="Other">Other</SelectItem>
+                      </SelectContent>
+                    </Select>
+
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
+
               <FormField
                 control={form.control}
                 name="foundationType"
@@ -244,7 +274,23 @@ function Addbuilding() {
                     <FormItem>
                       <FormLabel>Foundation Type</FormLabel>
                       <FormControl>
-                        <Input placeholder="...." {...field} />
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                        >
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select foundation type" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="Raft/Mat">Raft/Mat</SelectItem>
+                            <SelectItem value="Footings/combined foundation">
+                              Footings/combined foundation
+                            </SelectItem>
+                            <SelectItem value="other">other</SelectItem>
+                          </SelectContent>
+                        </Select>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -252,14 +298,65 @@ function Addbuilding() {
                 }}
               />
 
+              <FormField
+                control={form.control}
+                name="otherInformation"
+                render={({ field }) => {
+                  return (
+                    <FormItem
+                      className="col-span-3
+                    "
+                    >
+                      <FormLabel>Any other information</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          placeholder="Tell us a little bit about yourself"
+                          className="resize-none"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormDescription>
+                        You can <span>@mention</span> other users and
+                        organizations.
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  );
+                }}
+              ></FormField>
+
               <FormItem>
-                <FormLabel>Geo technical Report available</FormLabel>
+                <FormLabel>Geo technical Report</FormLabel>
                 <Input type="file" onChange={handleChange1}></Input>
               </FormItem>
               <FormItem>
-                <FormLabel>Structural Drawing available</FormLabel>
+                <FormLabel>Structural Drawing</FormLabel>
                 <Input type="file" onChange={handleChange2}></Input>
               </FormItem>
+              {/* <FormItem>
+                <FormLabel>Original Structural Drawing</FormLabel>
+                <Input type="file" onChange={handleChange3}></Input>
+              </FormItem> */}
+
+              <FormField
+                control={form.control}
+                name="dampnessCracks"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md col-span-3 p-4">
+                    <FormControl>
+                      <Checkbox
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
+                    <div className="space-y-1 leading-none">
+                      <FormLabel>
+                        Building having structural dampness/Cracks
+                      </FormLabel>
+                    </div>
+                  </FormItem>
+                )}
+              />
             </div>
             <Button type="submit" className="mt-8 px-8">
               Save

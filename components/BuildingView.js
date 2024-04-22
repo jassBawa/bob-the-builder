@@ -1,22 +1,22 @@
 import React from 'react';
-import PdfViewer from './dashboard/PdfViewer';
 
 function BuildingView({ building }) {
   console.log(building);
   return (
     <div className="overflow-y-scroll h-96">
       <div className="mt-4 mx-8 p-8 rounded bg-white grid grid-cols-2 gap-8">
+        <ViewItem label={'Building ID'} value={building?.id} />
         <ViewItem label={'Building Use'} value={building?.buildingUse} />
 
-        <ViewItem label={'Building Address'} value={building?.id} />
-        <ViewItem
-          label={'Building Address'}
-          value={building?.registeredAddress}
-        />
+        <ViewItem label={'Building Name'} value={building?.buildingName} />
         <ViewItem label={'Story heights'} value={building?.storyHeights} />
         <ViewItem
           label={'Total build up area'}
           value={building?.totalBuiltUpArea}
+        />
+        <ViewItem
+          label={'Dampness Cracks'}
+          value={`${building?.dampnessCracks}`}
         />
 
         <div className="col-span-2">

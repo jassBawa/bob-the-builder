@@ -26,7 +26,7 @@ function ProfileForm({ profile, isEditMode, setIsEditMode }) {
       organisationName: profile?.organisationName || ' ',
       organisationNumber: profile?.organisationNumber || '',
       organisationAddress: profile?.organisationAddress || '',
-      alternateNumber: profile?.alterateNumber || '',
+      alternateNumber: profile?.alternateNumber || '',
       city: profile?.city || '',
       country: profile?.country || '',
       pincode: profile?.pincode || '',

@@ -1,6 +1,7 @@
 'use client';
 import BuildingList from '@/components/dashboard/BuildingList';
 import ProfileForm from '@/components/forms/ProfileForm';
+import { DialogDemo } from '@/components/modals/DialogDemo';
 import { Button } from '@/components/ui/button';
 import useCurrentUser from '@/hooks/useCurrentUser';
 import { Edit2Icon } from 'lucide-react';
@@ -41,7 +42,7 @@ function Page() {
         <Link passHref href={'/addBuilding'}>
           <Button className="mt-4">Add building</Button>
         </Link>
-        {/* <DialogDemo /> */}
+        <DialogDemo />
       </div>
     </div>
   );

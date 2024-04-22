@@ -23,7 +23,6 @@ function Page() {
       <div className="mt-4 mx-8 p-8 rounded bg-white">
         <div className="max-w-sm overflow-hidden">{currentUser?.name}</div>
         <h1 className="text-4xl font-bold">{currentUser?.email}</h1>
-        Generate code
       </div>
     </>
   );
