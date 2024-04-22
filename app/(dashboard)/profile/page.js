@@ -36,7 +36,7 @@ function Page() {
       )}
 
       <div className="mt-4">
-        {/* <BuildingList /> */}
+        <BuildingList />
 
         <Link passHref href={'/addBuilding'}>
           <Button className="mt-4">Add building</Button>

@@ -1,17 +1,30 @@
-import { buildingsFetcher } from "@/services/apiService";
-import useSWR from "swr";
+function useBuildingData() {
+  const [buildingData, setBuildingData] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-function useBuildings() {
-  const { data, error, mutate } = useSWR("/api/buildings", buildingsFetcher);
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const users = /* Get a list of user IDs */ // Replace with your logic to get user IDs
+  //       const data = {};
 
-  const buildings = data || []; // Handle potential missing data
+  //       for (const userId of users) {
+  //         data[userId] = await fetchBuildingData(db, userId);
+  //       }
 
-  return {
-    buildings,
-    isLoading: !error && !data,
-    isError: error,
-    refetchBuildings: mutate,
-  };
+  //       setBuildingData(data);
+  //     } catch (err) {
+  //       setError(err);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   fetchData();
+  // }, [db]); // Re-run on changes to db
+
+  return { buildingData, loading, error };
 }
 
-export default useBuildings;
+export default useBuildingData;
