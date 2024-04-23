@@ -64,6 +64,7 @@ function Addbuilding() {
       buildingStructuralSystem: '',
       foundationType: '',
       otherInformation: '',
+      nondampnessCracks: false,
       dampnessCracks: false,
     },
   });
@@ -98,7 +99,7 @@ function Addbuilding() {
         georeportUrl: pdf2Url,
       }).then(() => {
         toast.success('Data added successfully ');
-        router.push('/dashbaord');
+        router.push('/dashboard');
       });
       // console.log(newBuildingRef);
     } catch (error) {
@@ -109,7 +110,7 @@ function Addbuilding() {
   };
   return (
     <>
-      <div className="mt-16 mx-8 p-8 rounded bg-white overflow-y-scroll">
+      <div className="mt-16 mx-8 p-8 rounded bg-white">
         <h2 className="text-2xl font-semibold">
           Please add building data here
         </h2>
@@ -170,7 +171,7 @@ function Addbuilding() {
                     <FormItem>
                       <FormLabel>Story Heights (In Feet)</FormLabel>
                       <FormControl>
-                        <Input placeholder="Building Usage" {...field} />
+                        <Input placeholder="200" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -310,14 +311,14 @@ function Addbuilding() {
                       <FormLabel>Any other information</FormLabel>
                       <FormControl>
                         <Textarea
-                          placeholder="Tell us a little bit about yourself"
+                          placeholder="Tell us a any extra information related to building"
                           className="resize-none"
                           {...field}
                         />
                       </FormControl>
                       <FormDescription>
-                        You can <span>@mention</span> other users and
-                        organizations.
+                        Provide any extra information related to the building
+                        here.
                       </FormDescription>
                       <FormMessage />
                     </FormItem>
@@ -357,9 +358,28 @@ function Addbuilding() {
                   </FormItem>
                 )}
               />
+              <FormField
+                control={form.control}
+                name="nondampnessCracks"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md col-span-3 p-4 -mt-8">
+                    <FormControl>
+                      <Checkbox
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
+                    <div className="space-y-1 leading-none">
+                      <FormLabel>
+                        Building having non-structural dampness/Cracks
+                      </FormLabel>
+                    </div>
+                  </FormItem>
+                )}
+              />
             </div>
             <Button type="submit" className="mt-8 px-8">
-              Save
+              Add building
             </Button>
           </form>
         </Form>

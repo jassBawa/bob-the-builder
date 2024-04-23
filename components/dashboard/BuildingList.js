@@ -13,11 +13,12 @@ function BuildingList() {
   const [currentBuilding, setCurrentBuilding] = useState();
 
   useEffect(() => {
-    fetchBuildingData(db, currentUser?.uid).then((buildingList) => {
-      console.log(buildingList);
-      setBuildings(buildingList);
-    });
-  }, [currentUser?.uid]);
+    if (db)
+      fetchBuildingData(db, currentUser?.uid).then((buildingList) => {
+        console.log(buildingList);
+        setBuildings(buildingList);
+      });
+  }, [currentUser?.uid, db]);
 
   const showBuilding = (building) => {
     setCurrentBuilding(building);
@@ -26,8 +27,12 @@ function BuildingList() {
 
   return (
     <div className="mt-4">
-      <p className="">Name of the buildings</p>
       <div className="space-y-2 max-w-md">
+        {buildings.length === 0 ? (
+          <h3 className="text-xl font-semibold">No buildings added yet</h3>
+        ) : (
+          <p className="">Name of the buildings</p>
+        )}
         {buildings?.map((building) => {
           return (
             <div

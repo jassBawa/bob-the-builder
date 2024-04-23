@@ -50,6 +50,7 @@ function SignupForm() {
         name,
         role,
       }).then((res) => {
+        toast.success('Created account successfully!');
         router.push(
           `${
             role === 'organisation'

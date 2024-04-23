@@ -16,8 +16,8 @@ import {
   FormLabel,
   FormMessage,
 } from '../ui/form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { OrganisationFormSchema } from '@/lib/formValidations';
+// import { zodResolver } from '@hookform/resolvers/zod';
+// import { OrganisationFormSchema } from '@/lib/formValidations';
 
 function GettingStartedForm() {
   const router = useRouter();
@@ -52,12 +52,12 @@ function GettingStartedForm() {
     }
   };
 
-  const onError = (vl) => {
-    console.log(vl);
-  };
+  // const onError = (vl) => {
+  //   console.log(vl);
+  // };
   return (
     <Form {...form} className="mt-12">
-      <form onSubmit={form.handleSubmit(onSubmit, onError)}>
+      <form onSubmit={form.handleSubmit(onSubmit)}>
         <div className="mt-4 grid gap-4 grid-cols-3">
           <FormField
             control={form.control}
@@ -166,7 +166,7 @@ function GettingStartedForm() {
           />
         </div>
         <Button type="submit" className="mt-8 px-8">
-          Submit
+          Save Information
         </Button>
       </form>
     </Form>

@@ -58,7 +58,7 @@ export default function LoginForm() {
       }
 
       router.push(
-        `${currentUser.role === 'officer' ? '/officer' : '/dashboard'}`
+        `${currentUser?.role === 'officer' ? '/officer' : '/dashboard'}`
       );
     } catch (error) {
       toast.error(error);
@@ -112,7 +112,7 @@ export default function LoginForm() {
 
         <Link href="/signup" className="opacity-80 text-center mt-6 block">
           Already have an account?
-          <span className="opacity-100 underline"> Sign In</span>
+          <span className="opacity-100 underline"> Sign Up</span>
         </Link>
       </form>
     </Form>
