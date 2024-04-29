@@ -8,11 +8,11 @@ function Page() {
   const currentUser = useCurrentUser();
   console.log(currentUser);
 
-  useEffect(() => {
-    // if (!currentUser) {
-    //   router.push('/login');
-    // }
-  }, [currentUser, router]);
+  // useEffect(() => {
+  //   if (currentUser) {
+  //     router.push('/login');
+  //   }
+  // }, [currentUser, router]);
 
   return (
     <>

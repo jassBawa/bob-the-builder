@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { LogoIcon, ProfileIcon } from '../ui/icons';
+import { Hourglass } from 'lucide-react';
 
 function Sidebar() {
   const sideLinks = [
@@ -12,16 +13,18 @@ function Sidebar() {
       isAdmin: true,
     },
     {
+      title: 'Requests',
+      icon: <Hourglass />,
+      href: '/officer/requests',
+      isAdmin: true,
+    },
+    {
       title: 'Profile',
       icon: <ProfileIcon />,
       href: '/officer/profile',
       isAdmin: true,
     },
   ];
-
-  // const { profile } = useProfile();
-  // console.log(profile);
-  // const isUserAdmin = profile?.admin_id ? true : false;
 
   const router = useRouter();
 

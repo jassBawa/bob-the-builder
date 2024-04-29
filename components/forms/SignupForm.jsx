@@ -45,7 +45,7 @@ function SignupForm() {
       const { email, password, name } = values; // Destructure name from values
 
       const userCred = createUserWithEmailAndPassword(auth, email, password);
-      await setDoc(doc(db, 'users', (await userCred).user.uid), {
+      await setDoc(doc(db, `${role}`, (await userCred).user.uid), {
         email,
         name,
         role,
@@ -59,22 +59,6 @@ function SignupForm() {
           }`
         );
       });
-      // .then(
-      //   (userCredential) => {
-      //     console.log(userCredential.user);
-      //     const user = userCredential.user;
-      //     const uid = user.uid; // Get the current user's unique identifier (uid)
-      //     // Create a new document in the "users" collection with the user's uid as the document ID
-      //     const userRef = collection(db, 'users', uid);
-
-      //     console.log(userRef);
-      //     return setDoc(userRef, {
-      //       name: name,
-      //       email: email,
-      //       role: role,
-      //     });
-      //   }
-      // );
     } catch (error) {
       toast.error(error.message || 'An error occurred during signup.'); // Provide a more user-friendly error message
     } finally {

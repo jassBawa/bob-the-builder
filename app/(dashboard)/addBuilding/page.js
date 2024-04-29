@@ -30,6 +30,7 @@ import { uploadFile } from '@/lib/uploadToFirebase';
 import { addDoc, collection, doc } from 'firebase/firestore';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { v4 as uuidv4 } from 'uuid';
 
 function Addbuilding() {
   const currentUser = useCurrentUser();
@@ -71,7 +72,7 @@ function Addbuilding() {
 
   const onSubmit = async (values) => {
     console.log(values);
-    toast.loading('Submitting data');
+
     try {
       const date = new Date();
       const pdf1Url = await uploadFile(
@@ -90,14 +91,15 @@ function Addbuilding() {
       );
       // Create a new building document reference
       const buildingsRef = collection(
-        doc(db, 'users', currentUser.uid),
+        doc(db, 'organisation', currentUser.uid),
         'buildings'
       );
       const newBuildingRef = await addDoc(buildingsRef, {
         ...values, // Include all building data fields
+        buildingId: uuidv4(),
         structuralReportUrl: pdf1Url,
         georeportUrl: pdf2Url,
-      }).then(() => {
+      }).then((data) => {
         toast.success('Data added successfully ');
         router.push('/dashboard');
       });

@@ -10,7 +10,7 @@ import { toast } from 'sonner';
 import { auth } from '@/firebase';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Input } from '../ui/Input';
 import { Button } from '../ui/button';
 import {
@@ -25,11 +25,7 @@ import useCurrentUser from '@/hooks/useCurrentUser';
 
 export default function LoginForm() {
   const router = useRouter();
-  const currentUser = useCurrentUser();
-  console.log(currentUser);
-  // useEffect(() => {
-  //   if (currentUser) router.push('/dashboard');
-  // }, [currentUser, router]);
+  const [role, setRole] = useState('');
 
   const { handleSubmit, ...form } = useForm({
     resolver: zodResolver(loginSchema),
@@ -40,11 +36,10 @@ export default function LoginForm() {
   });
 
   const onSubmit = async (values) => {
-    console.log({ values });
+    console.log(values);
     const { email, password } = values;
 
     try {
-      // const response = await login(values);
       const userCredential = await signInWithEmailAndPassword(
         auth,
         email,
@@ -53,24 +48,57 @@ export default function LoginForm() {
 
       if (userCredential) {
         console.log(userCredential.user);
-
         toast.success('Successfully Logged in!');
       }
 
-      router.push(
-        `${currentUser?.role === 'officer' ? '/officer' : '/dashboard'}`
-      );
+      router.push(`${role === 'officer' ? '/officer' : '/dashboard'}`);
     } catch (error) {
       toast.error(error);
     }
   };
-  // const onInvalid = (errors) => console.error(errors); // helpful
 
   return (
     <Form {...form}>
       <form onSubmit={handleSubmit(onSubmit)}>
         <header className="text-3xl font-semibold">Login</header>
         <div className="inputs__container mt-4 grid grid-cols-1 gap-4">
+          <FormField
+            control={form.control}
+            name="role"
+            render={({ field }) => {
+              return (
+                <FormItem className="">
+                  <FormLabel>Please Select account type</FormLabel>
+                  <div className="flex gap-2">
+                    <Button
+                      variant="outline" // Emphasize selected state (optional)
+                      onClick={() => setRole('organisation')}
+                      disabled={role === 'organisation'} // Prevent deselecting
+                      className={`w-full  ${
+                        role === 'organisation'
+                          ? 'bg-green-300 !opacity-100 text-black'
+                          : 'opacity-70'
+                      }`}
+                    >
+                      Organisation
+                    </Button>
+                    <Button
+                      variant="outline" // Different style (optional)
+                      onClick={() => setRole('officer')}
+                      disabled={role === 'officer'} // Prevent deselecting
+                      className={`w-full !opacity-100 ${
+                        role === 'officer'
+                          ? 'bg-green-300 opacity-100 text-black'
+                          : 'opacity-70'
+                      }`}
+                    >
+                      Officer
+                    </Button>
+                  </div>
+                </FormItem>
+              );
+            }}
+          />
           <FormField
             control={form.control}
             name="email"

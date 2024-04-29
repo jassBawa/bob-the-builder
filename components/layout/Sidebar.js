@@ -14,9 +14,9 @@ function OfficerSidebar() {
       isAdmin: true,
     },
     {
-      title: 'History',
+      title: 'Requests',
       icon: <HistoryIcon />,
-      href: '/history',
+      href: '/requests',
       isAdmin: true,
     },
     {
@@ -26,10 +26,6 @@ function OfficerSidebar() {
       isAdmin: true,
     },
   ];
-
-  // const { profile } = useProfile();
-  // console.log(profile);
-  // const isUserAdmin = profile?.admin_id ? true : false;
 
   const router = useRouter();
 

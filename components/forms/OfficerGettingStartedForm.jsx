@@ -19,20 +19,18 @@ import {
 // import { zodResolver } from '@hookform/resolvers/zod';
 // import { OrganisationFormSchema } from '@/lib/formValidations';
 
-function GettingStartedForm() {
+function OfficerGettingStartedForm() {
   const router = useRouter();
-  const currentUser = useCurrentUser();
+  const currentUser = useCurrentUser('officer');
   console.log(currentUser);
   const form = useForm({
     // resolver: zodResolver(OrganisationFormSchema),
     defaultValues: {
-      organisationName: '',
-      organisationNumber: '',
-      organisationAddress: '',
-      alternateNumber: '',
-      city: '',
-      country: '',
-      pincode: '',
+      name: '',
+      number: '',
+      employeeId: '',
+      email: '',
+      company: '',
     },
   });
 
@@ -40,12 +38,12 @@ function GettingStartedForm() {
     console.log(values);
 
     try {
-      const userDoc = doc(db, 'organisation', currentUser.uid);
+      const userDoc = doc(db, 'officer', currentUser.uid);
       await updateDoc(userDoc, {
         ...values,
       }).then(() => {
         toast.success('Information updated!');
-        router.push('/dashboard');
+        router.push('/officer');
       });
     } catch (error) {
       toast.error(error);
@@ -58,13 +56,13 @@ function GettingStartedForm() {
         <div className="mt-4 grid gap-4 grid-cols-3">
           <FormField
             control={form.control}
-            name="organisationName"
+            name="name"
             render={({ field }) => {
               return (
-                <FormItem className="col-span-2">
-                  <FormLabel>Organisation Name</FormLabel>
+                <FormItem className="">
+                  <FormLabel> Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="Organisation Name" {...field} />
+                    <Input placeholder="Your name" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -73,11 +71,11 @@ function GettingStartedForm() {
           />
           <FormField
             control={form.control}
-            name="organisationNumber"
+            name="number"
             render={({ field }) => {
               return (
                 <FormItem>
-                  <FormLabel>Organisation Number</FormLabel>
+                  <FormLabel>Phone Number</FormLabel>
                   <FormControl>
                     <Input placeholder="98787XXX" {...field} />
                   </FormControl>
@@ -88,13 +86,13 @@ function GettingStartedForm() {
           />
           <FormField
             control={form.control}
-            name="organisationAddress"
+            name="employeeId"
             render={({ field }) => {
               return (
-                <FormItem className="col-span-2">
-                  <FormLabel>Enter organisation address</FormLabel>
+                <FormItem className="">
+                  <FormLabel>Employee id</FormLabel>
                   <FormControl>
-                    <Input placeholder="Gill Park Ludhiana" {...field} />
+                    <Input placeholder="928929292" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -103,13 +101,13 @@ function GettingStartedForm() {
           />
           <FormField
             control={form.control}
-            name="alternateNumber"
+            name="email"
             render={({ field }) => {
               return (
                 <FormItem>
-                  <FormLabel>Alternate Organisation Number</FormLabel>
+                  <FormLabel> Email Address</FormLabel>
                   <FormControl>
-                    <Input placeholder="98787XXX" {...field} />
+                    <Input placeholder="johndeo@gmail.com" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -118,43 +116,13 @@ function GettingStartedForm() {
           />
           <FormField
             control={form.control}
-            name="city"
+            name="company"
             render={({ field }) => {
               return (
                 <FormItem>
-                  <FormLabel>City</FormLabel>
+                  <FormLabel>Company Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter your city here" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              );
-            }}
-          />
-          <FormField
-            control={form.control}
-            name="country"
-            render={({ field }) => {
-              return (
-                <FormItem>
-                  <FormLabel>Country</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Enter country here" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              );
-            }}
-          />
-          <FormField
-            control={form.control}
-            name="pincode"
-            render={({ field }) => {
-              return (
-                <FormItem>
-                  <FormLabel>Pincode</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Enter your pincode here" {...field} />
+                    <Input placeholder="Enter your company name" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -170,4 +138,4 @@ function GettingStartedForm() {
   );
 }
 
-export default GettingStartedForm;
+export default OfficerGettingStartedForm;

@@ -40,7 +40,7 @@ function BuildingList() {
               onClick={() => showBuilding(building)}
               className="flex justify-between bg-slate-100 px-4 py-2 shadow-sm"
             >
-              <p>{building.buildingUse}</p>
+              <p>{building.buildingName}</p>
               <p>{building.yearOfConstruction}</p>
             </div>
           );
