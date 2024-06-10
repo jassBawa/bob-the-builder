@@ -55,7 +55,7 @@ function SignupForm() {
           `${
             role === 'organisation'
               ? '/getting-started'
-              : '/officer/getting-started-officer'
+              : '/officer/getting-started'
           }`
         );
       });

@@ -9,7 +9,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { useState } from 'react';
-import BuildingView from '../BuildingView';
+import BuildingView from '../shared/BuildingView';
 
 export function DialogDemo({ isOpen = false, setIsOpen, buildingData }) {
   console.log(buildingData);
@@ -18,7 +18,7 @@ export function DialogDemo({ isOpen = false, setIsOpen, buildingData }) {
 
   return (
     <Dialog open={isOpen} onClose={handleClose}>
-      <DialogContent className="sm:max-w-[1025px]">
+      <DialogContent className="sm:max-w-[1025px] md:max-w-full w-full h-full">
         <DialogHeader>
           <DialogTitle>View building details</DialogTitle>
           <DialogDescription>

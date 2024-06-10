@@ -1,5 +1,4 @@
 'use client';
-// import { createOrganization } from '@/services/apiService';
 import { db } from '@/firebase';
 import useCurrentUser from '@/hooks/useCurrentUser';
 import { doc, setDoc, updateDoc } from 'firebase/firestore';

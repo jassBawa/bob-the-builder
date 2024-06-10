@@ -10,7 +10,7 @@ import { toast } from 'sonner';
 import { auth } from '@/firebase';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Input } from '../ui/Input';
 import { Button } from '../ui/button';
 import {
@@ -21,7 +21,6 @@ import {
   FormLabel,
   FormMessage,
 } from '../ui/form';
-import useCurrentUser from '@/hooks/useCurrentUser';
 
 export default function LoginForm() {
   const router = useRouter();

@@ -29,7 +29,7 @@ function Page({ params }) {
 
   console.log(building);
   return (
-    <div className="mt-16 mx-8 p-8 rounded bg-white">
+    <div className="mt-16 mx-8 rounded bg-white">
       <h2 className="text-2xl font-semibold">Welcome back, name</h2>
       <p className="text-sm">Track and Manage your information</p>
 
@@ -93,7 +93,7 @@ const fetchBuildingDetails = async (orgId, buildingId) => {
     const querySnapshot = await getDocs(q);
 
     if (querySnapshot.empty) {
-      console.warn('Building not found in organization:', orgId, buildingId);
+      console.warn('Building not found in organisation:', orgId, buildingId);
       return null; // Handle case where no building matches the ID
     } else {
       // Assuming there should be only one matching building (due to the query)

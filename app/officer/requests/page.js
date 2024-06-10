@@ -1,5 +1,13 @@
 'use client';
 import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuItem,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { db } from '@/firebase';
 import useCurrentUser from '@/hooks/useCurrentUser';
 import { collection, getDocs, query, where } from 'firebase/firestore';
@@ -57,15 +65,42 @@ function Page() {
 
               <td className="flex gap-2 ">
                 {req.status === 'accept' ? (
-                  <Button
-                    onClick={() =>
-                      router.push(
-                        `/officer/view/${req.organisationId}/${req.buildingId}`
-                      )
-                    }
-                  >
-                    View{' '}
-                  </Button>
+                  <>
+                    <Button
+                      onClick={() =>
+                        router.push(
+                          `/officer/view/${req.organisationId}/${req.buildingId}`
+                        )
+                      }
+                    >
+                      View{' '}
+                    </Button>
+                    <DropdownMenu className="ml-4">
+                      <DropdownMenuTrigger>Report</DropdownMenuTrigger>
+                      <DropdownMenuContent>
+                        <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem
+                          onClick={() =>
+                            router.push(
+                              `/officer/edit/visual/${req.organisationId}/${req.buildingId}`
+                            )
+                          }
+                        >
+                          Visual inspection
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() =>
+                            router.push(
+                              `/officer/edit/ndt/${req.organisationId}/${req.buildingId}`
+                            )
+                          }
+                        >
+                          NDT
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </>
                 ) : (
                   <span>Wait until request is approved</span>
                 )}

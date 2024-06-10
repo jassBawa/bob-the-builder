@@ -6,8 +6,9 @@ function OrganisationLists({ organisations }) {
     return <h3>No list of organisations found</h3>;
   }
   return (
-    <div className="mt-24">
+    <div className="mt-12">
       <h3 className="text-3xl font-semibold mb-4">List of organisations</h3>
+      <div className='flex flex-col gap-4'>
       {organisations?.map((org) => {
         return (
           <Link
@@ -19,7 +20,7 @@ function OrganisationLists({ organisations }) {
             Name: {org.name}
           </Link>
         );
-      })}
+      })}</div>
     </div>
   );
 }

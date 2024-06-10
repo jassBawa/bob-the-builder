@@ -1,5 +1,4 @@
 'use client';
-// import { createOrganization } from '@/services/apiService';
 import { db } from '@/firebase';
 import useCurrentUser from '@/hooks/useCurrentUser';
 import { doc, setDoc, updateDoc } from 'firebase/firestore';
@@ -26,10 +25,8 @@ function OfficerGettingStartedForm() {
   const form = useForm({
     // resolver: zodResolver(OrganisationFormSchema),
     defaultValues: {
-      name: '',
       number: '',
       employeeId: '',
-      email: '',
       company: '',
     },
   });
@@ -41,6 +38,8 @@ function OfficerGettingStartedForm() {
       const userDoc = doc(db, 'officer', currentUser.uid);
       await updateDoc(userDoc, {
         ...values,
+        email: currentUser?.email,
+        name: currentUser?.name
       }).then(() => {
         toast.success('Information updated!');
         router.push('/officer');
@@ -54,21 +53,6 @@ function OfficerGettingStartedForm() {
     <Form {...form} className="mt-12">
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <div className="mt-4 grid gap-4 grid-cols-3">
-          <FormField
-            control={form.control}
-            name="name"
-            render={({ field }) => {
-              return (
-                <FormItem className="">
-                  <FormLabel> Name</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Your name" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              );
-            }}
-          />
           <FormField
             control={form.control}
             name="number"
@@ -93,21 +77,6 @@ function OfficerGettingStartedForm() {
                   <FormLabel>Employee id</FormLabel>
                   <FormControl>
                     <Input placeholder="928929292" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              );
-            }}
-          />
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => {
-              return (
-                <FormItem>
-                  <FormLabel> Email Address</FormLabel>
-                  <FormControl>
-                    <Input placeholder="johndeo@gmail.com" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

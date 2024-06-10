@@ -20,6 +20,12 @@ function OfficerSidebar() {
       isAdmin: true,
     },
     {
+      title: 'Reports',
+      icon: <HistoryIcon />,
+      href: '/reports',
+      isAdmin: true,
+    },
+    {
       title: 'Profile',
       icon: <ProfileIcon />,
       href: '/profile',

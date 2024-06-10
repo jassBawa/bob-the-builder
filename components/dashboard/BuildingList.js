@@ -10,15 +10,16 @@ function BuildingList() {
   const currentUser = useCurrentUser();
   const [buildings, setBuildings] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
-  const [currentBuilding, setCurrentBuilding] = useState();
+  const [currentBuilding, setCurrentBuilding] = useState(null);
 
   useEffect(() => {
-    if (db)
-      fetchBuildingData(db, currentUser?.uid).then((buildingList) => {
+    const userId = currentUser?.uid;
+    if (db && userId)
+      fetchBuildingData(db, userId).then((buildingList) => {
         console.log(buildingList);
         setBuildings(buildingList);
       });
-  }, [currentUser?.uid, db]);
+  }, [currentUser?.uid]);
 
   const showBuilding = (building) => {
     setCurrentBuilding(building);
@@ -45,11 +46,16 @@ function BuildingList() {
             </div>
           );
         })}
-        <DialogDemo
-          isOpen={isOpen}
-          setIsOpen={setIsOpen}
-          buildingData={currentBuilding}
-        />
+        {
+          currentBuilding !==null ? (
+            <DialogDemo
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
+            buildingData={currentBuilding}
+          />
+          ) : null
+        }
+       
       </div>
     </div>
   );

@@ -2,7 +2,7 @@
 import { Button } from '@/components/ui/button';
 import { db } from '@/firebase';
 import useCurrentUser from '@/hooks/useCurrentUser';
-import useOrganizationStore from '@/hooks/useOrganisation';
+import useOrganisationStore from '@/hooks/useOrganisation';
 import { addDoc, collection } from 'firebase/firestore';
 import { useEffect } from 'react';
 import { toast } from 'sonner';
@@ -10,7 +10,7 @@ import { toast } from 'sonner';
 function Page({ params }) {
   const { orgId } = params;
   const { organisation, fetchOrganisation, buildings, isLoading } =
-    useOrganizationStore();
+    useOrganisationStore();
 
   const currentUser = useCurrentUser('officer');
 
