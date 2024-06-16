@@ -1,6 +1,6 @@
 'use client';
 import BuildingList from '@/components/dashboard/BuildingList';
-import ProfileForm from '@/components/forms/ProfileForm';
+import ProfileForm from '@/components/forms/org/ProfileForm';
 import { DialogDemo } from '@/components/modals/DialogDemo';
 import { Button } from '@/components/ui/button';
 import useCurrentUser from '@/hooks/useCurrentUser';

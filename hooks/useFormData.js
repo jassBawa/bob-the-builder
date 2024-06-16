@@ -90,7 +90,8 @@ const useFormData = create((set) => ({
       },
     })),
   handlePhotoChange: async (type, name, file) => {
-    const url = await uploadImages(file, `audits/${name}`);
+    const url = await uploadImages(file);
+    console.log(url);
     set((state) => ({
       structuralObservationsData: {
         ...state.structuralObservationsData,

@@ -1,11 +1,11 @@
-import { Input } from '../ui/Input';
+import { Input } from '@/components/ui/Input';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '../ui/select';
+} from '@/components/ui/select';
 
 export const SelectProbingMethod = ({ onChange, value }) => {
   const handleChange = (newVal) => {

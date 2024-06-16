@@ -26,9 +26,10 @@ const getMetricGrade = (grade, value) => {
 
 function USPVGroundFloorForm() {
   const { ndtdata, updateField } = useNdtStore();
-  const uspvData = ndtdata.strucuturalIntegrity.USPV;
+  const uspvData = ndtdata.inSitu.USPV;
 
   const handleLocationChange = (index, e) => {
+    console.log(e);
     const newValue = e.target.value;
     updateField('inSitu', 'USPV', 'ground', index, 'location', newValue);
   };
@@ -37,7 +38,7 @@ function USPVGroundFloorForm() {
   const handleElementChange = (index, value) => {
     console.log(index, value);
     updateField(
-      'strucuturalIntegrity',
+      'inSitu',
       'USPV',
       'ground',
       index,
@@ -49,7 +50,7 @@ function USPVGroundFloorForm() {
   // Grade
   const handleGradeChange = (index, value) => {
     updateField(
-      'strucuturalIntegrity',
+      'inSitu',
       'USPV',
       'ground',
       index,
@@ -58,23 +59,23 @@ function USPVGroundFloorForm() {
     );
   };
 
-  // Grade Results
-  const handleGradeResultsChange = (index, event) => {
-    const newValue = event.target.value;
-    updateField(
-      'strucuturalIntegrity',
-      'USPV',
-      'ground',
-      index,
-      'rhTestResults',
-      newValue
-    );
-  };
+  // // Grade Results
+  // const handleGradeResultsChange = (index, event) => {
+  //   const newValue = event.target.value;
+  //   updateField(
+  //     'inSitu',
+  //     'USPV',
+  //     'ground',
+  //     index,
+  //     'rhTestResults',
+  //     newValue
+  //   );
+  // };
 
   // Probing
   const handleProbingMethodChange = (index, value) => {
     updateField(
-      'strucuturalIntegrity',
+      'inSitu',
       'USPV',
       'ground',
       index,
@@ -86,7 +87,7 @@ function USPVGroundFloorForm() {
   // uspv
   const handleUSPVChange = (index, value) => {
     updateField(
-      'strucuturalIntegrity',
+      'inSitu',
       'USPV',
       'ground',
       index,
@@ -96,7 +97,7 @@ function USPVGroundFloorForm() {
     const grade = uspvData.ground[index].grade;
     const metricGrade = getMetricGrade(grade, value);
     updateField(
-      'strucuturalIntegrity',
+      'inSitu',
       'USPV',
       'ground',
       index,

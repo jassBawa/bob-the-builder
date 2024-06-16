@@ -7,8 +7,8 @@ import { useForm } from 'react-hook-form';
 import { auth, db } from '@/firebase';
 import Link from 'next/link';
 import { toast } from 'sonner';
-import { Input } from '../ui/Input';
-import { Button } from '../ui/button';
+import { Input } from '@/components/ui/Input';
+import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
@@ -16,7 +16,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '../ui/form';
+} from '@/components/ui/form';
 // import { initializeApp } from "firebase/app";
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { collection, doc, setDoc } from 'firebase/firestore';

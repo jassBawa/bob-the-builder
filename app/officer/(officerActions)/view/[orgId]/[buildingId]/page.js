@@ -41,11 +41,29 @@ function Page({ params }) {
           <ViewItem label={'Building Name'} value={building?.buildingName} />
           <ViewItem label={'Story heights'} value={building?.storyHeights} />
           <ViewItem
+            label={'Building Structural system'}
+            value={building?.buildingStructuralSystem}
+          />
+          <ViewItem
+            label={'Other information'}
+            value={building?.otherInformation}
+          />
+
+          <ViewItem
+            label={'Foundation type'}
+            value={building?.foundationType}
+          />
+          <ViewItem
+            label={'Ground Coverage Area'}
+            value={building?.groundCoverageArea}
+          />
+          <ViewItem label={'Number of stories'} value={building?.noOfStories} />
+          <ViewItem
             label={'Total build up area'}
             value={building?.totalBuiltUpArea}
           />
           <ViewItem
-            label={'Dampness Cracks'}
+            label={'Dampness/Cracks'}
             value={`${building?.dampnessCracks}`}
           />
 

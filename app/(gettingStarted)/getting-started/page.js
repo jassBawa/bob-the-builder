@@ -1,4 +1,4 @@
-import GettingStartedForm from '@/components/forms/GettingStartedForm';
+import GettingStartedForm from '@/components/forms/org/GettingStartedForm';
 
 function GettingStartedPage() {
   return (

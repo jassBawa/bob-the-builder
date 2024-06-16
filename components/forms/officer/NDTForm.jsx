@@ -11,9 +11,11 @@ import {
 import { options } from '@/config/testsConfig';
 import { db } from '@/firebase';
 import useCurrentUser from '@/hooks/useCurrentUser';
+import useNdtStore from '@/hooks/useNdtData';
 import { doc, updateDoc } from 'firebase/firestore';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
 
 function NDTForm() {
   const [topic, setTopic] = useState('');
@@ -21,6 +23,8 @@ function NDTForm() {
   const [Component, setComponent] = useState(null);
   const officer = useCurrentUser('officer');
   const pathName = usePathname();
+  const [loading, setIsLoading] = useState(false);
+  const { ndtdata } = useNdtStore();
   const officerId = officer?.uid;
 
   // Split the URL by '/'
@@ -29,7 +33,6 @@ function NDTForm() {
   // Extract the orgid and buildingId
   let organisationId = segments[4];
   let buildingId = segments[5];
-
 
   const handleTopicChange = (value) => {
     setTopic(value);
@@ -51,23 +54,26 @@ function NDTForm() {
     }
   }, [subtopic, topic]);
 
-
-  const handleSaveData = async() => {
+  const handleSaveData = async () => {
     const reportId = `${buildingId}_${officerId}`;
     console.log(reportId);
 
+    setIsLoading(true);
     const formData = {
-      'hello': 'afa',
-    }
-
+      ndtdata: ndtdata,
+    };
     try {
       const docRef = doc(db, `officer/${officerId}/reports/${reportId}`);
-      await updateDoc(docRef, formData);
+      await updateDoc(docRef, formData).then(() =>
+        toast.success('Data saved successfully')
+      );
       console.log('Data updated successfully!');
     } catch (error) {
       console.error('Error updating data: ', error);
+    } finally {
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
     <div className="mt-8 p-8 mx-8 rounded bg-white grid grid-cols-2 gap-8">
@@ -116,7 +122,9 @@ function NDTForm() {
           <div>Please select a test and subtopic</div>
         )}
 
-        <Button onClick={handleSaveData}>Save data</Button>
+        <Button disabled={loading} onClick={handleSaveData}>
+          Save data
+        </Button>
       </div>
     </div>
   );

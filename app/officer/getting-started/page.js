@@ -1,4 +1,4 @@
-import OfficerGettingStartedForm from '@/components/forms/OfficerGettingStartedForm';
+import OfficerGettingStartedForm from '@/components/forms/officer/OfficerGettingStartedForm';
 
 function GettingStartedPage() {
   return (

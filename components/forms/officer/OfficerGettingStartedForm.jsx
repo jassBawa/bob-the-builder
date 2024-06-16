@@ -5,8 +5,8 @@ import { doc, setDoc, updateDoc } from 'firebase/firestore';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
-import { Input } from '../ui/Input';
-import { Button } from '../ui/button';
+import { Input } from '@/components/ui/Input';
+import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
@@ -14,7 +14,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '../ui/form';
+} from '@/components/ui/form';
 // import { zodResolver } from '@hookform/resolvers/zod';
 // import { OrganisationFormSchema } from '@/lib/formValidations';
 

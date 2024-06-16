@@ -1,7 +1,7 @@
 'use client';
 import { useForm } from 'react-hook-form';
-import { Input } from '../ui/Input';
-import { Button } from '../ui/button';
+import { Input } from '@/components/ui/Input';
+import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
@@ -9,7 +9,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '../ui/form';
+} from '@/components/ui/form';
 import { toast } from 'sonner';
 import useCurrentUser from '@/hooks/useCurrentUser';
 import { doc, updateDoc } from 'firebase/firestore';

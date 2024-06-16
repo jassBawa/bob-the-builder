@@ -9,7 +9,21 @@ function BuildingView({ building }) {
         <ViewItem label={'Building Use'} value={building?.buildingUse} />
 
         <ViewItem label={'Building Name'} value={building?.buildingName} />
+        <ViewItem
+          label={'Building Structural system'}
+          value={building?.buildingStructuralSystem}
+        />
+        <ViewItem label={'Foundation type'} value={building?.foundationType} />
+        <ViewItem
+          label={'Ground Coverage Area'}
+          value={building?.groundCoverageArea}
+        />
+        <ViewItem label={'Number of stories'} value={building?.noOfStories} />
         <ViewItem label={'Story heights'} value={building?.storyHeights} />
+        <ViewItem
+          label={'Other information'}
+          value={building?.otherInformation}
+        />
         <ViewItem
           label={'Total build up area'}
           value={building?.totalBuiltUpArea}

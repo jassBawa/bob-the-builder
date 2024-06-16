@@ -19,7 +19,7 @@ function Page() {
   const router = useRouter();
   const officerId = currentUser?.uid;
   const [pendingRequests, setPendingRequests] = useState();
-  console.log(currentUser);
+
   useEffect(() => {
     if (!officerId) return;
 
@@ -41,6 +41,8 @@ function Page() {
 
     fetchPendingRequests();
   }, [officerId]);
+
+  const handleGeneratePdf = () => {};
 
   return (
     <div className="mt-8 mx-8 p-8 rounded bg-white">
@@ -97,6 +99,11 @@ function Page() {
                           }
                         >
                           NDT
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() => router.push(`/officer/viewReports/${req.organisationId}/${req.buildingId}`)}
+                        >
+                          Download Report
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>

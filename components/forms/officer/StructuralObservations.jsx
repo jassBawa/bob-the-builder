@@ -96,6 +96,7 @@ function StructuralObservations() {
     }
   };
 
+  console.log(structuralObservationsData);
   return (
     <div>
       <h2 className="text-xl font-semibold ">Step 2: Structural Observation</h2>

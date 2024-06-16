@@ -1,5 +1,5 @@
 'use client';
-import OfficerProfileForm from '@/components/forms/officerProfileForm';
+import OfficerProfileForm from '@/components/forms/officer/officerProfileForm';
 import useCurrentUser from '@/hooks/useCurrentUser';
 import { Edit2Icon } from 'lucide-react';
 import { useState } from 'react';

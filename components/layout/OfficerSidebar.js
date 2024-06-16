@@ -1,8 +1,10 @@
 'use client';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { LogoIcon, ProfileIcon } from '../ui/icons';
+import { LogoIcon, ProfileIcon } from '@/components/ui/icons';
 import { Hourglass } from 'lucide-react';
+import { signOut } from 'firebase/auth';
+import { auth } from '@/firebase';
 
 function Sidebar() {
   const sideLinks = [
@@ -29,7 +31,7 @@ function Sidebar() {
   const router = useRouter();
 
   const handleLogout = () => {
-    logout();
+    signOut(auth);
     router.push('/login');
   };
 

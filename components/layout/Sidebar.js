@@ -2,7 +2,7 @@
 import { signOut } from 'firebase/auth';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { HistoryIcon, LogoIcon, ProfileIcon } from '../ui/icons';
+import { HistoryIcon, LogoIcon, ProfileIcon } from '@/components/ui/icons';
 import { auth } from '@/firebase';
 
 function OfficerSidebar() {
