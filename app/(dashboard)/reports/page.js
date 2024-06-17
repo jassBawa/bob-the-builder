@@ -30,7 +30,7 @@ function Page() {
         <ul>
           {reports.map((report) => (
             <li className='bg-slate-300 p-2 rounded mb-2 cursor-pointer' key={report.id} onClick={() => handleReportClick(report.id)}>
-              {report.buildingId} - {report.timestamp}
+              {report.buildingData?.buildingName} - {report.timestamp}
             </li>
           ))}
         </ul>

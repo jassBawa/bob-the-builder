@@ -24,10 +24,18 @@ import DeflectionForm from '../officer/structuralForms/DeflectionForm';
 import ConditionOfForm from '../officer/structuralForms/ConditionOfForm';
 import { usePathname, useRouter } from 'next/navigation';
 import useCurrentUser from '@/hooks/useCurrentUser';
-import { doc, setDoc } from 'firebase/firestore';
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  setDoc,
+  where,
+} from 'firebase/firestore';
 import { db } from '@/firebase';
 import { toast } from 'sonner';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export const staticOptions = [
   'Beam',
@@ -45,9 +53,10 @@ function StructuralObservations() {
   const pathName = usePathname();
   const currentUser = useCurrentUser('officer');
   const router = useRouter();
+  const [buildingData, setBuildingData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  console.log(pathName);
+  // console.log(pathName);
 
   // Split the URL by '/'
   let segments = pathName.split('/');
@@ -64,22 +73,25 @@ function StructuralObservations() {
     const reportData = {
       userId: currentUser.uid,
       buildingId: buildingId,
+      buildingData: buildingData,
       generalObservationsData: generalObservationsData,
       structuralObservationsData: structuralObservationsData,
       timestamp: new Date().toISOString(), // Optional: Add a timestamp
     };
 
+    console.log(reportData);
+
     try {
       // Save report data to Firestore under both organisation and officer collections
       let reportId = `${buildingId}_${organisationId}`;
-      
+
       // Save under organisation
       await setDoc(
         doc(db, `organisation/${organisationId}/reports`, reportId),
         reportData
-        );
-        
-       reportId = `${buildingId}_${currentUser.uid}`;
+      );
+
+      reportId = `${buildingId}_${currentUser.uid}`;
       // Save under officer
       await setDoc(
         doc(db, `officer/${currentUser.uid}/reports`, reportId),
@@ -97,7 +109,41 @@ function StructuralObservations() {
     }
   };
 
-  console.log(structuralObservationsData);
+  useEffect(() => {
+    const fetchBuildings = async () => {
+      // setLoading(true);
+      // setError(null);
+      try {
+        const buildingsCollectionRef = collection(
+          db,
+          `organisation/${organisationId}/buildings`
+        );
+        const q = query(
+          buildingsCollectionRef,
+          where('buildingId', '==', buildingId)
+        );
+        const querySnapshot = await getDocs(q);
+
+        if (!querySnapshot.empty) {
+          const doc = querySnapshot.docs[0]; // Assuming there's only one building with this ID
+          console.log(doc.data());
+          setBuildingData({
+            id: doc.id,
+            ...doc.data(),
+          });
+        }
+        console.log();
+      } catch (err) {
+        // setError(err.message);
+        console.log(err);
+      }
+      // setLoading(false);
+    };
+
+    fetchBuildings();
+  }, [buildingId, organisationId]);
+
+  // console.log(structuralObservationsData);
   return (
     <div>
       <h2 className="text-xl font-semibold ">Step 2: Structural Observation</h2>
