@@ -17,6 +17,8 @@ function Page() {
     router.push(`/reports/${reportId}`);
   };
 
+  console.log(reports);
+
   return (
     <div className="mt-8 mx-8 p-12 rounded bg-white min-h-full">
       <h3 className="relative group text-3xl font-semibold flex gap-2">

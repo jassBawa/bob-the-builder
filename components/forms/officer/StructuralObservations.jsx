@@ -71,14 +71,15 @@ function StructuralObservations() {
 
     try {
       // Save report data to Firestore under both organisation and officer collections
-      const reportId = `${buildingId}_${currentUser.uid}`;
-
+      let reportId = `${buildingId}_${organisationId}`;
+      
       // Save under organisation
       await setDoc(
         doc(db, `organisation/${organisationId}/reports`, reportId),
         reportData
-      );
-
+        );
+        
+       reportId = `${buildingId}_${currentUser.uid}`;
       // Save under officer
       await setDoc(
         doc(db, `officer/${currentUser.uid}/reports`, reportId),
