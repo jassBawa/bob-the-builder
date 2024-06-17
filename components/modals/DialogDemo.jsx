@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -7,33 +7,29 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import AddBuildingForm from "../forms/AddBuildingForm";
-import { useState } from "react";
+} from '@/components/ui/dialog';
+import { useState } from 'react';
+import BuildingView from '../shared/BuildingView';
 
-export function DialogDemo() {
-  const [isOpen, setIsOpen] = useState(false);
-
+export function DialogDemo({ isOpen = false, setIsOpen, buildingData }) {
+  console.log(buildingData);
   const handleOpen = () => setIsOpen(true);
   const handleClose = () => setIsOpen(false);
 
   return (
     <Dialog open={isOpen} onClose={handleClose}>
-      <DialogTrigger asChild>
-        <Button className="mt-4" onClick={handleOpen}>
-          Add building
-        </Button>
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-[1025px]">
+      <DialogContent className="sm:max-w-[1025px] md:max-w-full w-full h-full">
         <DialogHeader>
-          <DialogTitle>Add building</DialogTitle>
+          <DialogTitle>View building details</DialogTitle>
           <DialogDescription>
-            Make changes to your profile here. Click save when you're done.
+            you can view the submitted building details here
           </DialogDescription>
         </DialogHeader>
 
-        <AddBuildingForm onClose={handleClose} />
-        {/* <DialogFooter></DialogFooter> */}
+        <BuildingView building={buildingData} />
+        <DialogTrigger>
+          <Button onClick={handleClose}>Close</Button>
+        </DialogTrigger>
       </DialogContent>
     </Dialog>
   );

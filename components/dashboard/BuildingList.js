@@ -1,40 +1,62 @@
-import useBuildings from "@/hooks/useBuildings";
-import Link from "next/link";
-import React from "react";
+'use client';
+import useCurrentUser from '@/hooks/useCurrentUser';
+
+import { db } from '@/firebase';
+import { fetchBuildingData } from '@/lib/buildingSubcollection';
+import { useEffect, useState } from 'react';
+import { DialogDemo } from '../modals/DialogDemo';
 
 function BuildingList() {
-  const { buildings, isLoading } = useBuildings();
+  const currentUser = useCurrentUser();
+  const [buildings, setBuildings] = useState([]);
+  const [isOpen, setIsOpen] = useState(false);
+  const [currentBuilding, setCurrentBuilding] = useState(null);
+
+  useEffect(() => {
+    const userId = currentUser?.uid;
+    if (db && userId)
+      fetchBuildingData(db, userId).then((buildingList) => {
+        console.log(buildingList);
+        setBuildings(buildingList);
+      });
+  }, [currentUser?.uid]);
+
+  const showBuilding = (building) => {
+    setCurrentBuilding(building);
+    setIsOpen(true);
+  };
 
   return (
     <div className="mt-4">
-      <p className="">Name of the buildings</p>
-      {isLoading ? (
-        <div>loading</div>
-      ) : (
-        <ul className="building__container mt-4 rounded-lg max-w-xl w-full border">
-          {buildings.map((building, index) => (
+      <div className="space-y-2 max-w-md">
+        {buildings.length === 0 ? (
+          <h3 className="text-xl font-semibold">No buildings added yet</h3>
+        ) : (
+          <p className="">Name of the buildings</p>
+        )}
+        {buildings?.map((building) => {
+          return (
             <div
-              key={index}
-              className="flex gap-8 items-center border-b py-2 px-4"
+              key={building?.id}
+              onClick={() => showBuilding(building)}
+              className="flex justify-between bg-slate-100 px-4 py-2 shadow-sm"
             >
-              <Link
-                target="_blank"
-                href={`/building/${building.id}`}
-                // className="mr-8"
-              >
-                {building.id}
-              </Link>
-              {/* <span className="ml-auto flex gap-4"> */}
-              <span>{building.country}</span>
-              <span>{building.Building_use}</span>
-              <span>{building.city}</span>
-              {/* <Edit2Icon className="opacity-40 w-5 h-5" /> */}
-              {/* <Trash2 className="opacity-40 w-5 h-5" /> */}
-              {/* </span> */}
+              <p>{building.buildingName}</p>
+              <p>{building.yearOfConstruction}</p>
             </div>
-          ))}
-        </ul>
-      )}
+          );
+        })}
+        {
+          currentBuilding !==null ? (
+            <DialogDemo
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
+            buildingData={currentBuilding}
+          />
+          ) : null
+        }
+       
+      </div>
     </div>
   );
 }

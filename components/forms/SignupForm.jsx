@@ -1,13 +1,14 @@
-"use client";
-import { signupSchema } from "@/lib/formValidations";
-import { zodResolver } from "@hookform/resolvers/zod";
+'use client';
+import { signupSchema } from '@/lib/formValidations';
+import { zodResolver } from '@hookform/resolvers/zod';
 
-import { useForm } from "react-hook-form";
+import { useForm } from 'react-hook-form';
 
-import Link from "next/link";
-import { Input } from "../ui/Input";
-import { Button } from "../ui/button";
-import { Checkbox } from "../ui/checkbox";
+import { auth, db } from '@/firebase';
+import Link from 'next/link';
+import { toast } from 'sonner';
+import { Input } from '@/components/ui/Input';
+import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
@@ -15,44 +16,53 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "../ui/form";
-import { signup } from "@/services/apiService";
-import { useRouter } from "next/navigation";
-import { useAuthStore } from "@/state/auth";
-import { toast } from "sonner";
+} from '@/components/ui/form';
+// import { initializeApp } from "firebase/app";
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { collection, doc, setDoc } from 'firebase/firestore';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 function SignupForm() {
   const router = useRouter();
-  const {
-    login: loginStore,
-    token,
-    isLoggedIn,
-  } = useAuthStore((state) => state);
+  const [role, setRole] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const { handleSubmit, ...form } = useForm({
     resolver: zodResolver(signupSchema),
     defaultValues: {
-      name: "",
-      email: "",
-      password: "",
-      isOrg: false,
+      name: '',
+      email: '',
+      password: '',
     },
   });
 
   const onSubmit = async (values) => {
-    console.log({ values });
-
+    console.log(values, role);
+    setIsLoading(true);
     try {
-      const response = await signup(values);
+      // handle signup with name addition
+      const { email, password, name } = values; // Destructure name from values
 
-      if (response.message === "success") {
-        toast.success("Successfully signed up !");
-        console.log(response);
-        router.push("/login");
-        // router.push("/dashboard");
-      }
+      const userCred = createUserWithEmailAndPassword(auth, email, password);
+      await setDoc(doc(db, `${role}`, (await userCred).user.uid), {
+        email,
+        name,
+        role,
+      }).then((res) => {
+        toast.success('Created account successfully!');
+        router.push(
+          `${
+            role === 'organisation'
+              ? '/getting-started'
+              : '/officer/getting-started'
+          }`
+        );
+      });
     } catch (error) {
-      toast.error(error);
+      toast.error(error.message || 'An error occurred during signup.'); // Provide a more user-friendly error message
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -66,11 +76,48 @@ function SignupForm() {
           <div className="inputs__container mt-4 grid grid-cols-1 gap-4">
             <FormField
               control={form.control}
+              name="role"
+              render={({ field }) => {
+                return (
+                  <FormItem className="">
+                    <FormLabel>Please Select account type</FormLabel>
+                    <div className="flex gap-2">
+                      <Button
+                        variant="outline" // Emphasize selected state (optional)
+                        onClick={() => setRole('organisation')}
+                        disabled={role === 'organisation'} // Prevent deselecting
+                        className={`w-full  ${
+                          role === 'organisation'
+                            ? 'bg-green-300 !opacity-100 text-black'
+                            : 'opacity-70'
+                        }`}
+                      >
+                        Organisation
+                      </Button>
+                      <Button
+                        variant="outline" // Different style (optional)
+                        onClick={() => setRole('officer')}
+                        disabled={role === 'officer'} // Prevent deselecting
+                        className={`w-full !opacity-100 ${
+                          role === 'officer'
+                            ? 'bg-green-300 opacity-100 text-black'
+                            : 'opacity-70'
+                        }`}
+                      >
+                        Officer
+                      </Button>
+                    </div>
+                  </FormItem>
+                );
+              }}
+            />
+            <FormField
+              control={form.control}
               name="name"
               render={({ field }) => {
                 return (
                   <FormItem>
-                    <FormLabel>Name</FormLabel>
+                    <FormLabel>Org Name / Officer name</FormLabel>
                     <FormControl>
                       <Input placeholder="John doe" {...field} />
                     </FormControl>
@@ -118,30 +165,9 @@ function SignupForm() {
                 );
               }}
             />
-            {/* <FormField
-              control={form.control}
-              name="isOrg"
-              render={({ field }) => {
-                return (
-                  <FormItem className="flex flex-row items-center gap-2">
-                    <FormControl>
-                      <Checkbox
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                      />
-                    </FormControl>
-                    <FormLabel className="!mt-0">
-                      Register as Organisation
-                    </FormLabel>
-
-                    <FormMessage />
-                  </FormItem>
-                );
-              }}
-            /> */}
           </div>
-          <Button type="submit" className="mt-8 w-full">
-            Submit
+          <Button disabled={isLoading} type="submit" className="mt-8 w-full">
+            {isLoading ? 'loading' : 'Submit'}
           </Button>
 
           <Link href="/login" className="opacity-80 text-center mt-6 block">

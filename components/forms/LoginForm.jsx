@@ -1,15 +1,18 @@
-"use client";
-import { loginSchema } from "@/lib/formValidations";
-import { zodResolver } from "@hookform/resolvers/zod";
+'use client';
+import { loginSchema } from '@/lib/formValidations';
+import { zodResolver } from '@hookform/resolvers/zod';
 
-import { useForm } from "react-hook-form";
+import { useForm } from 'react-hook-form';
 
-import Link from "next/link";
-import { toast } from "sonner";
+import Link from 'next/link';
+import { toast } from 'sonner';
 
-import { login } from "@/services/apiService";
-import { Input } from "../ui/Input";
-import { Button } from "../ui/button";
+import { auth } from '@/firebase';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { Input } from '@/components/ui/Input';
+import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
@@ -17,57 +20,84 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "../ui/form";
-import { useRouter } from "next/navigation";
-import { useAuthStore } from "@/state/auth";
-import { useEffect } from "react";
+} from '@/components/ui/form';
 
 export default function LoginForm() {
   const router = useRouter();
-  const {
-    login: loginStore,
-    token,
-    isLoggedIn,
-  } = useAuthStore((state) => state);
-
-  useEffect(() => {
-    if (isLoggedIn) router.push("/dashboard");
-  }, [isLoggedIn, router]);
+  const [role, setRole] = useState('');
 
   const { handleSubmit, ...form } = useForm({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      email: "",
-      password: "",
+      email: '',
+      password: '',
     },
   });
 
   const onSubmit = async (values) => {
-    console.log({ values });
+    console.log(values);
+    const { email, password } = values;
 
     try {
-      const response = await login(values);
-      toast.success("Successfully Logged in!");
-      console.log(response);
-      if (response.message === "success") {
-        console.log(response);
-        loginStore(response.token, response.data.name);
-        router.push("/getting-started");
-        // router.push("/dashboard");
-      } else {
-        // toast.error(response.message);
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+      if (userCredential) {
+        console.log(userCredential.user);
+        toast.success('Successfully Logged in!');
       }
+
+      router.push(`${role === 'officer' ? '/officer' : '/dashboard'}`);
     } catch (error) {
       toast.error(error);
     }
   };
-  // const onInvalid = (errors) => console.error(errors); // helpful
 
   return (
     <Form {...form}>
       <form onSubmit={handleSubmit(onSubmit)}>
         <header className="text-3xl font-semibold">Login</header>
         <div className="inputs__container mt-4 grid grid-cols-1 gap-4">
+          <FormField
+            control={form.control}
+            name="role"
+            render={({ field }) => {
+              return (
+                <FormItem className="">
+                  <FormLabel>Please Select account type</FormLabel>
+                  <div className="flex gap-2">
+                    <Button
+                      variant="outline" // Emphasize selected state (optional)
+                      onClick={() => setRole('organisation')}
+                      disabled={role === 'organisation'} // Prevent deselecting
+                      className={`w-full  ${
+                        role === 'organisation'
+                          ? 'bg-green-300 !opacity-100 text-black'
+                          : 'opacity-70'
+                      }`}
+                    >
+                      Organisation
+                    </Button>
+                    <Button
+                      variant="outline" // Different style (optional)
+                      onClick={() => setRole('officer')}
+                      disabled={role === 'officer'} // Prevent deselecting
+                      className={`w-full !opacity-100 ${
+                        role === 'officer'
+                          ? 'bg-green-300 opacity-100 text-black'
+                          : 'opacity-70'
+                      }`}
+                    >
+                      Officer
+                    </Button>
+                  </div>
+                </FormItem>
+              );
+            }}
+          />
           <FormField
             control={form.control}
             name="email"
@@ -109,7 +139,7 @@ export default function LoginForm() {
 
         <Link href="/signup" className="opacity-80 text-center mt-6 block">
           Already have an account?
-          <span className="opacity-100 underline"> Sign In</span>
+          <span className="opacity-100 underline"> Sign Up</span>
         </Link>
       </form>
     </Form>
