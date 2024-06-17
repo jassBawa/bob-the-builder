@@ -62,7 +62,7 @@ console.log(reportRef);
       {reportData ? (
         <div className="overflow-y-auto">
           <PDFViewer style={{ width: '100%', height: '600px' }}>
-            <ReportFile reportData={reportData} />
+            <ReportFile reportData={reportData} role='organisation'/>
           </PDFViewer>
           <button onClick={handleDownload}>Download PDF</button>
         </div>
