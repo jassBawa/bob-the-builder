@@ -39,9 +39,10 @@ function BuildingView({ building }) {
           </p>
 
           <iframe
-            src={building.structuralReportUrl}
+           src={`${building.structuralReportUrl}#toolbar=0`}
+            // src={}
             frameborder="0"
-            className="w-full h-72"
+            className="w-full h-96"
           ></iframe>
           {/* <PdfViewer /> */}
         </div>
@@ -51,11 +52,51 @@ function BuildingView({ building }) {
           </p>
 
           <iframe
-            src={building?.georeportUrl}
+          
+            src={`${building?.georeportUrl}#toolbar=0`}
             frameborder="0"
-            className="w-full h-72"
+            className="w-full h-96"
           ></iframe>
           {/* <PdfViewer /> */}
+        </div>
+        <div className="col-span-2">
+          <p className="text-2xl  text-slate-600 font-semibold">
+          Architectural Drawings
+          </p>
+
+          <iframe
+          
+            src={`${building?.architecturalUrl}#toolbar=0`}
+            frameborder="0"
+            className="w-full h-96"
+          ></iframe>
+
+        </div>
+        <div className="col-span-2">
+          <p className="text-2xl  text-slate-600 font-semibold">
+          Structural Design Calucation
+          </p>
+
+          <iframe
+          
+            src={`${building?.structuralCalculationUrl}#toolbar=0`}
+            frameborder="0"
+            className="w-full h-96"
+          ></iframe>
+
+        </div>
+        <div className="col-span-2">
+          <p className="text-2xl  text-slate-600 font-semibold">
+          Structural Design Calucation
+          </p>
+
+          <img
+          
+            src={`${building?.buildingImage}`}
+            frameborder="0"
+            className="w-full h-96 object-contain"
+          ></img>
+
         </div>
       </div>
       {/* </div> */}

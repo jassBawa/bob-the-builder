@@ -49,7 +49,7 @@ function ReboundHammerForm() {
             <TableRow>
               <TableHead className="w-[100px]">Floor level</TableHead>
               <TableHead>Location</TableHead>
-              <TableHead>Strcutural Element</TableHead>
+              <TableHead>Structural Element</TableHead>
               <TableHead>Grade of concrete</TableHead>
               <TableHead>RH Test Result</TableHead>
             </TableRow>

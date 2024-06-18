@@ -25,7 +25,7 @@ function CapoForm() {
               <TableRow>
                 <TableHead className="w-[100px]">Floor level</TableHead>
                 <TableHead>Location</TableHead>
-                <TableHead>Strcutural Element</TableHead>
+                <TableHead>Structural Element</TableHead>
                 <TableHead>Failure Load</TableHead>
                 <TableHead>Cube Compressive Strength</TableHead>
               </TableRow>

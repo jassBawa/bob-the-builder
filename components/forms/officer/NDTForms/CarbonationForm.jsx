@@ -22,7 +22,7 @@ function CarbonationForm() {
       </div>
       <div className="mt-4 grid grid-cols-2 gap-8">
         <div>
-          <Label>Strcutural element</Label>
+          <Label>Structural element</Label>
           <Select>
             <SelectTrigger>
               <SelectValue placeholder="Select an option" />

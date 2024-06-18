@@ -35,7 +35,7 @@ function USPVForm() {
               <TableRow>
                 <TableHead className="w-[100px]">Floor level</TableHead>
                 <TableHead>Location</TableHead>
-                <TableHead>Strcutural Element</TableHead>
+                <TableHead>Structural Element</TableHead>
                 <TableHead>Grade of concrete</TableHead>
                 <TableHead>Probing method</TableHead>
                 <TableHead>Ultrasonic Pulse Velocity</TableHead>

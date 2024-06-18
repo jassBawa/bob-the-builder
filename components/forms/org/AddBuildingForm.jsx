@@ -1,4 +1,4 @@
-"use client"
+'use client';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
@@ -39,6 +39,9 @@ function AddBuildingForm() {
   const [file1, setFile1] = useState(null);
   const [file2, setFile2] = useState(null);
   const [file3, setFile3] = useState(null);
+  const [file4, setFile4] = useState(null);
+  const [file5, setFile5] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange1 = (event) => {
     setFile1(event.target.files[0]);
@@ -49,6 +52,12 @@ function AddBuildingForm() {
   };
   const handleChange3 = (event) => {
     setFile3(event.target.files[0]);
+  };
+  const handleChange4 = (event) => {
+    setFile4(event.target.files[0]);
+  };
+  const handleChange5 = (event) => {
+    setFile5(event.target.files[0]);
   };
 
   const form = useForm({
@@ -71,6 +80,7 @@ function AddBuildingForm() {
 
   const onSubmit = async (values) => {
     console.log(values);
+    setIsLoading(true);
 
     try {
       const date = new Date();
@@ -88,6 +98,27 @@ function AddBuildingForm() {
         'georeport',
         date
       );
+      const pdf3Url = await uploadFile(
+        storage,
+        currentUser?.uid,
+        file3,
+        'architectural',
+        date
+      );
+      const pdf4Url = await uploadFile(
+        storage,
+        currentUser?.uid,
+        file4,
+        'strcuturalCalculation',
+        date
+      );
+      const pdf5Url = await uploadFile(
+        storage,
+        currentUser?.uid,
+        file5,
+        'buildingPhoto',
+        date
+      );
       // Create a new building document reference
       const buildingsRef = collection(
         doc(db, 'organisation', currentUser.uid),
@@ -98,6 +129,9 @@ function AddBuildingForm() {
         buildingId: uuidv4(),
         structuralReportUrl: pdf1Url,
         georeportUrl: pdf2Url,
+        architecturalUrl: pdf3Url,
+        structuralCalculationUrl: pdf4Url,
+        buildingImage: pdf5Url,
       }).then((data) => {
         toast.success('Data added successfully ');
         router.push('/dashboard');
@@ -105,6 +139,8 @@ function AddBuildingForm() {
       // console.log(newBuildingRef);
     } catch (error) {
       toast.error(error);
+    } finally {
+      setIsLoading(false);
     }
 
     // close modal
@@ -228,7 +264,7 @@ function AddBuildingForm() {
             name="buildingStructuralSystem"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Strcutural system</FormLabel>
+                <FormLabel>Structural system</FormLabel>
                 <Select
                   onValueChange={field.onChange}
                   defaultValue={field.value}
@@ -328,6 +364,18 @@ function AddBuildingForm() {
             <FormLabel>Structural Drawing</FormLabel>
             <Input type="file" onChange={handleChange2}></Input>
           </FormItem>
+          <FormItem>
+            <FormLabel>Architectural Drawing</FormLabel>
+            <Input type="file" onChange={handleChange3}></Input>
+          </FormItem>
+          <FormItem>
+            <FormLabel>Structural Design Calculation</FormLabel>
+            <Input type="file" onChange={handleChange4}></Input>
+          </FormItem>
+          <FormItem>
+            <FormLabel>Add building Photo</FormLabel>
+            <Input type="file" onChange={handleChange5}></Input>
+          </FormItem>
           {/* <FormItem>
         <FormLabel>Original Structural Drawing</FormLabel>
         <Input type="file" onChange={handleChange3}></Input>
@@ -372,7 +420,7 @@ function AddBuildingForm() {
             )}
           />
         </div>
-        <Button type="submit" className="mt-8 px-8">
+        <Button type="submit" disabled={isLoading} className="mt-8 px-8">
           Add building
         </Button>
       </form>

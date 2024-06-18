@@ -42,7 +42,7 @@ function HalfCellPotentialForm() {
             <TableRow>
               <TableHead className="w-[100px]">Floor level</TableHead>
               <TableHead>Location</TableHead>
-              <TableHead>Strcutural Element</TableHead>
+              <TableHead>Structural Element</TableHead>
               <TableHead>Grade of concrete</TableHead>
               <TableHead>Spacing (in mm)</TableHead>
               <TableHead>Measure Potential (in mm)</TableHead>
