@@ -126,6 +126,18 @@ const initialState = {
       }),
     },
   },
+  chemical: {
+    carbonation: {
+      element: '',
+      grade: '',
+      floor: '',
+      location: '',
+      meanDepth: '',
+      ageOfStrcutural: '',
+      captionPhoto: '',
+      remarks: '',
+    },
+  },
 };
 
 const useNdtStore = create((set) => ({
@@ -142,6 +154,21 @@ const useNdtStore = create((set) => ({
           ),
         },
       };
+      return { ndtdata: updatedNdtdata };
+    }),
+  updateChemicalAttack: (field, value) =>
+    set((state) => {
+      const updatedNdtdata = { ...state.ndtdata };
+
+      // Ensure `chemical` and `carbonation` exist
+      updatedNdtdata.chemical = {
+        ...updatedNdtdata.chemical,
+        carbonation: {
+          ...updatedNdtdata.chemical.carbonation,
+          [field]: value,
+        },
+      };
+
       return { ndtdata: updatedNdtdata };
     }),
   addEntry: (topic, subtopic, level, entry) =>

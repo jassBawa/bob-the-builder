@@ -29,7 +29,7 @@ const ReportPage = () => {
       const reportRef = doc(
         db,
         'officer',
-        '8Nr4XjUYQXcZJN7qkgvEBROdXrC3',
+        officerId,
         'reports',
         reportId
       );

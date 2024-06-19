@@ -9,10 +9,34 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import useNdtStore from '@/hooks/useNdtData';
+import { uploadImages } from '@/lib/uploadToFirebase';
 
 const staticOptions = ['beam', 'slab', 'column', 'footing'];
 
 function CarbonationForm() {
+  const { updateChemicalAttack } = useNdtStore();
+
+  // Example usage
+
+  const handleChange = (val, field) => {
+    console.log(val);
+    updateChemicalAttack(field, val);
+  };
+
+  const handlePhoto = async (event) => {
+    const { files } = event.target;
+
+    console.log(files);
+    if (files.length > 0) {
+      uploadImages(files[0]).then((url) => {
+        console.log(url);
+
+        return updateChemicalAttack('captionPhoto', url);
+      });
+    }
+  };
+
   return (
     <div>
       <div className="flex items-start">
@@ -23,7 +47,7 @@ function CarbonationForm() {
       <div className="mt-4 grid grid-cols-2 gap-8">
         <div>
           <Label>Structural element</Label>
-          <Select>
+          <Select onValueChange={(e) => handleChange(e, 'element')}>
             <SelectTrigger>
               <SelectValue placeholder="Select an option" />
             </SelectTrigger>
@@ -38,7 +62,7 @@ function CarbonationForm() {
         </div>
         <div>
           <Label>Grade of concrete</Label>
-          <Select>
+          <Select onValueChange={(e) => handleChange(e, 'grade')}>
             <SelectTrigger>
               <SelectValue placeholder="Select an option" />
             </SelectTrigger>
@@ -59,7 +83,7 @@ function CarbonationForm() {
         </div>
         <div>
           <Label>Floor</Label>
-          <Select>
+          <Select onValueChange={(e) => handleChange(e, 'floor')}>
             <SelectTrigger>
               <SelectValue placeholder="Select an option" />
             </SelectTrigger>
@@ -74,27 +98,39 @@ function CarbonationForm() {
         <div>
           <Label>Location</Label>
 
-          <Input placeholder="Location" />
+          <Input
+            placeholder="Location"
+            onChange={(e) => handleChange(e.target.value, 'location')}
+          />
         </div>
         <div>
           <Label>Mean carbonation depth</Label>
 
-          <Input placeholder="....." />
+          <Input
+            placeholder="...."
+            onChange={(e) => handleChange(e.target.value, 'meanDepth')}
+          />
         </div>
         <div>
           <Label>Age of Strucutural member</Label>
 
-          <Input placeholder="....." />
+          <Input
+            placeholder="...."
+            onChange={(e) => handleChange(e.target.value, 'ageOfStrcutural')}
+          />
         </div>
         <div>
           <Label>Caption/Photographs</Label>
 
-          <Input type="file"></Input>
+          <Input type="file" onChange={handlePhoto}></Input>
         </div>
         <div>
           <Label>Remarks</Label>
 
-          <Input placeholder="Enter remarks" />
+          <Input
+            placeholder="...."
+            onChange={(e) => handleChange(e.target.value, 'remarks')}
+          />
         </div>
       </div>
     </div>

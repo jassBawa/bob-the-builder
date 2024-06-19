@@ -7,6 +7,7 @@ import {
   Text,
   View,
 } from '@react-pdf/renderer';
+import React from 'react';
 
 // Create styles
 const styles = StyleSheet.create({
@@ -21,6 +22,11 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     textDecoration: 'underline',
     fontWeight: 'bold',
+  },
+  subtopic: {
+    fontSize: 16,
+    marginBottom: 10,
+    fontWeight: 'semibold',
   },
   table: {
     display: 'table',
@@ -81,7 +87,9 @@ const MyDocument = ({ reportData, role = 'officer' }) => {
   if (
     !reportData ||
     !reportData.generalObservationsData ||
-    !reportData.structuralObservationsData
+    !reportData.structuralObservationsData ||
+    !reportData.buildingData ||
+    !reportData.ndtdata
   ) {
     return (
       <Document>
@@ -94,13 +102,14 @@ const MyDocument = ({ reportData, role = 'officer' }) => {
 
   const generalObservations = reportData.generalObservationsData;
   const structuralData = reportData.structuralObservationsData;
+  const buildingData = reportData.buildingData;
+  const ndtData = reportData.ndtdata;
 
   // Helper function to render table rows with potential images
   const renderTableRow = (field, fieldValue) => {
-    console.log(field, fieldValue);
     if (field === 'photo' && fieldValue) {
       return (
-        <View style={styles.tableRow} key={field}>
+        <View style={styles.tableRow} key={field} classroom="border">
           <Text style={styles.tableColHeader}>{field}</Text>
           <Image style={styles.tableCol} src={fieldValue} alt="field" />
         </View>
@@ -117,25 +126,32 @@ const MyDocument = ({ reportData, role = 'officer' }) => {
   };
 
   const renderStructuralData = (data) => {
-    return Object.entries(data).map(
-      ([key, value]) =>
-        hasData(value) && (
+    return Object.entries(data).map(([key, value]) => {
+      if (hasData(value)) {
+        return (
           <View key={key} style={styles.table}>
             <Text style={styles.sectionHeader}>{key}</Text>
-            {Object.entries(value).map(
-              ([subKey, subValue]) =>
-                hasData(subValue) && (
+            {Object.entries(value).map(([subKey, subValue]) => {
+              if (hasData(subValue)) {
+                return (
                   <View key={subKey} style={styles.table}>
-                    <Text style={styles.sectionHeader}>{subKey}</Text>
-                    {Object.entries(subValue).map(([field, fieldValue]) =>
-                      renderTableRow(field, fieldValue)
-                    )}
+                    {subKey && <Text style={styles.subtopic}>{subKey}</Text>}
+                    {Object.entries(subValue).map(([field, fieldValue]) => {
+                      if (hasData(fieldValue)) {
+                        return renderTableRow(field, fieldValue);
+                      }
+                      return null;
+                    })}
                   </View>
-                )
-            )}
+                );
+              }
+              return null;
+            })}
           </View>
-        )
-    );
+        );
+      }
+      return null;
+    });
   };
 
   return (
@@ -217,6 +233,53 @@ const MyDocument = ({ reportData, role = 'officer' }) => {
             </View>
           </View>
         </View>
+        <View style={styles.section}>
+          <Text style={styles.sectionHeader}>Building Details</Text>
+          <View style={styles.table}>
+            <View style={styles.tableRow}>
+              <Text style={styles.tableColHeader}>Building Name</Text>
+              <Text style={styles.tableCol}>{buildingData.buildingName}</Text>
+            </View>
+            <View style={styles.tableRow}>
+              <Text style={styles.tableColHeader}>Number of Stories</Text>
+              <Text style={styles.tableCol}>{buildingData.noOfStories}</Text>
+            </View>
+            <View style={styles.tableRow}>
+              <Text style={styles.tableColHeader}>Year of Construction</Text>
+              <Text style={styles.tableCol}>
+                {buildingData.yearOfConstruction}
+              </Text>
+            </View>
+            <View style={styles.tableRow}>
+              <Text style={styles.tableColHeader}>Type of Structure</Text>
+              <Text style={styles.tableCol}>
+                {buildingData.buildingStructuralSystem}
+              </Text>
+            </View>
+            <View style={styles.tableRow}>
+              <Text style={styles.tableColHeader}>Location</Text>
+              <Text style={styles.tableCol}>{buildingData.location}</Text>
+            </View>
+            <View style={styles.tableRow}>
+              <Text style={styles.tableColHeader}>
+                Architectural Plan Available
+              </Text>
+              <Text style={styles.tableCol}>
+                {buildingData.architecturalUrl ? 'Yes' : 'No'}
+              </Text>
+            </View>
+            <View style={styles.tableRow}>
+              <Text style={styles.tableColHeader}>Foundation Type</Text>
+              <Text style={styles.tableCol}>{buildingData.foundationType}</Text>
+            </View>
+            <View style={styles.tableRow}>
+              <Text style={styles.tableColHeader}>Other Information</Text>
+              <Text style={styles.tableCol}>
+                {buildingData.otherInformation}
+              </Text>
+            </View>
+          </View>
+        </View>
       </Page>
       <Page style={styles.page}>
         <View style={styles.section}>
@@ -224,12 +287,159 @@ const MyDocument = ({ reportData, role = 'officer' }) => {
           {renderStructuralData(structuralData)}
         </View>
       </Page>
+      <Page style={styles.page}>
+        <View style={styles.section}>
+          <Text style={styles.sectionHeader}>NDT Data</Text>
+          {renderData(ndtData.corrosion, styles)}
+          {renderData(ndtData.inSitu, styles)}
+          {renderData(ndtData.strucuturalIntegrity, styles)}
+        </View>
+        <View style={styles.section}>
+          <Text style={styles.sectionHeader}>Chemical - Carbonation</Text>
+          <View style={styles.table}>
+            {ndtData.chemical.carbonation.element && (
+              <View key="element" style={styles.tableRow}>
+                <Text style={styles.tableColHeader}>Element</Text>
+                <Text style={styles.tableCol}>
+                  {ndtData.chemical.carbonation.element}
+                </Text>
+              </View>
+            )}
+            {ndtData.chemical.carbonation.grade && (
+              <View key="grade" style={styles.tableRow}>
+                <Text style={styles.tableColHeader}>Grade</Text>
+                <Text style={styles.tableCol}>
+                  {ndtData.chemical.carbonation.grade}
+                </Text>
+              </View>
+            )}
+            {ndtData.chemical.carbonation.floor && (
+              <View key="floor" style={styles.tableRow}>
+                <Text style={styles.tableColHeader}>Floor</Text>
+                <Text style={styles.tableCol}>
+                  {ndtData.chemical.carbonation.floor}
+                </Text>
+              </View>
+            )}
+            {ndtData.chemical.carbonation.location && (
+              <View key="location" style={styles.tableRow}>
+                <Text style={styles.tableColHeader}>Location</Text>
+                <Text style={styles.tableCol}>
+                  {ndtData.chemical.carbonation.location}
+                </Text>
+              </View>
+            )}
+            {ndtData.chemical.carbonation.meanDepth && (
+              <View key="meanDepth" style={styles.tableRow}>
+                <Text style={styles.tableColHeader}>Mean Depth</Text>
+                <Text style={styles.tableCol}>
+                  {ndtData.chemical.carbonation.meanDepth}
+                </Text>
+              </View>
+            )}
+            {ndtData.chemical.carbonation.ageOfStrcutural && (
+              <View key="ageOfStrcutural" style={styles.tableRow}>
+                <Text style={styles.tableColHeader}>Age Of Structural</Text>
+                <Text style={styles.tableCol}>
+                  {ndtData.chemical.carbonation.ageOfStrcutural}
+                </Text>
+              </View>
+            )}
+            {ndtData.chemical.carbonation.captionPhoto && (
+              <View key="captionPhoto" style={styles.tableRow}>
+                <Text style={styles.tableColHeader}>Caption Photo</Text>
+                <Text style={styles.tableCol}>
+                  {ndtData.chemical.carbonation.captionPhoto}
+                </Text>
+              </View>
+            )}
+            {ndtData.chemical.carbonation.remarks && (
+              <View key="remarks" style={styles.tableRow}>
+                <Text style={styles.tableColHeader}>Remarks</Text>
+                <Text style={styles.tableCol}>
+                  {ndtData.chemical.carbonation.remarks}
+                </Text>
+              </View>
+            )}
+          </View>
+        </View>
+      </Page>
     </Document>
   );
 };
 export default MyDocument;
 
-// Helper function to check if an object has any non-empty values
-const hasData = (obj) => {
-  return Object.values(obj).some((value) => value !== '');
+const hasData = (value) => {
+  if (Array.isArray(value)) {
+    return value.some((item) => Object.values(item).some((v) => v !== ''));
+  } else if (typeof value === 'object' && value !== null) {
+    return Object.values(value).some((v) => v !== '');
+  }
+  return Boolean(value);
+};
+
+const renderTableRow = (field, value, styles) => (
+  <View key={field} style={styles.tableRow}>
+    <Text style={styles.tableColHeader}>{field}</Text>
+    <Text style={styles.tableCol}>{value}</Text>
+  </View>
+);
+
+const renderData = (ndtdata, styles) => {
+  return Object.entries(ndtdata).map(([topic, subtopics]) => {
+    return (
+      <View key={topic} style={styles.section}>
+        {topic && <Text style={styles.sectionHeader}>{topic}</Text>}
+        {Object.entries(subtopics).map(([subtopic, levels]) => {
+          return (
+            <View key={`${topic}-${subtopic}`} style={styles.table}>
+              {subtopic && <Text style={styles.subtopic}>{subtopic}</Text>}
+
+              {Object.entries(levels).map(([level, data]) => {
+                if (Array.isArray(data)) {
+                  return (
+                    <View
+                      key={`${topic}-${subtopic}-${level}`}
+                      style={styles.table}
+                    >
+                      {data.map((item, index) => (
+                        <View
+                          key={`${topic}-${subtopic}-${level}-${index}`}
+                          style={styles.table}
+                        >
+                          {Object.entries(item).map(([field, fieldValue]) => {
+                            if (hasData(fieldValue)) {
+                              return renderTableRow(field, fieldValue, styles);
+                            }
+                            return null;
+                          })}
+                        </View>
+                      ))}
+                    </View>
+                  );
+                } else {
+                  if (hasData(data)) {
+                    return (
+                      <View
+                        key={`${topic}-${subtopic}-${level}`}
+                        style={styles.table}
+                      >
+                        {Object.entries(data).map(([field, fieldValue]) => {
+                          if (hasData(fieldValue)) {
+                            return renderTableRow(field, fieldValue, styles);
+                          }
+                          return null;
+                        })}
+                      </View>
+                    );
+                  }
+                  return null;
+                }
+              })}
+            </View>
+          );
+        })}
+      </View>
+    );
+  });
 };
