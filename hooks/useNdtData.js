@@ -75,7 +75,6 @@ const initialState = {
       ground: Array(10).fill({
         location: '',
         element: '',
-        grade: '',
         spacing: '',
         measurePotentital: '',
         metricGrade: '',
@@ -83,7 +82,6 @@ const initialState = {
       first: Array(10).fill({
         location: '',
         element: '',
-        grade: '',
         spacing: '',
         measurePotentital: '',
         metricGrade: '',
@@ -91,7 +89,6 @@ const initialState = {
       second: Array(10).fill({
         location: '',
         element: '',
-        grade: '',
         spacing: '',
         measurePotentital: '',
         metricGrade: '',

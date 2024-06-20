@@ -2,8 +2,8 @@ import { useEffect, useMemo } from 'react';
 
 import { Input } from '@/components/ui/Input';
 import { TableCell } from '@/components/ui/table';
-import { SelectElement, SelectGrade } from './ReboundHammerGroundFloorForm';
 import useNdtStore from '@/hooks/useNdtData';
+import { SelectElement } from './ReboundHammerGroundFloorForm';
 
 export const getMetricGrade = (grade, value) => {
   const numericValue = parseFloat(value); // Ensure the value is a number
@@ -11,17 +11,11 @@ export const getMetricGrade = (grade, value) => {
 
   if (isNaN(numericValue)) return '';
 
-  // Extract the numeric part of the grade
-  const gradeNumericPart = parseInt(grade.slice(1));
-  console.log(gradeNumericPart);
+  if (numericValue < 200) return 'Low';
+  if (numericValue >= 200 && numericValue <= 350) return 'Uncertain';
 
-  if (!isNaN(gradeNumericPart) && gradeNumericPart <= 25) {
-    if (numericValue < 200) return 'Low';
-    if (numericValue >= 200 && numericValue <= 350) return 'Uncertain';
-  } else {
-    if (numericValue > 350 && numericValue <= 500) return 'High';
-    if (numericValue > 500) return 'Severe';
-  }
+  if (numericValue > 350 && numericValue <= 500) return 'High';
+  if (numericValue > 500) return 'Severe';
 
   return '';
 };
@@ -55,17 +49,6 @@ function HalfCellGroundFloorForm() {
     );
   };
 
-  // Grade
-  const handleGradeChange = (index, value) => {
-    updateField(
-      'corrosion',
-      'halfCellPotential',
-      'ground',
-      index,
-      'grade',
-      value
-    );
-  };
 
   // Spacing
   const handleResultChange = (index, value) => {
@@ -90,7 +73,7 @@ function HalfCellGroundFloorForm() {
       'measurePotentital',
       value
     );
-    const grade = halfCellPotentialData.ground[index].grade;
+    const grade = halfCellPotentialData.ground[index].grade; // no need of this
     const metricGrade = getMetricGrade(grade, value);
     updateField(
       'corrosion',
@@ -133,15 +116,6 @@ function HalfCellGroundFloorForm() {
 
       <TableCell className="space-y-4">
         {halfCellPotentialData['ground'].map((el, index) => (
-          <SelectGrade
-            key={index}
-            onChange={(value) => handleGradeChange(index, value)}
-            value={el.grade}
-          />
-        ))}
-      </TableCell>
-      <TableCell className="space-y-4">
-        {halfCellPotentialData['ground'].map((el, index) => (
           <Input
             key={index}
             value={el.spacing}
@@ -168,26 +142,28 @@ function HalfCellGroundFloorForm() {
 
 export default HalfCellGroundFloorForm;
 
-
-export const InputWithHelper = ({ name, placeholder, value, grade, onChange }) => {
+export const InputWithHelper = ({
+  name,
+  placeholder,
+  value,
+  grade,
+  onChange,
+}) => {
   const getHelperText = (grade, value) => {
-    console.log(grade, value);
+    // console.log(grade, value);
     const numericValue = parseFloat(value); // Ensure the value is a number
     console.log(numericValue);
 
     if (isNaN(numericValue)) return '';
 
     // Extract the numeric part of the grade
-    const gradeNumericPart = parseInt(grade.slice(1));
-    console.log(gradeNumericPart);
+    // const gradeNumericPart = parseInt(grade.slice(1));
+    // console.log(gradeNumericPart);
 
-    if (!isNaN(gradeNumericPart) && gradeNumericPart <= 25) {
       if (numericValue < 200) return 'Low';
       if (numericValue >= 200 && numericValue <= 350) return 'Uncertain';
-    } else {
       if (numericValue > 350 && numericValue <= 500) return 'High';
       if (numericValue > 500) return 'Severe';
-    }
 
     return '';
   };

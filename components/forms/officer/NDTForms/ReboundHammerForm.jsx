@@ -27,7 +27,7 @@ function ReboundHammerForm() {
         </h3>
         <TooltipProvider>
           <Tooltip>
-            <TooltipTrigger className="ml-2 bg-gray-200 rounded-full w-5 h-5 flex items-center justify-center p-2 text-xs">
+            <TooltipTrigger className="ml-2 bg-amber-400 rounded-full w-5 h-5 flex items-center justify-center p-2 text-xs">
               i
             </TooltipTrigger>
             <TooltipContent>

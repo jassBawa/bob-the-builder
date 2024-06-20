@@ -1,6 +1,7 @@
 import useCurrentUser from '@/hooks/useCurrentUser';
 import {
   Document,
+  Font,
   Image,
   Page,
   StyleSheet,
@@ -9,24 +10,34 @@ import {
 } from '@react-pdf/renderer';
 import React from 'react';
 
+Font.register({
+  family: 'Times-Roman',
+  src: 'https://fonts.gstatic.com/s/timesnewroman/v11/rP2DpRRLCen5dL56PH3ysEJ-01g7LqGBNeWn6u11DC8.ttf',
+});
+
 // Create styles
 const styles = StyleSheet.create({
   page: {
     padding: 30,
+    fontFamily: 'Times-Roman', // Set font family
+
   },
   section: {
     marginBottom: 20,
+    
   },
   sectionHeader: {
-    fontSize: 18,
+    fontSize: 16,
     marginBottom: 10,
     textDecoration: 'underline',
     fontWeight: 'bold',
+    textTransform: 'capitalize',
   },
   subtopic: {
-    fontSize: 16,
+    fontSize: 14,
     marginBottom: 10,
     fontWeight: 'semibold',
+    textTransform: 'capitalize',
   },
   table: {
     display: 'table',
@@ -40,18 +51,27 @@ const styles = StyleSheet.create({
     width: '40%',
     borderStyle: 'solid',
     borderColor: '#000',
-    borderBottomWidth: 1,
+    border: 1,
     fontSize: 12,
     fontWeight: 'bold',
     padding: 5,
+    textTransform: 'capitalize',
+     fontFamily: 'Times-Roman', // Set font family
+     fontSize: 12,
+
   },
   tableCol: {
     width: '60%',
     borderStyle: 'solid',
     borderColor: '#000',
-    borderBottomWidth: 1,
+    border: 1,
+    // borderBottomWidth: 1,
     fontSize: 12,
     padding: 5,
+    textTransform: 'capitalize',
+     
+     fontSize: 12,
+
   },
   label: {
     fontWeight: 'bold',
@@ -71,10 +91,11 @@ const styles = StyleSheet.create({
     left: '20%',
     transform: 'rotate(-45deg)', // Added rotation
     opacity: 0.4,
-    fontSize: 50,
+    fontSize: 30,
     color: 'red',
     textAlign: 'center',
     zIndex: -1,
+    pointerEvents: 'none',
   },
 });
 
@@ -278,16 +299,26 @@ const MyDocument = ({ reportData, role = 'officer' }) => {
                 {buildingData.otherInformation}
               </Text>
             </View>
+            <View style={styles.tableRow} classroom="border">
+              <Text style={styles.tableColHeader}>Building Image</Text>
+              <Image
+                style={styles.tableCol}
+                src={buildingData.buildingImage}
+                alt="field"
+              />
+            </View>
           </View>
         </View>
       </Page>
       <Page style={styles.page}>
+      {user && <Text style={styles.watermark}>{user?.email}</Text>}
         <View style={styles.section}>
           <Text style={styles.sectionHeader}>Structural Data</Text>
           {renderStructuralData(structuralData)}
         </View>
       </Page>
       <Page style={styles.page}>
+      {user && <Text style={styles.watermark}>{user?.email}</Text>}
         <View style={styles.section}>
           <Text style={styles.sectionHeader}>NDT Data</Text>
           {renderData(ndtData.corrosion, styles)}

@@ -214,8 +214,8 @@ export const SelectGrade = ({ onChange, value }) => {
       </SelectTrigger>
       <SelectContent>
         <SelectItem value="Good">Good</SelectItem>
-        <SelectItem value="Bad">Bad</SelectItem>
         <SelectItem value="Fair">Fair</SelectItem>
+        <SelectItem value="Bad">Bad</SelectItem>
       </SelectContent>
     </Select>
   );

@@ -24,7 +24,7 @@ function HalfCellPotentialForm() {
         </h3>
         <TooltipProvider>
           <Tooltip>
-            <TooltipTrigger className="ml-2 bg-gray-200 rounded-full w-5 h-5 flex items-center justify-center p-2 text-xs">
+            <TooltipTrigger className="ml-2 bg-amber-400 rounded-full w-5 h-5 flex items-center justify-center p-2 text-xs">
               i
             </TooltipTrigger>
             <TooltipContent>
@@ -43,9 +43,8 @@ function HalfCellPotentialForm() {
               <TableHead className="w-[100px]">Floor level</TableHead>
               <TableHead>Location</TableHead>
               <TableHead>Structural Element</TableHead>
-              <TableHead>Grade of concrete</TableHead>
               <TableHead>Spacing (in mm)</TableHead>
-              <TableHead>Measure Potential (in mm)</TableHead>
+              <TableHead>Measure Potential</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>

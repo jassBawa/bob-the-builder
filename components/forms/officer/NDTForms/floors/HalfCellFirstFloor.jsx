@@ -108,15 +108,6 @@ function HalfCellFirstFloorForm() {
 
       <TableCell className="space-y-4">
         {halfCellPotentialData['first'].map((el, index) => (
-          <SelectGrade
-            key={index}
-            onChange={(value) => handleGradeChange(index, value)}
-            value={el.grade}
-          />
-        ))}
-      </TableCell>
-      <TableCell className="space-y-4">
-        {halfCellPotentialData['first'].map((el, index) => (
           <Input
             key={index}
             value={el.spacing}

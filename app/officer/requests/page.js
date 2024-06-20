@@ -62,7 +62,7 @@ function Page() {
             >
               <td>{req.officerId}</td>
               <td className="w-min bg-indigo-400 rounded-full px-4 py-2">
-                {req.status}
+                {req.status === 'accept' ? 'accepted' : req.status}
               </td>
 
               <td className="flex gap-2 ">

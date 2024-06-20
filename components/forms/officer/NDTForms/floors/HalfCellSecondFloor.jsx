@@ -112,15 +112,6 @@ function HalfCellSecondFloorForm() {
 
       <TableCell className="space-y-4">
         {halfCellPotentialData['second'].map((el, index) => (
-          <SelectGrade
-            key={index}
-            onChange={(value) => handleGradeChange(index, value)}
-            value={el.grade}
-          />
-        ))}
-      </TableCell>
-      <TableCell className="space-y-4">
-        {halfCellPotentialData['second'].map((el, index) => (
           <Input
             key={index}
             value={el.spacing}
