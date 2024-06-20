@@ -1,22 +1,30 @@
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 
 import { Input } from '@/components/ui/Input';
 import { TableCell } from '@/components/ui/table';
 import { SelectElement, SelectGrade } from './ReboundHammerGroundFloorForm';
 import useNdtStore from '@/hooks/useNdtData';
 
-const getMetricGrade = (value) => {
-  const numericValue = parseFloat(value);
+export const getMetricGrade = (grade, value) => {
+  const numericValue = parseFloat(value); // Ensure the value is a number
+  console.log('uppr', numericValue);
+
   if (isNaN(numericValue)) return '';
 
-  if (numericValue < 200) return 'Low';
-  if (numericValue >= 200 && numericValue <= 350) return 'Uncertain';
-  if (numericValue > 350 && numericValue <= 500) return 'High';
-  if (numericValue > 500) return 'Severe';
+  // Extract the numeric part of the grade
+  const gradeNumericPart = parseInt(grade.slice(1));
+  console.log(gradeNumericPart);
+
+  if (!isNaN(gradeNumericPart) && gradeNumericPart <= 25) {
+    if (numericValue < 200) return 'Low';
+    if (numericValue >= 200 && numericValue <= 350) return 'Uncertain';
+  } else {
+    if (numericValue > 350 && numericValue <= 500) return 'High';
+    if (numericValue > 500) return 'Severe';
+  }
 
   return '';
 };
-
 
 function HalfCellGroundFloorForm() {
   const { ndtdata, updateField } = useNdtStore();
@@ -89,7 +97,7 @@ function HalfCellGroundFloorForm() {
       'halfCellPotential',
       'ground',
       index,
-      'measurePotentital',
+      'metricGrade',
       metricGrade
     );
   };
@@ -148,7 +156,7 @@ function HalfCellGroundFloorForm() {
             key={index}
             name={`measurePotentital-${index + 1}`}
             placeholder="Enter measure potentital value"
-            value={el.upvValues}
+            value={el.measurePotentital}
             grade={el.grade}
             onChange={(value) => handleMeasureChange(index, value)}
           />
@@ -160,26 +168,31 @@ function HalfCellGroundFloorForm() {
 
 export default HalfCellGroundFloorForm;
 
-import React from 'react';
 
-export const InputWithHelper = ({
-  name,
-  placeholder,
-  value,
-  grade,
-  onChange,
-}) => {
+export const InputWithHelper = ({ name, placeholder, value, grade, onChange }) => {
   const getHelperText = (grade, value) => {
-    const numericValue = parseFloat(value);
+    console.log(grade, value);
+    const numericValue = parseFloat(value); // Ensure the value is a number
+    console.log(numericValue);
+
     if (isNaN(numericValue)) return '';
 
-    if (numericValue < 200) return 'Low';
-    if (numericValue >= 200 && numericValue <= 350) return 'Uncertain';
-    if (numericValue > 350 && numericValue <= 500) return 'High';
-    if (numericValue > 500) return 'Severe';
+    // Extract the numeric part of the grade
+    const gradeNumericPart = parseInt(grade.slice(1));
+    console.log(gradeNumericPart);
+
+    if (!isNaN(gradeNumericPart) && gradeNumericPart <= 25) {
+      if (numericValue < 200) return 'Low';
+      if (numericValue >= 200 && numericValue <= 350) return 'Uncertain';
+    } else {
+      if (numericValue > 350 && numericValue <= 500) return 'High';
+      if (numericValue > 500) return 'Severe';
+    }
 
     return '';
   };
+
+  const helperText = useMemo(() => getHelperText(grade, value), [grade, value]);
 
   return (
     <div>
@@ -189,7 +202,7 @@ export const InputWithHelper = ({
         value={value}
         onChange={(e) => onChange(e.target.value)}
       />
-      <p>{getHelperText(grade, value)}</p>
+      <p>{helperText}</p>
     </div>
   );
 };

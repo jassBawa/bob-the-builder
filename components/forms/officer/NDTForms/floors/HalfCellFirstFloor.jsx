@@ -4,6 +4,9 @@ import { Input } from '@/components/ui/Input';
 import { TableCell } from '@/components/ui/table';
 import { SelectElement, SelectGrade } from './ReboundHammerGroundFloorForm';
 import useNdtStore from '@/hooks/useNdtData';
+import { InputWithHelper, getMetricGrade } from './HalfCellGroundFloor';
+
+
 
 function HalfCellFirstFloorForm() {
   const { ndtdata, updateField } = useNdtStore();
@@ -62,6 +65,16 @@ function HalfCellFirstFloorForm() {
       'measurePotentital',
       value
     );
+    const grade = halfCellPotentialData.first[index].grade;
+    const metricGrade = getMetricGrade(grade, value);
+    updateField(
+      'corrosion',
+      'halfCellPotential',
+      'first',
+      index,
+      'metricGrade',
+      metricGrade
+    );
   };
 
   useEffect(() => {
@@ -113,12 +126,14 @@ function HalfCellFirstFloorForm() {
         ))}
       </TableCell>
       <TableCell className="space-y-4">
-        {halfCellPotentialData['first'].map((el, index) => (
-          <Input
+      {halfCellPotentialData['first'].map((el, index) => (
+          <InputWithHelper
             key={index}
+            name={`measurePotentital-${index + 1}`}
+            placeholder="Enter measure potentital value"
             value={el.measurePotentital}
-            placeholder="Enter measure potential"
-            onChange={(event) => handleMeasureChange(index, event.target.value)}
+            grade={el.grade}
+            onChange={(value) => handleMeasureChange(index, value)}
           />
         ))}
       </TableCell>

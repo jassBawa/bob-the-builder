@@ -26,7 +26,7 @@ const getMetricGrade = (grade, value) => {
 
 function IntegrityUSPVFirstFloorForm() {
   const { ndtdata, updateField } = useNdtStore();
-  const uspvData = ndtdata.inSitu.USPV;
+  const uspvData = ndtdata.strucuturalIntegrity.USPV;
 
   const handleLocationChange = (index, e) => {
     const newValue = e.target.value;
