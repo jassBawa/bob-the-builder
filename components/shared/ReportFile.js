@@ -379,9 +379,11 @@ const MyDocument = ({ reportData, role = 'officer' }) => {
             {ndtData.chemical.carbonation.captionPhoto && (
               <View key="captionPhoto" style={styles.tableRow}>
                 <Text style={styles.tableColHeader}>Caption Photo</Text>
-                <Text style={styles.tableCol}>
-                  {ndtData.chemical.carbonation.captionPhoto}
-                </Text>
+                <Image
+                style={styles.tableCol}
+                src={ndtData.chemical.carbonation.captionPhoto}
+                alt="field"
+              />
               </View>
             )}
             {ndtData.chemical.carbonation.remarks && (

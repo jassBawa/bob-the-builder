@@ -55,7 +55,7 @@ function NDTForm() {
   }, [subtopic, topic]);
 
   const handleSaveData = async () => {
-    const reportId = `${buildingId}_${officerId}`;
+    let reportId = `${buildingId}_${officerId}`;
     console.log(reportId);
 
     setIsLoading(true);
@@ -67,6 +67,14 @@ function NDTForm() {
       await updateDoc(docRef, formData).then(() =>
         toast.success('Data saved successfully')
       );
+      
+      reportId = `${buildingId}_${organisationId}`;
+      const docRefOrg = doc(db, `organisation/${organisationId}/reports/${reportId}`)
+      await updateDoc(docRefOrg, formData).then(() =>
+        // toast.success('Data saved successfully')
+      console.log('data saved for orga')
+      );
+      
       console.log('Data updated successfully!');
     } catch (error) {
       console.error('Error updating data: ', error);
