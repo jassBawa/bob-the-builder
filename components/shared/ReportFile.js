@@ -24,34 +24,46 @@ const styles = StyleSheet.create({
   },
   section: {
     marginBottom: 20,
-    
+  },
+  sectionMainHeading: {
+    fontSize: 20,
+    marginBottom: 10,
+    fontWeight: 'bold',
+    textTransform: 'capitalize',
+  },
+  ReportHeader: {
+    fontSize: 32,
+    marginBottom: 16,
+    textAlign: 'center',
+    fontWeight: 'bold',
+    textTransform: 'capitalize',
   },
   sectionHeader: {
     fontSize: 16,
     marginBottom: 10,
-    textDecoration: 'underline',
-    fontWeight: 'bold',
+    fontWeight: 'semibold',
     textTransform: 'capitalize',
   },
   subtopic: {
     fontSize: 14,
-    marginBottom: 10,
     fontWeight: 'semibold',
     textTransform: 'capitalize',
   },
   table: {
     display: 'table',
+    border: '1px solid black',
     width: 'auto',
     marginBottom: 10,
   },
   tableRow: {
     flexDirection: 'row',
+    // border: '1px solid black',
+    borderTopWidth: 1
   },
   tableColHeader: {
     width: '40%',
-    borderStyle: 'solid',
-    borderColor: '#000',
-    border: 1,
+    borderRight: '1px solid black',
+    borderTopWidth: '1px solid black',
     fontSize: 12,
     fontWeight: 'bold',
     padding: 5,
@@ -62,10 +74,7 @@ const styles = StyleSheet.create({
   },
   tableCol: {
     width: '60%',
-    borderStyle: 'solid',
-    borderColor: '#000',
-    border: 1,
-    // borderBottomWidth: 1,
+    borderTopWidth: 1,
     fontSize: 12,
     padding: 5,
     textTransform: 'capitalize',
@@ -94,7 +103,7 @@ const styles = StyleSheet.create({
     fontSize: 30,
     color: 'red',
     textAlign: 'center',
-    zIndex: -1,
+    zIndex: 2,
     pointerEvents: 'none',
   },
 });
@@ -115,7 +124,7 @@ const MyDocument = ({ reportData, role = 'officer' }) => {
     return (
       <Document>
         <Page style={styles.page}>
-          <Text>Loading...</Text>
+          <Text>No report found...</Text>
         </Page>
       </Document>
     );
@@ -131,7 +140,7 @@ const MyDocument = ({ reportData, role = 'officer' }) => {
     if (field === 'photo' && fieldValue) {
       return (
         <View style={styles.tableRow} key={field} classroom="border">
-          <Text style={styles.tableColHeader}>{field}</Text>
+          <Text style={styles.tableColHeader} className="last:border-b-0">{field}</Text>
           <Image style={styles.tableCol} src={fieldValue} alt="field" />
         </View>
       );
@@ -139,7 +148,7 @@ const MyDocument = ({ reportData, role = 'officer' }) => {
     return (
       fieldValue && (
         <View style={styles.tableRow} key={field}>
-          <Text style={styles.tableColHeader}>{field}</Text>
+          <Text style={styles.tableColHeader} className="last:border-b-0">{field}</Text>
           <Text style={styles.tableCol}>{fieldValue}</Text>
         </View>
       )
@@ -150,7 +159,7 @@ const MyDocument = ({ reportData, role = 'officer' }) => {
     return Object.entries(data).map(([key, value]) => {
       if (hasData(value)) {
         return (
-          <View key={key} style={styles.table}>
+          <View key={key} style={styles.table} >
             <Text style={styles.sectionHeader}>{key}</Text>
             {Object.entries(value).map(([subKey, subValue]) => {
               if (hasData(subValue)) {
@@ -180,7 +189,7 @@ const MyDocument = ({ reportData, role = 'officer' }) => {
       <Page style={styles.page}>
         {user && <Text style={styles.watermark}>{user?.email}</Text>}
         <View style={styles.section}>
-          <Text style={styles.sectionHeader}>Report</Text>
+          <Text style={styles.ReportHeader}>Report</Text>
           <View style={styles.table}>
             <View style={styles.tableRow}>
               <Text style={styles.tableColHeader}>Building ID</Text>
@@ -200,8 +209,8 @@ const MyDocument = ({ reportData, role = 'officer' }) => {
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionHeader}>General Observations</Text>
-          <View style={styles.table}>
+          <Text style={styles.sectionMainHeading}>General Observations</Text>
+          <View style={styles.table} >
             <View style={styles.tableRow}>
               <Text style={styles.tableColHeader}>Age of Building</Text>
               <Text style={styles.tableCol}>
@@ -256,7 +265,7 @@ const MyDocument = ({ reportData, role = 'officer' }) => {
         </View>
         <View style={styles.section}>
           <Text style={styles.sectionHeader}>Building Details</Text>
-          <View style={styles.table}>
+          <View style={styles.table} >
             <View style={styles.tableRow}>
               <Text style={styles.tableColHeader}>Building Name</Text>
               <Text style={styles.tableCol}>{buildingData.buildingName}</Text>
@@ -313,21 +322,21 @@ const MyDocument = ({ reportData, role = 'officer' }) => {
       <Page style={styles.page}>
       {user && <Text style={styles.watermark}>{user?.email}</Text>}
         <View style={styles.section}>
-          <Text style={styles.sectionHeader}>Structural Data</Text>
+          <Text style={styles.sectionMainHeading}>Structural Data</Text>
           {renderStructuralData(structuralData)}
         </View>
       </Page>
       <Page style={styles.page}>
       {user && <Text style={styles.watermark}>{user?.email}</Text>}
         <View style={styles.section}>
-          <Text style={styles.sectionHeader}>NDT Data</Text>
+          <Text style={styles.sectionMainHeading}>NDT Data</Text>
           {renderData(ndtData.corrosion, styles)}
           {renderData(ndtData.inSitu, styles)}
           {renderData(ndtData.strucuturalIntegrity, styles)}
         </View>
         <View style={styles.section}>
           <Text style={styles.sectionHeader}>Chemical - Carbonation</Text>
-          <View style={styles.table}>
+          <View style={styles.table} >
             {ndtData.chemical.carbonation.element && (
               <View key="element" style={styles.tableRow}>
                 <Text style={styles.tableColHeader}>Element</Text>
@@ -433,12 +442,14 @@ const renderData = (ndtdata, styles) => {
                   return (
                     <View
                       key={`${topic}-${subtopic}-${level}`}
-                      style={styles.table}
+                      // style={styles.table}
+                     
                     >
                       {data.map((item, index) => (
                         <View
                           key={`${topic}-${subtopic}-${level}-${index}`}
-                          style={styles.table}
+                          // style={styles.table}
+                         
                         >
                           {Object.entries(item).map(([field, fieldValue]) => {
                             if (hasData(fieldValue)) {
@@ -455,7 +466,8 @@ const renderData = (ndtdata, styles) => {
                     return (
                       <View
                         key={`${topic}-${subtopic}-${level}`}
-                        style={styles.table}
+                        // style={styles.table}
+                       
                       >
                         {Object.entries(data).map(([field, fieldValue]) => {
                           if (hasData(fieldValue)) {
