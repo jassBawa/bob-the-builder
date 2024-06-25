@@ -15,7 +15,6 @@ function Page({ params }) {
   const currentUser = useCurrentUser('officer');
 
   console.log('organisation', organisation);
-  console.log('buildings', buildings);
   useEffect(() => {
     fetchOrganisation(orgId);
   }, [orgId]);
@@ -29,9 +28,13 @@ function Page({ params }) {
   }
 
   const handleRequestAccess = async (buildingId) => {
+    if (!buildingId && !buildings) return;
     const requestRef = collection(db, 'requests');
+    const building = buildings?.find((b) => b.buildingId === buildingId);
     const newRequest = {
       buildingId,
+      buildingName: building.buildingName,
+      buildingUse: building.buildingUse,
       organisationId: orgId,
       officerId: currentUser.uid,
       status: 'pending',

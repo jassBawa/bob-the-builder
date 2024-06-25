@@ -33,70 +33,79 @@ function BuildingView({ building }) {
           value={`${building?.dampnessCracks}`}
         />
 
-        <div className="col-span-2">
+        <div className="col-span-2 flex gap-[25rem]">
           <p className="text-2xl  text-slate-600 font-semibold">
             Structural Report File
           </p>
 
-          <iframe
-           src={`${building.structuralReportUrl}#toolbar=0`}
-            // src={}
-            frameborder="0"
-            className="w-full h-96"
-          ></iframe>
+          {building.structuralReportUrl ? (
+            <iframe
+              src={`${building.structuralReportUrl}#toolbar=0`}
+              // src={}
+              frameborder="0"
+              className="w-full h-96"
+            ></iframe>
+          ) : (
+            <span className="text-2xl font-semibold">No data available</span>
+          )}
+
           {/* <PdfViewer /> */}
         </div>
-        <div className="col-span-2">
+        <div className="col-span-2 flex gap-[29.3rem]">
           <p className="text-2xl  text-slate-600 font-semibold">
             Geo Report File
           </p>
 
-          <iframe
-          
-            src={`${building?.georeportUrl}#toolbar=0`}
-            frameborder="0"
-            className="w-full h-96"
-          ></iframe>
-          {/* <PdfViewer /> */}
+          {building.georeportUrl ? (
+            <iframe
+              src={`${building?.georeportUrl}#toolbar=0`}
+              frameborder="0"
+              className="w-full h-96"
+            ></iframe>
+          ) : (
+            <span className="text-2xl font-semibold">No data available</span>
+          )}
         </div>
-        <div className="col-span-2">
+        <div className="col-span-2 flex gap-[24rem] ">
           <p className="text-2xl  text-slate-600 font-semibold">
-          Architectural Drawings
+            Architectural Drawings
           </p>
 
-          <iframe
-          
-            src={`${building?.architecturalUrl}#toolbar=0`}
-            frameborder="0"
-            className="w-full h-96"
-          ></iframe>
-
+          {building.architecturalUrl ? (
+            <iframe
+              src={`${building?.architecturalUrl}#toolbar=0`}
+              frameborder="0"
+              className="w-full h-96"
+            ></iframe>
+          ) : (
+            <span className="text-2xl font-semibold">No data available</span>
+          )}
         </div>
-        <div className="col-span-2">
+        <div className="col-span-2 flex gap-[19.7rem]">
           <p className="text-2xl  text-slate-600 font-semibold">
-          Structural Design Calucation
+            Structural Design Calucation
           </p>
 
-          <iframe
-          
-            src={`${building?.structuralCalculationUrl}#toolbar=0`}
-            frameborder="0"
-            className="w-full h-96"
-          ></iframe>
-
+          {building.structuralCalculationUrl ? (
+            <iframe
+              src={`${building?.structuralCalculationUrl}#toolbar=0`}
+              frameborder="0"
+              className="w-full h-96"
+            ></iframe>
+          ) : (
+            <span className="text-2xl font-semibold">No data available</span>
+          )}
         </div>
         <div className="col-span-2">
           <p className="text-2xl  text-slate-600 font-semibold">
-          Structural Design Calucation
+            Structural Design Calucation
           </p>
 
           <img
-          
             src={`${building?.buildingImage}`}
             frameborder="0"
             className="w-full h-96 object-contain"
           ></img>
-
         </div>
       </div>
       {/* </div> */}
@@ -110,7 +119,7 @@ const ViewItem = ({ label, value }) => {
   return (
     <div>
       <p className="text-2xl  text-slate-600 font-semibold">{label}</p>
-      <p className="text-xl mt-4">{value}</p>
+      <p className="text-xl mt-4">{value ? value : "No data available"}</p>
     </div>
   );
 };

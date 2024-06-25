@@ -50,7 +50,7 @@ function Page() {
       <p className="text-sm">List of officer’s accessed the portal</p>
       <table className="mt-16 w-full" border={2}>
         <tr className="flex border-b-2 border-black justify-between items-center  bg-slate-200 p-4 rounded px-8">
-          <td>Officer Id</td>
+          <td>Building Name</td>
           <td>Status</td>
           <td>Actions</td>
         </tr>
@@ -60,7 +60,7 @@ function Page() {
               key={req.id}
               className="flex justify-between items-center  bg-slate-200 p-4 rounded px-8"
             >
-              <td>{req.officerId}</td>
+              <td>{req.buildingName}</td>
               <td className="w-min bg-indigo-400 rounded-full px-4 py-2">
                 {req.status === 'accept' ? 'accepted' : req.status}
               </td>

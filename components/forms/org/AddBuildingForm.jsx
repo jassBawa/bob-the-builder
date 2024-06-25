@@ -124,6 +124,7 @@ function AddBuildingForm() {
         doc(db, 'organisation', currentUser.uid),
         'buildings'
       );
+      console.log(pdf1Url, pdf2Url, pdf3Url, pdf5Url, pdf4Url);
       const newBuildingRef = await addDoc(buildingsRef, {
         ...values, // Include all building data fields
         buildingId: uuidv4(),
@@ -136,7 +137,7 @@ function AddBuildingForm() {
         toast.success('Data added successfully ');
         router.push('/dashboard');
       });
-      // console.log(newBuildingRef);
+      console.log(newBuildingRef);
     } catch (error) {
       toast.error(error);
     } finally {

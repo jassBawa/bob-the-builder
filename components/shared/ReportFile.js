@@ -20,7 +20,6 @@ const styles = StyleSheet.create({
   page: {
     padding: 30,
     fontFamily: 'Times-Roman', // Set font family
-
   },
   section: {
     marginBottom: 20,
@@ -58,7 +57,7 @@ const styles = StyleSheet.create({
   tableRow: {
     flexDirection: 'row',
     // border: '1px solid black',
-    borderTopWidth: 1
+    borderTopWidth: 1,
   },
   tableColHeader: {
     width: '40%',
@@ -68,9 +67,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     padding: 5,
     textTransform: 'capitalize',
-     fontFamily: 'Times-Roman', // Set font family
-     fontSize: 12,
-
+    fontFamily: 'Times-Roman', // Set font family
+    fontSize: 12,
   },
   tableCol: {
     width: '60%',
@@ -78,9 +76,8 @@ const styles = StyleSheet.create({
     fontSize: 12,
     padding: 5,
     textTransform: 'capitalize',
-     
-     fontSize: 12,
 
+    fontSize: 12,
   },
   label: {
     fontWeight: 'bold',
@@ -106,14 +103,16 @@ const styles = StyleSheet.create({
     zIndex: 2,
     pointerEvents: 'none',
   },
+  notApplicable: {
+    fontSize: 14,
+    color: 'red',
+  },
 });
 
-// Create Document Component
 // Create Document Component
 const MyDocument = ({ reportData, role = 'officer' }) => {
   const user = useCurrentUser(role);
 
-  console.log(reportData);
   if (
     !reportData ||
     !reportData.generalObservationsData ||
@@ -131,16 +130,21 @@ const MyDocument = ({ reportData, role = 'officer' }) => {
   }
 
   const generalObservations = reportData.generalObservationsData;
-  const structuralData = reportData.structuralObservationsData;
   const buildingData = reportData.buildingData;
+  const structuralData = reportData.structuralObservationsData;
   const ndtData = reportData.ndtdata;
+  const sortedNdtdata = sortObjectKeysRecursively(ndtData);
+
+  console.log(sortedNdtdata);
 
   // Helper function to render table rows with potential images
   const renderTableRow = (field, fieldValue) => {
     if (field === 'photo' && fieldValue) {
       return (
         <View style={styles.tableRow} key={field} classroom="border">
-          <Text style={styles.tableColHeader} className="last:border-b-0">{field}</Text>
+          <Text style={styles.tableColHeader} className="last:border-b-0">
+            {field}
+          </Text>
           <Image style={styles.tableCol} src={fieldValue} alt="field" />
         </View>
       );
@@ -148,39 +152,58 @@ const MyDocument = ({ reportData, role = 'officer' }) => {
     return (
       fieldValue && (
         <View style={styles.tableRow} key={field}>
-          <Text style={styles.tableColHeader} className="last:border-b-0">{field}</Text>
+          <Text style={styles.tableColHeader} className="last:border-b-0">
+            {field}
+          </Text>
           <Text style={styles.tableCol}>{fieldValue}</Text>
         </View>
       )
     );
   };
 
-  const renderStructuralData = (data) => {
+  const renderStructuralData = (data, styles) => {
     return Object.entries(data).map(([key, value]) => {
       if (hasData(value)) {
         return (
-          <View key={key} style={styles.table} >
+          <View key={key} style={styles.table}>
             <Text style={styles.sectionHeader}>{key}</Text>
             {Object.entries(value).map(([subKey, subValue]) => {
               if (hasData(subValue)) {
+                const hasFieldValues = Object.values(subValue).some((fieldValue) => hasData(fieldValue));
+  
                 return (
                   <View key={subKey} style={styles.table}>
                     {subKey && <Text style={styles.subtopic}>{subKey}</Text>}
-                    {Object.entries(subValue).map(([field, fieldValue]) => {
-                      if (hasData(fieldValue)) {
-                        return renderTableRow(field, fieldValue);
-                      }
-                      return null;
-                    })}
+                    {hasFieldValues ? (
+                      Object.entries(subValue).map(([field, fieldValue]) => {
+                        if (hasData(fieldValue)) {
+                          return renderTableRow(field, fieldValue, styles);
+                        }
+                        return null;
+                      })
+                    ) : (
+                      <Text style={styles.notApplicable}>Not Applicable</Text>
+                    )}
                   </View>
                 );
               }
-              return null;
+              return (
+                <View key={subKey} style={styles.table}>
+                  {subKey && <Text style={styles.subtopic}>{subKey}</Text>}
+                  <Text style={styles.notApplicable}>Not Applicable</Text>
+                </View>
+              );
             })}
           </View>
         );
+      } else {
+        return (
+          <View key={key} style={styles.table}>
+            <Text style={styles.sectionHeader}>{key}</Text>
+            <Text style={styles.notApplicable}>Not Applicable</Text>
+          </View>
+        );
       }
-      return null;
     });
   };
 
@@ -210,7 +233,7 @@ const MyDocument = ({ reportData, role = 'officer' }) => {
 
         <View style={styles.section}>
           <Text style={styles.sectionMainHeading}>General Observations</Text>
-          <View style={styles.table} >
+          <View style={styles.table}>
             <View style={styles.tableRow}>
               <Text style={styles.tableColHeader}>Age of Building</Text>
               <Text style={styles.tableCol}>
@@ -265,7 +288,7 @@ const MyDocument = ({ reportData, role = 'officer' }) => {
         </View>
         <View style={styles.section}>
           <Text style={styles.sectionHeader}>Building Details</Text>
-          <View style={styles.table} >
+          <View style={styles.table}>
             <View style={styles.tableRow}>
               <Text style={styles.tableColHeader}>Building Name</Text>
               <Text style={styles.tableCol}>{buildingData.buildingName}</Text>
@@ -320,23 +343,23 @@ const MyDocument = ({ reportData, role = 'officer' }) => {
         </View>
       </Page>
       <Page style={styles.page}>
-      {user && <Text style={styles.watermark}>{user?.email}</Text>}
+        {user && <Text style={styles.watermark}>{user?.email}</Text>}
         <View style={styles.section}>
           <Text style={styles.sectionMainHeading}>Structural Data</Text>
-          {renderStructuralData(structuralData)}
+          {renderStructuralData(structuralData, styles)}
         </View>
       </Page>
       <Page style={styles.page}>
-      {user && <Text style={styles.watermark}>{user?.email}</Text>}
+        {user && <Text style={styles.watermark}>{user?.email}</Text>}
         <View style={styles.section}>
           <Text style={styles.sectionMainHeading}>NDT Data</Text>
-          {renderData(ndtData.corrosion, styles)}
-          {renderData(ndtData.inSitu, styles)}
-          {renderData(ndtData.strucuturalIntegrity, styles)}
+          {renderData(sortedNdtdata.corrosion, styles)}
+          {renderData(sortedNdtdata.inSitu, styles)}
+          {renderData(sortedNdtdata.strucuturalIntegrity, styles)}
         </View>
         <View style={styles.section}>
           <Text style={styles.sectionHeader}>Chemical - Carbonation</Text>
-          <View style={styles.table} >
+          <View style={styles.table}>
             {ndtData.chemical.carbonation.element && (
               <View key="element" style={styles.tableRow}>
                 <Text style={styles.tableColHeader}>Element</Text>
@@ -389,10 +412,10 @@ const MyDocument = ({ reportData, role = 'officer' }) => {
               <View key="captionPhoto" style={styles.tableRow}>
                 <Text style={styles.tableColHeader}>Caption Photo</Text>
                 <Image
-                style={styles.tableCol}
-                src={ndtData.chemical.carbonation.captionPhoto}
-                alt="field"
-              />
+                  style={styles.tableCol}
+                  src={ndtData.chemical.carbonation.captionPhoto}
+                  alt="field"
+                />
               </View>
             )}
             {ndtData.chemical.carbonation.remarks && (
@@ -411,6 +434,7 @@ const MyDocument = ({ reportData, role = 'officer' }) => {
 };
 export default MyDocument;
 
+// Your hasData function
 const hasData = (value) => {
   if (Array.isArray(value)) {
     return value.some((item) => Object.values(item).some((v) => v !== ''));
@@ -427,60 +451,82 @@ const renderTableRow = (field, value, styles) => (
   </View>
 );
 
+// Function to sort object keys and recursively sort nested objects
+const sortObjectKeysRecursively = (obj) => {
+  if (Array.isArray(obj)) {
+    return obj.map(sortObjectKeysRecursively);
+  }
+  if (typeof obj === 'object' && obj !== null) {
+    const sortedKeys = Object.keys(obj).sort();
+    const sortedObj = {};
+    sortedKeys.forEach((key) => {
+      sortedObj[key] = sortObjectKeysRecursively(obj[key]);
+    });
+    return sortedObj;
+  }
+  return obj;
+};
+
+// Sorted ndtdata
+
 const renderData = (ndtdata, styles) => {
   return Object.entries(ndtdata).map(([topic, subtopics]) => {
     return (
       <View key={topic} style={styles.section}>
         {topic && <Text style={styles.sectionHeader}>{topic}</Text>}
         {Object.entries(subtopics).map(([subtopic, levels]) => {
+          const hasDataToShow = Object.values(levels).some((levelData) => {
+            if (Array.isArray(levelData)) {
+              return levelData.some((item) => hasData(item));
+            } else {
+              return hasData(levelData);
+            }
+          });
+
           return (
             <View key={`${topic}-${subtopic}`} style={styles.table}>
               {subtopic && <Text style={styles.subtopic}>{subtopic}</Text>}
 
-              {Object.entries(levels).map(([level, data]) => {
-                if (Array.isArray(data)) {
-                  return (
-                    <View
-                      key={`${topic}-${subtopic}-${level}`}
-                      // style={styles.table}
-                     
-                    >
-                      {data.map((item, index) => (
-                        <View
-                          key={`${topic}-${subtopic}-${level}-${index}`}
-                          // style={styles.table}
-                         
-                        >
-                          {Object.entries(item).map(([field, fieldValue]) => {
+              {hasDataToShow ? (
+                Object.entries(levels).map(([level, data]) => {
+                  if (Array.isArray(data)) {
+                    return (
+                      <View key={`${topic}-${subtopic}-${level}`}>
+                        {data.map((item, index) => (
+                          <View key={`${topic}-${subtopic}-${level}-${index}`}>
+                            {Object.entries(item).map(([field, fieldValue]) => {
+                              if (hasData(fieldValue)) {
+                                return renderTableRow(
+                                  field,
+                                  fieldValue,
+                                  styles
+                                );
+                              }
+                              return null;
+                            })}
+                          </View>
+                        ))}
+                      </View>
+                    );
+                  } else {
+                    if (hasData(data)) {
+                      return (
+                        <View key={`${topic}-${subtopic}-${level}`}>
+                          {Object.entries(data).map(([field, fieldValue]) => {
                             if (hasData(fieldValue)) {
                               return renderTableRow(field, fieldValue, styles);
                             }
                             return null;
                           })}
                         </View>
-                      ))}
-                    </View>
-                  );
-                } else {
-                  if (hasData(data)) {
-                    return (
-                      <View
-                        key={`${topic}-${subtopic}-${level}`}
-                        // style={styles.table}
-                       
-                      >
-                        {Object.entries(data).map(([field, fieldValue]) => {
-                          if (hasData(fieldValue)) {
-                            return renderTableRow(field, fieldValue, styles);
-                          }
-                          return null;
-                        })}
-                      </View>
-                    );
+                      );
+                    }
+                    return null;
                   }
-                  return null;
-                }
-              })}
+                })
+              ) : (
+                <Text style={styles.notApplicable}>Not Applicable</Text>
+              )}
             </View>
           );
         })}
@@ -488,3 +534,4 @@ const renderData = (ndtdata, styles) => {
     );
   });
 };
+

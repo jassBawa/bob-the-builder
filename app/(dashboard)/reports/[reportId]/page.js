@@ -8,7 +8,7 @@ import ReportFile from '@/components/shared/ReportFile';
 import { usePathname, useRouter } from 'next/navigation';
 import useCurrentUser from '@/hooks/useCurrentUser';
 
-const ReportPage = ({reportId}) => {
+const ReportPage = ({ reportId }) => {
   // console.log(reportId);
   const [reportData, setReportData] = useState(null);
   const pathName = usePathname();
@@ -16,9 +16,8 @@ const ReportPage = ({reportId}) => {
   const orgId = useMemo(() => org?.uid, [org]);
   const segments = useMemo(() => pathName?.split('/'), [pathName]);
 
-
   useEffect(() => {
-    if(!orgId) return;
+    if (!orgId) return;
     console.log(segments, orgId);
     let organisationId = segments[3];
     let reportId = segments[2];
@@ -26,18 +25,11 @@ const ReportPage = ({reportId}) => {
     console.log(reportId);
 
     const fetchReportData = async () => {
-    
-      const reportRef = doc(
-        db,
-        'organisation',
-        orgId,
-        'reports',
-        reportId
-      );
+      const reportRef = doc(db, 'organisation', orgId, 'reports', reportId);
 
       console.log(reportId);
 
-console.log(reportRef);
+      console.log(reportRef);
       const docSnap = await getDoc(reportRef);
 
       if (docSnap.exists()) {
