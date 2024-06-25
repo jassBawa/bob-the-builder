@@ -83,7 +83,7 @@ function BuildingView({ building }) {
         </div>
         <div className="col-span-2 flex gap-[19.7rem]">
           <p className="text-2xl  text-slate-600 font-semibold">
-            Structural Design Calucation
+            Structural Design Calculation
           </p>
 
           {building.structuralCalculationUrl ? (
@@ -98,7 +98,7 @@ function BuildingView({ building }) {
         </div>
         <div className="col-span-2">
           <p className="text-2xl  text-slate-600 font-semibold">
-            Structural Design Calucation
+            Building Image
           </p>
 
           <img
