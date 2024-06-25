@@ -9,12 +9,12 @@ import USPVForm from '@/components/forms/officer/NDTForms/USPVForm';
 export const options = {
   'in situ concrete strength': [
     { name: 'Rebound Hammer', component: ReboundHammer },
-    { name: 'USPV', component: USPVForm },
+    { name: 'UPV', component: USPVForm },
     { name: 'Capo', component: CapoForm },
   ],
   'chemical': [{ name: 'carbonation', component: CarbonationForm }],
   'corrosion': [
     { name: 'Half Cell Potential', component: HalfCellPotentialForm },
   ],
-  'strucutralIntegrity': [{ name: 'USPV', component: StrcuturalIntegrityUSPVForm }],
+  'strucutralIntegrity': [{ name: 'UPV', component: StrcuturalIntegrityUSPVForm }],
 };

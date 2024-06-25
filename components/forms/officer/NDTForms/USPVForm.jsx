@@ -30,7 +30,6 @@ function USPVForm() {
       <div className="">
         <div className="mt-8 grid gap-8">
           <Table>
-            <TableCaption>A list of your recent invoices.</TableCaption>
             <TableHeader>
               <TableRow>
                 <TableHead className="w-[100px]">Floor level</TableHead>
