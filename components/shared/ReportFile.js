@@ -37,6 +37,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textTransform: 'capitalize',
   },
+  notApplicableText: {
+    color: 'red', //
+  },
   sectionHeader: {
     fontSize: 16,
     marginBottom: 10,
@@ -107,12 +110,15 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: 'red',
   },
+  notAvailableText: {
+    color: 'red', // Change to your desired color
+  },
 });
 
 // Create Document Component
 const MyDocument = ({ reportData, role = 'officer' }) => {
   const user = useCurrentUser(role);
-
+  console.log(reportData);
   if (
     !reportData ||
     !reportData.generalObservationsData ||
@@ -169,8 +175,10 @@ const MyDocument = ({ reportData, role = 'officer' }) => {
             <Text style={styles.sectionHeader}>{key}</Text>
             {Object.entries(value).map(([subKey, subValue]) => {
               if (hasData(subValue)) {
-                const hasFieldValues = Object.values(subValue).some((fieldValue) => hasData(fieldValue));
-  
+                const hasFieldValues = Object.values(subValue).some(
+                  (fieldValue) => hasData(fieldValue)
+                );
+
                 return (
                   <View key={subKey} style={styles.table}>
                     {subKey && <Text style={styles.subtopic}>{subKey}</Text>}
@@ -182,7 +190,7 @@ const MyDocument = ({ reportData, role = 'officer' }) => {
                         return null;
                       })
                     ) : (
-                      <Text style={styles.notApplicable}>Not Applicable</Text>
+                      <Text style={styles.notApplicable}>Not available</Text>
                     )}
                   </View>
                 );
@@ -190,7 +198,7 @@ const MyDocument = ({ reportData, role = 'officer' }) => {
               return (
                 <View key={subKey} style={styles.table}>
                   {subKey && <Text style={styles.subtopic}>{subKey}</Text>}
-                  <Text style={styles.notApplicable}>Not Applicable</Text>
+                  <Text style={styles.notApplicable}>Not available</Text>
                 </View>
               );
             })}
@@ -200,7 +208,7 @@ const MyDocument = ({ reportData, role = 'officer' }) => {
         return (
           <View key={key} style={styles.table}>
             <Text style={styles.sectionHeader}>{key}</Text>
-            <Text style={styles.notApplicable}>Not Applicable</Text>
+            <Text style={styles.notApplicable}>Not available</Text>
           </View>
         );
       }
@@ -236,108 +244,254 @@ const MyDocument = ({ reportData, role = 'officer' }) => {
           <View style={styles.table}>
             <View style={styles.tableRow}>
               <Text style={styles.tableColHeader}>Age of Building</Text>
-              <Text style={styles.tableCol}>
-                {generalObservations.ageOfBuilding}
+              <Text
+                style={[
+                  styles.tableCol,
+                  !generalObservations.ageOfBuilding &&
+                    styles.notApplicableText,
+                ]}
+              >
+                {generalObservations.ageOfBuilding || 'Not available'}
               </Text>
             </View>
             <View style={styles.tableRow}>
               <Text style={styles.tableColHeader}>Number of Stories</Text>
-              <Text style={styles.tableCol}>
-                {generalObservations.numberOfStories}
+              <Text
+                style={[
+                  styles.tableCol,
+                  !generalObservations.numberOfStories &&
+                    styles.notApplicableText,
+                ]}
+              >
+                {generalObservations.numberOfStories || 'Not available'}
               </Text>
             </View>
             <View style={styles.tableRow}>
               <Text style={styles.tableColHeader}>Date of Inspection</Text>
-              <Text style={styles.tableCol}>
-                {generalObservations.dateOfInspection}
+              <Text
+                style={[
+                  styles.tableCol,
+                  !generalObservations.dateOfInspection &&
+                    styles.notApplicableText,
+                ]}
+              >
+                {generalObservations.dateOfInspection || 'Not available'}
               </Text>
             </View>
             <View style={styles.tableRow}>
               <Text style={styles.tableColHeader}>Type of Structure</Text>
-              <Text style={styles.tableCol}>
-                {generalObservations.typeOfStructure}
+              <Text
+                style={[
+                  styles.tableCol,
+                  !generalObservations.typeOfStructure &&
+                    styles.notApplicableText,
+                ]}
+              >
+                {generalObservations.typeOfStructure || 'Not available'}
               </Text>
             </View>
             <View style={styles.tableRow}>
               <Text style={styles.tableColHeader}>Location</Text>
-              <Text style={styles.tableCol}>
-                {generalObservations.location}
+              <Text
+                style={[
+                  styles.tableCol,
+                  !generalObservations.location && styles.notApplicableText,
+                ]}
+              >
+                {generalObservations.location || 'Not available'}
               </Text>
             </View>
             <View style={styles.tableRow}>
               <Text style={styles.tableColHeader}>
                 Architectural Plan Available
               </Text>
-              <Text style={styles.tableCol}>
+              <Text style={[styles.tableCol]}>
                 {generalObservations.architecturalPlanAvailable ? 'Yes' : 'No'}
               </Text>
             </View>
             <View style={styles.tableRow}>
               <Text style={styles.tableColHeader}>Name of Structure</Text>
-              <Text style={styles.tableCol}>
-                {generalObservations.nameOfStructure}
+              <Text
+                style={[
+                  styles.tableCol,
+                  !generalObservations.nameOfStructure &&
+                    styles.notApplicableText,
+                ]}
+              >
+                {generalObservations.nameOfStructure || 'Not available'}
               </Text>
             </View>
             <View style={styles.tableRow}>
               <Text style={styles.tableColHeader}>Size of Building</Text>
-              <Text style={styles.tableCol}>
-                {generalObservations.sizeOfBuilding}
+              <Text
+                style={[
+                  styles.tableCol,
+                  !generalObservations.sizeOfBuilding &&
+                    styles.notApplicableText,
+                ]}
+              >
+                {generalObservations.sizeOfBuilding || 'Not available'}
               </Text>
             </View>
           </View>
         </View>
+      </Page>
+      <Page style={styles.page}>
+        {user && <Text style={styles.watermark}>{user?.email}</Text>}
         <View style={styles.section}>
           <Text style={styles.sectionHeader}>Building Details</Text>
           <View style={styles.table}>
             <View style={styles.tableRow}>
               <Text style={styles.tableColHeader}>Building Name</Text>
-              <Text style={styles.tableCol}>{buildingData.buildingName}</Text>
+              <Text
+                style={[
+                  styles.tableCol,
+                  !buildingData.buildingName && styles.notAvailableText,
+                ]}
+              >
+                {buildingData.buildingName || 'Not available'}
+              </Text>
             </View>
             <View style={styles.tableRow}>
               <Text style={styles.tableColHeader}>Number of Stories</Text>
-              <Text style={styles.tableCol}>{buildingData.noOfStories}</Text>
+              <Text
+                style={[
+                  styles.tableCol,
+                  !buildingData.noOfStories && styles.notAvailableText,
+                ]}
+              >
+                {buildingData.noOfStories || 'Not available'}
+              </Text>
             </View>
             <View style={styles.tableRow}>
               <Text style={styles.tableColHeader}>Year of Construction</Text>
-              <Text style={styles.tableCol}>
-                {buildingData.yearOfConstruction}
+              <Text
+                style={[
+                  styles.tableCol,
+                  !buildingData.yearOfConstruction && styles.notAvailableText,
+                ]}
+              >
+                {buildingData.yearOfConstruction || 'Not available'}
               </Text>
             </View>
             <View style={styles.tableRow}>
               <Text style={styles.tableColHeader}>Type of Structure</Text>
-              <Text style={styles.tableCol}>
-                {buildingData.buildingStructuralSystem}
+              <Text
+                style={[
+                  styles.tableCol,
+                  !buildingData.buildingStructuralSystem &&
+                    styles.notAvailableText,
+                ]}
+              >
+                {buildingData.buildingStructuralSystem || 'Not available'}
               </Text>
             </View>
             <View style={styles.tableRow}>
               <Text style={styles.tableColHeader}>Location</Text>
-              <Text style={styles.tableCol}>{buildingData.location}</Text>
+              <Text
+                style={[
+                  styles.tableCol,
+                  !buildingData.location && styles.notAvailableText,
+                ]}
+              >
+                {buildingData.location || 'Not available'}
+              </Text>
             </View>
             <View style={styles.tableRow}>
               <Text style={styles.tableColHeader}>
                 Architectural Plan Available
               </Text>
-              <Text style={styles.tableCol}>
+              <Text
+                style={[
+                  styles.tableCol,
+                  !buildingData.architecturalUrl && styles.notAvailableText,
+                ]}
+              >
                 {buildingData.architecturalUrl ? 'Yes' : 'No'}
               </Text>
             </View>
             <View style={styles.tableRow}>
               <Text style={styles.tableColHeader}>Foundation Type</Text>
-              <Text style={styles.tableCol}>{buildingData.foundationType}</Text>
+              <Text
+                style={[
+                  styles.tableCol,
+                  !buildingData.foundationType && styles.notAvailableText,
+                ]}
+              >
+                {buildingData.foundationType || 'Not available'}
+              </Text>
             </View>
             <View style={styles.tableRow}>
               <Text style={styles.tableColHeader}>Other Information</Text>
-              <Text style={styles.tableCol}>
-                {buildingData.otherInformation}
+              <Text
+                style={[
+                  styles.tableCol,
+                  !buildingData.otherInformation && styles.notAvailableText,
+                ]}
+              >
+                {buildingData.otherInformation || 'Not available'}
               </Text>
             </View>
-            <View style={styles.tableRow} classroom="border">
+            <View style={styles.tableRow}>
+              <Text style={styles.tableColHeader}>Ground Coverage Area</Text>
+              <Text
+                style={[
+                  styles.tableCol,
+                  !buildingData.groundCoverageArea && styles.notAvailableText,
+                ]}
+              >
+                {buildingData.groundCoverageArea || 'Not available'}
+              </Text>
+            </View>
+            <View style={styles.tableRow}>
+              <Text style={styles.tableColHeader}>Total Built-Up Area</Text>
+              <Text
+                style={[
+                  styles.tableCol,
+                  !buildingData.totalBuiltUpArea && styles.notAvailableText,
+                ]}
+              >
+                {buildingData.totalBuiltUpArea || 'Not available'}
+              </Text>
+            </View>
+            <View style={styles.tableRow}>
+              <Text style={styles.tableColHeader}>Dampness Cracks</Text>
+              <Text
+                style={[
+                  styles.tableCol,
+                  buildingData.dampnessCracks === undefined &&
+                    styles.notAvailableText,
+                ]}
+              >
+                {buildingData.dampnessCracks ? 'Yes' : 'No'}
+              </Text>
+            </View>
+            <View style={styles.tableRow}>
+              <Text style={styles.tableColHeader}>Non-Dampness Cracks</Text>
+              <Text
+                style={[
+                  styles.tableCol,
+                  buildingData.nondampnessCracks === undefined &&
+                    styles.notAvailableText,
+                ]}
+              >
+                {buildingData.nondampnessCracks ? 'Yes' : 'No'}
+              </Text>
+            </View>
+
+            <View style={styles.tableRow}>
               <Text style={styles.tableColHeader}>Building Image</Text>
-              <Image
-                style={styles.tableCol}
-                src={buildingData.buildingImage}
-                alt="field"
-              />
+              {buildingData.buildingImage ? (
+                <Image
+                  style={styles.tableCol}
+                  src={buildingData.buildingImage}
+                  alt="Building Image"
+                />
+              ) : (
+                <Text style={[styles.tableCol, styles.notAvailableText]}>
+                  Not available
+                </Text>
+              )}
             </View>
           </View>
         </View>
@@ -525,7 +679,7 @@ const renderData = (ndtdata, styles) => {
                   }
                 })
               ) : (
-                <Text style={styles.notApplicable}>Not Applicable</Text>
+                <Text style={styles.notApplicable}>Not available</Text>
               )}
             </View>
           );
@@ -534,4 +688,3 @@ const renderData = (ndtdata, styles) => {
     );
   });
 };
-
