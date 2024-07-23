@@ -6,7 +6,7 @@ import { TableCell } from '@/components/ui/table';
 import useNdtStore from '@/hooks/useNdtData';
 import { SelectElement, SelectGrade } from './ReboundHammerGroundFloorForm';
 
-const getMetricGrade = (grade, value) => {
+const getRemarks = (grade, value) => {
   const numericValue = parseFloat(value);
   if (isNaN(numericValue)) return '';
 
@@ -56,8 +56,8 @@ function USPVSecondFloorForm() {
   const handleUSPVChange = (index, value) => {
     updateField('inSitu', 'USPV', 'second', index, 'upvValues', value);
     const grade = uspvData.second[index].grade;
-    const metricGrade = getMetricGrade(grade, value);
-    updateField('inSitu', 'USPV', 'second', index, 'metricGrade', metricGrade);
+    const remarks = getRemarks(grade, value);
+    updateField('inSitu', 'USPV', 'second', index, 'remarks', remarks);
   };
 
   useEffect(() => {

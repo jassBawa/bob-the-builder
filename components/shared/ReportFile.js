@@ -51,6 +51,9 @@ const styles = StyleSheet.create({
     fontWeight: 'semibold',
     textTransform: 'capitalize',
   },
+  remarks: {
+    backgroundColor: 'red',
+  },
   table: {
     display: 'table',
     border: '1px solid black',
@@ -598,12 +601,31 @@ const hasData = (value) => {
   return Boolean(value);
 };
 
-const renderTableRow = (field, value, styles) => (
-  <View key={field} style={styles.tableRow}>
-    <Text style={styles.tableColHeader}>{field}</Text>
-    <Text style={styles.tableCol}>{value}</Text>
-  </View>
-);
+// const renderTableRow = (field, value, styles) => (
+//   <View key={field} style={styles.tableRow}>
+//     <Text style={styles.tableColHeader}>{field}</Text>
+//     <Text style={styles.tableCol}>{value}</Text>
+//   </View>
+// );
+
+const renderTableRow = (field, value, styles) => {
+  const isRemarks = field === 'remarks';
+  const headerStyle = [
+    styles.tableColHeader,
+    isRemarks && { backgroundColor: '#f94449' }, // Append color dynamically
+  ];
+  const valueStyle = [
+    styles.tableCol,
+    isRemarks && { backgroundColor: '#f94449' }, // Append color dynamically
+  ];
+
+  return (
+    <View key={field} style={styles.tableRow}>
+      <Text style={headerStyle}>{field}</Text>
+      <Text style={valueStyle}>{value}</Text>
+    </View>
+  );
+};
 
 // Function to sort object keys and recursively sort nested objects
 const sortObjectKeysRecursively = (obj) => {

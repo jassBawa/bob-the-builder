@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/Input';
 import { TableCell } from '@/components/ui/table';
 import { SelectElement, SelectGrade } from './ReboundHammerGroundFloorForm';
 import useNdtStore from '@/hooks/useNdtData';
-import { InputWithHelper, getMetricGrade } from './HalfCellGroundFloor';
+import { InputWithHelper, getRemarks } from './HalfCellGroundFloor';
 
 function HalfCellSecondFloorForm() {
   const { ndtdata, updateField } = useNdtStore();
@@ -70,14 +70,14 @@ function HalfCellSecondFloorForm() {
       value
     );
     const grade = halfCellPotentialData.second[index].grade;
-    const metricGrade = getMetricGrade(grade, value);
+    const remarks = getRemarks(grade, value);
     updateField(
       'corrosion',
       'halfCellPotential',
       'second',
       index,
-      'metricGrade',
-      metricGrade
+      'remarks',
+      remarks
     );
   };
 

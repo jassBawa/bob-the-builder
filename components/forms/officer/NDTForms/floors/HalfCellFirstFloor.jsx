@@ -2,9 +2,9 @@ import { useEffect } from 'react';
 
 import { Input } from '@/components/ui/Input';
 import { TableCell } from '@/components/ui/table';
-import { SelectElement, SelectGrade } from './ReboundHammerGroundFloorForm';
 import useNdtStore from '@/hooks/useNdtData';
-import { InputWithHelper, getMetricGrade } from './HalfCellGroundFloor';
+import { InputWithHelper, getRemarks } from './HalfCellGroundFloor';
+import { SelectElement } from './ReboundHammerGroundFloorForm';
 
 
 
@@ -66,14 +66,14 @@ function HalfCellFirstFloorForm() {
       value
     );
     const grade = halfCellPotentialData.first[index].grade;
-    const metricGrade = getMetricGrade(grade, value);
+    const remarks = getRemarks(grade, value);
     updateField(
       'corrosion',
       'halfCellPotential',
       'first',
       index,
-      'metricGrade',
-      metricGrade
+      'remarks',
+      remarks
     );
   };
 

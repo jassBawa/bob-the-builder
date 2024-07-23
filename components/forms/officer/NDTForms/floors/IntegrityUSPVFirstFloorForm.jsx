@@ -9,7 +9,7 @@ import { TableCell } from '@/components/ui/table';
 import useNdtStore from '@/hooks/useNdtData';
 import { SelectElement, SelectGrade } from './ReboundHammerGroundFloorForm';
 
-const getMetricGrade = (grade, value) => {
+const getRemarks = (grade, value) => {
   const numericValue = parseFloat(value);
   if (isNaN(numericValue)) return '';
 
@@ -94,14 +94,14 @@ function IntegrityUSPVFirstFloorForm() {
       value
     );
     const grade = uspvData.first[index].grade;
-    const metricGrade = getMetricGrade(grade, value);
+    const remarks = getRemarks(grade, value);
     updateField(
       'strucuturalIntegrity',
       'USPV',
       'first',
       index,
-      'metricGrade',
-      metricGrade
+      'remarks',
+      remarks
     );
   };
 

@@ -5,7 +5,7 @@ import { TableCell } from '@/components/ui/table';
 import useNdtStore from '@/hooks/useNdtData';
 import { SelectElement } from './ReboundHammerGroundFloorForm';
 
-export const getMetricGrade = (grade, value) => {
+export const getRemarks = (grade, value) => {
   const numericValue = parseFloat(value); // Ensure the value is a number
   console.log('uppr', numericValue);
 
@@ -74,14 +74,14 @@ function HalfCellGroundFloorForm() {
       value
     );
     const grade = halfCellPotentialData.ground[index].grade; // no need of this
-    const metricGrade = getMetricGrade(grade, value);
+    const remarks = getRemarks(grade, value);
     updateField(
       'corrosion',
       'halfCellPotential',
       'ground',
       index,
-      'metricGrade',
-      metricGrade
+      'remarks',
+      remarks
     );
   };
 
