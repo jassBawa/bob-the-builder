@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/Input';
 import { TableCell } from '@/components/ui/table';
 import { SelectElement } from './ReboundHammerGroundFloorForm';
 import useNdtStore from '@/hooks/useNdtData';
+import { SelectGrade } from './CapoGroundFloor';
 
 function CapoFirstFloor() {
   const { ndtdata, updateField } = useNdtStore();
@@ -21,9 +22,8 @@ function CapoFirstFloor() {
   };
 
   // Grade
-  const handleFailureChange = (index, value) => {
-    console.log(index, value);
-    updateField('inSitu', 'capo', 'first', index, 'failureLoad', value);
+  const handleGradeChange = (index, value) => {
+    updateField('inSitu', 'capo', 'first', index, 'grade', value);
   };
 
   // Grade Results
@@ -36,6 +36,15 @@ function CapoFirstFloor() {
       'cubeCompressiveStrength',
       value
     );
+
+    const tempGrade = capoData['first'][index]['grade'];
+    const numberMatch = tempGrade.match(/\d+/);
+    const extractedNumber = numberMatch ? Number(numberMatch[0]) : null; // Handle case where no number is found
+    const compressiveStrength = extractedNumber / value;
+    const safetyStatus = compressiveStrength > 1.5 ? 'unsafe' : 'safe';
+
+    console.log(compressiveStrength);
+    updateField('inSitu', 'capo', 'first', index, 'DCStatus', safetyStatus);
   };
 
   useEffect(() => {
@@ -68,11 +77,10 @@ function CapoFirstFloor() {
       </TableCell>
       <TableCell className="text-right space-y-4">
         {capoData['first'].map((el, index) => (
-          <Input
+          <SelectGrade
             key={index}
-            value={el.failureLoad}
-            placeholder="Enter test result here..."
-            onChange={(e) => handleFailureChange(index, e.target.value)}
+            onChange={(value) => handleGradeChange(index, value)}
+            value={el.grade}
           />
         ))}
       </TableCell>

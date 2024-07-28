@@ -1,8 +1,6 @@
-
 import {
   Table,
   TableBody,
-  TableCaption,
   TableHead,
   TableHeader,
   TableRow,
@@ -18,12 +16,11 @@ import ReboundHammerFirstFloorForm from './floors/ReboundHammerFirstFloor';
 import ReboundHammerSecondFloorForm from './floors/ReboundHammerSecondFloor';
 
 function ReboundHammerForm() {
-  
   return (
     <div>
       <div className="flex items-start">
         <h3 className="text-2xl font-semibold text-blue-500 flex items-start">
-          Rebound Hammer (IS 516 Part 5, Section - 4)
+          Rebound Hammer (IS 516 Part 5, Section - 4): 2020
         </h3>
         <TooltipProvider>
           <Tooltip>
@@ -49,8 +46,23 @@ function ReboundHammerForm() {
               <TableHead className="w-[100px]">Floor level</TableHead>
               <TableHead>Location</TableHead>
               <TableHead>Structural Element</TableHead>
-              <TableHead>Grade of concrete</TableHead>
-              <TableHead>RH Test Result</TableHead>
+              <TableHead className="flex gap-2">
+                Assume Grade of concrete{' '}
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger className="ml-2 bg-amber-400 rounded-full w-5 h-5 flex items-center justify-center p-2 text-xs">
+                      i
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p className="max-w-xs">
+                        As per IS:456 - 2000 , minimum grade of concrete specify
+                        for structural memmbers are M20
+                      </p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </TableHead>
+              <TableHead>Average Compressive Strength Of Concrete</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>

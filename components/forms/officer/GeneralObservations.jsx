@@ -1,25 +1,34 @@
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
-import { FormLabel } from '@/components/ui/form';
 import { Label } from '@/components/ui/label';
-import useFormData from '@/hooks/useFormData';
+import useGeneralObservations from '@/hooks/useGeneralObservations';
 import useMultiForm from '@/hooks/useMultiForm';
-import React from 'react';
+import { useState } from 'react';
 
 function GeneralObservations() {
   const { nextStep } = useMultiForm();
-  const { generalObservationsData, updateGeneralObservationsData } =
-    useFormData();
+  const { generalObservationsData, setGeneralObservationsData } =
+    useGeneralObservations();
 
-  const handleChange = (e) => {
-    console.log(e.target.value);
-    const { name, value, type, checked } = e.target;
-    updateGeneralObservationsData({
-      [name]: type === 'checkbox' ? checked : value,
+  const [formData, setFormData] = useState(generalObservationsData);
+
+  const handleChange = (event) => {
+    console.log(event.target);
+    setFormData({
+      ...formData,
+      [event.target.name]:
+        event.target.type === 'checkbox'
+          ? event.target.checked
+          : event.target.value,
     });
   };
-  console.log(generalObservationsData);
+
+  const handleSubmit = () => {
+    setGeneralObservationsData(formData);
+    nextStep();
+  };
+
+  console.log(formData);
 
   return (
     <div>
@@ -30,7 +39,7 @@ function GeneralObservations() {
           <Input
             type="date"
             name="dateOfInspection"
-            value={generalObservationsData.dateOfInspection}
+            value={formData.dateOfInspection}
             onChange={handleChange}
             placeholder="YYYY-MM-DD"
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
@@ -42,7 +51,7 @@ function GeneralObservations() {
           <Input
             type="text"
             name="typeOfStructure"
-            value={generalObservationsData.typeOfStructure}
+            value={formData.typeOfStructure}
             onChange={handleChange}
             placeholder="Type of Structure"
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
@@ -54,7 +63,7 @@ function GeneralObservations() {
           <Input
             type="text"
             name="ageOfBuilding"
-            value={generalObservationsData.ageOfBuilding}
+            value={formData.ageOfBuilding}
             onChange={handleChange}
             placeholder="Age of Building"
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
@@ -65,14 +74,14 @@ function GeneralObservations() {
           <Input
             type="text"
             name="numberOfStories"
-            value={generalObservationsData.numberOfStories}
+            value={formData.numberOfStories}
             onChange={handleChange}
             placeholder="Number of Stories"
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           />
         </div>
       </div>
-      <Button type="button" onClick={nextStep}>
+      <Button type="button" onClick={handleSubmit}>
         Next
       </Button>
     </div>
