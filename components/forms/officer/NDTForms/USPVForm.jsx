@@ -23,9 +23,16 @@ export const gradeOptions = ['Good', 'Bad', 'Fair'];
 function USPVForm() {
   return (
     <div>
-      <h2 className="text-2xl font-semibold text-blue-500">
-        Ultrasonic Pulse Velocity (IS 516 Part 5, Section 1) - 2018
-      </h2>
+      <div>
+        <h2 className="text-2xl font-semibold text-blue-500">
+          Ultrasonic Pulse Velocity (IS 516 Part 5, Section 1) - 2018
+        </h2>
+        <p className="text-red-400">
+          {' '}
+          * As per IS:456 - 2000 , minimum grade of concrete specify for
+          structural memmbers are M20
+        </p>
+      </div>
       <div className="">
         <div className="mt-8 grid gap-8">
           <Table>
