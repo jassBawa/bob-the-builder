@@ -19,8 +19,13 @@ export const SelectProbingMethod = ({ onChange, value }) => {
       </SelectTrigger>
 
       <SelectContent>
-        <SelectItem value={'cross probing'}>Cross Probing</SelectItem>
-        <SelectItem value={'surface probing'}>Surface Probing</SelectItem>
+        <SelectItem value={'direct transmition'}>Direct Transmition</SelectItem>
+        <SelectItem value={'indirect transmition'}>
+          Indirect Transmition
+        </SelectItem>
+        <SelectItem value={'semidirect transmition'}>
+          Semidirect Transmition
+        </SelectItem>
       </SelectContent>
     </Select>
   );

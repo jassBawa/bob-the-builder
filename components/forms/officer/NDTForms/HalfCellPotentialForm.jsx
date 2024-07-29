@@ -29,7 +29,7 @@ function HalfCellPotentialForm() {
             </TooltipTrigger>
             <TooltipContent>
               <p className="max-w-xs">
-               All measured potential values are negative.
+                All measured potential values are negative.
               </p>
             </TooltipContent>
           </Tooltip>
@@ -43,8 +43,10 @@ function HalfCellPotentialForm() {
               <TableHead className="w-[100px]">Floor level</TableHead>
               <TableHead>Location</TableHead>
               <TableHead>Structural Element</TableHead>
-              <TableHead>Spacing (in mm)</TableHead>
-              <TableHead>Measure Potential</TableHead>
+              {/* <TableHead>Spacing (in mm)</TableHead> */}
+              <TableHead>
+                Maximum Measured Potential in 1 element (mV)
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>

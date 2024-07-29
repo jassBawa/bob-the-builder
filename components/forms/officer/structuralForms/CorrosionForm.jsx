@@ -1,138 +1,104 @@
+import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/Input';
-import { TableCell } from '@/components/ui/table';
-import useFormData from '@/hooks/useFormData';
-import { SelectGrade } from '../../officer/StructuralObservations';
+import { TableCell, TableRow } from '@/components/ui/table';
+import useStructuralObservations from '@/hooks/useStructuralObservations';
+import React from 'react';
 
 function CorrosionForm() {
-  const {
-    structuralObservationsData,
-    handleGradeChange,
-    handleLocationChange,
-    handlePhotoChange,
-  } = useFormData();
+  const { structuralObservationsData, addItem, removeItem, updateItem } =
+    useStructuralObservations();
 
-  const {corrosion} = structuralObservationsData;
+  console.log(structuralObservationsData);
+  const { corrosion } = structuralObservationsData;
 
-  const onLocationChange = (event, type) => {
-    const { name, value } = event.target;
-    handleLocationChange(type, name, value);
+  const handleAddCorrosion = () => {
+    console.log('handle add');
+    addItem('corrosion', {
+      id: Date.now(),
+      element: '',
+      location: '',
+      photo: '',
+    });
   };
 
-  const onPhotoChange = (event, type) => {
-    const { name, files } = event.target;
+  const handleRemoveCorrosion = (id) => {
+    removeItem('corrosion', id);
+  };
+
+  const handleChange = (id, field, value) => {
+    const updatedCorrosion = {
+      ...corrosion.find((ele) => ele.id === id),
+      [field]: value,
+    };
+    updateItem('corrosion', id, updatedCorrosion);
+  };
+
+  const onPhotoChange = async (id, event) => {
+    const { files } = event.target;
     if (files.length > 0) {
-      handlePhotoChange(type, name, files[0]);
+      const url = await uploadImages(files[0]);
+      const updatedCorrosion = {
+        ...corrosion.find((ele) => ele.id === id),
+        photo: url,
+      };
+      updateItem('corrosion', id, updatedCorrosion);
     }
   };
 
   return (
     <>
-      <TableCell className="font-medium border-r">Corrosion / stains</TableCell>
-      <TableCell className="font-medium border-r space-y-4 p-0 ">
-        <p className="py-2 px-4  border-b-2">Beam</p>
-        <p className="py-2 px-4 border-b-2">Slab</p>
-        <p className="py-2 px-4 border-b-2">Column</p>
-        <p className="py-2 px-4 border-b-2">Chajja</p>
-        <p className="py-2 px-4 border-b-2">Stairs</p>
-        <p className="py-2 px-4 border-b-2">Wall</p>
-      </TableCell>
-      <TableCell className="space-y-4">
-        <SelectGrade
-          value={corrosion.beam.grade}
-          onChange={(value) => handleGradeChange('corrosion', 'beam', value)}
-        />
-        <SelectGrade
-          value={corrosion.slab.grade}
-          onChange={(value) => handleGradeChange('corrosion', 'slab', value)}
-        />
-        <SelectGrade
-          value={corrosion.column.grade}
-          onChange={(value) => handleGradeChange('corrosion', 'column', value)}
-        />
-        <SelectGrade
-          value={corrosion.chajja.grade}
-          onChange={(value) => handleGradeChange('corrosion', 'chajja', value)}
-        />
-        <SelectGrade
-          value={corrosion.stairs.grade}
-          onChange={(value) => handleGradeChange('corrosion', 'stairs', value)}
-        />
-        <SelectGrade
-          value={corrosion.wall.grade}
-          onChange={(value) => handleGradeChange('corrosion', 'wall', value)}
-        />
-      </TableCell>
-      <TableCell className="text-right space-y-4">
-        <Input
-          type="text"
-          name="beam"
-          placeholder="Enter location"
-          onChange={(e) => onLocationChange(e, 'corrosion')}
-        />
-        <Input
-          type="text"
-          name="slab"
-          placeholder="Enter location"
-          onChange={(e) => onLocationChange(e, 'corrosion')}
-        />
-        <Input
-          type="text"
-          name="column"
-          placeholder="Enter location"
-          onChange={(e) => onLocationChange(e, 'corrosion')}
-        />
-        <Input
-          type="text"
-          name="chajja"
-          placeholder="Enter location"
-          onChange={(e) => onLocationChange(e, 'corrosion')}
-        />
-        <Input
-          type="text"
-          name="stairs"
-          placeholder="Enter location"
-          onChange={(e) => onLocationChange(e, 'corrosion')}
-        />
-        <Input
-          type="text"
-          name="wall"
-          placeholder="Enter location"
-          onChange={(e) => onLocationChange(e, 'corrosion')}
-        />
-      </TableCell>
+      {corrosion.map((Corrosion) => (
+        <React.Fragment key={Corrosion.id}>
+          <TableRow>
+            <TableCell className="font-medium border-r">corrosion</TableCell>
+            <TableCell>
+              <Input
+                type="text"
+                value={Corrosion.element}
+                onChange={(e) =>
+                  handleChange(Corrosion.id, 'element', e.target.value)
+                }
+              />
+            </TableCell>
 
-      <TableCell className="space-y-4">
-        <Input
-          type="file"
-          name="beam"
-          onChange={(e) => onPhotoChange(e, 'corrosion')}
-        />
-        <Input
-          type="file"
-          name="slab"
-          onChange={(e) => onPhotoChange(e, 'corrosion')}
-        />
-        <Input
-          type="file"
-          name="column"
-          onChange={(e) => onPhotoChange(e, 'corrosion')}
-        />
-        <Input
-          type="file"
-          name="chajja"
-          onChange={(e) => onPhotoChange(e, 'corrosion')}
-        />
-        <Input
-          type="file"
-          name="stairs"
-          onChange={(e) => onPhotoChange(e, 'corrosion')}
-        />
-        <Input
-          type="file"
-          name="wall"
-          onChange={(e) => onPhotoChange(e, 'corrosion')}
-        />
-      </TableCell>
+            <TableCell>
+              <Input
+                type="text"
+                value={Corrosion.location}
+                onChange={(e) =>
+                  handleChange(Corrosion.id, 'location', e.target.value)
+                }
+              />
+            </TableCell>
+            <TableCell>
+              <Input
+                type="file"
+                name="photo"
+                onChange={(e) => onPhotoChange(Corrosion.id, e)}
+              />
+            </TableCell>
+            {/* Add more input fields for, location, photo */}
+            <TableCell>
+              <Button
+                variant="outline"
+                onClick={() => handleRemoveCorrosion(Corrosion.id)}
+              >
+                Remove
+              </Button>
+            </TableCell>
+          </TableRow>
+        </React.Fragment>
+      ))}
+      {/* <TableCell> */}
+      <Button
+        variant="outline"
+        className="my-2"
+        type="button"
+        onClick={handleAddCorrosion}
+      >
+        + Add Corrosion
+      </Button>
+      {/* </TableCell> */}
     </>
   );
 }

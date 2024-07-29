@@ -80,7 +80,7 @@ function Page() {
                     <DropdownMenu className="ml-4">
                       <DropdownMenuTrigger>Report</DropdownMenuTrigger>
                       <DropdownMenuContent>
-                        <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem
                           onClick={() =>
@@ -101,9 +101,22 @@ function Page() {
                           NDT
                         </DropdownMenuItem>
                         <DropdownMenuItem
-                          onClick={() => router.push(`/officer/viewReports/${req.organisationId}/${req.buildingId}`)}
+                          onClick={() =>
+                            router.push(
+                              `/officer/viewReports/${req.organisationId}/${req.buildingId}`
+                            )
+                          }
                         >
                           Download Report
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() =>
+                            router.push(
+                              `/officer/viewResults/${req.organisationId}/${req.buildingId}`
+                            )
+                          }
+                        >
+                          View Results
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>

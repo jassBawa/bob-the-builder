@@ -48,6 +48,22 @@ function ReboundHammerGroundFloorForm() {
       'rhTestResults',
       newValue
     );
+    console.log(reboundHammerData['ground'][index]['grade']);
+    const tempGrade = reboundHammerData['ground'][index]['grade'];
+    const numberMatch = tempGrade.match(/\d+/);
+    const extractedNumber = numberMatch ? Number(numberMatch[0]) : null; // Handle case where no number is found
+    const compressiveStrength = extractedNumber / (newValue - newValue * 0.25);
+    const safetyStatus = compressiveStrength > 1.5 ? 'unsafe' : 'safe';
+
+    console.log(compressiveStrength);
+    updateField(
+      'inSitu',
+      'reboundHammer',
+      'ground',
+      index,
+      'DCStatus',
+      safetyStatus
+    );
   };
 
   useEffect(() => {

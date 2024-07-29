@@ -1,109 +1,90 @@
+import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/Input';
-import { TableCell } from '@/components/ui/table';
-import useFormData from '@/hooks/useFormData';
-import { SelectGrade } from '../../officer/StructuralObservations';
+import { TableCell, TableRow } from '@/components/ui/table';
+import useStructuralObservations from '@/hooks/useStructuralObservations';
+import React from 'react';
 
 function SettlementForm() {
-  const {
-    structuralObservationsData,
-    handleGradeChange,
-    handleLocationChange,
-    handlePhotoChange,
-  } = useFormData();
+  const { structuralObservationsData, addItem, removeItem, updateItem } =
+    useStructuralObservations();
 
-  const {settlement}= structuralObservationsData;
+  const { settlement } = structuralObservationsData;
 
-  const onLocationChange = (event, type) => {
-    const { name, value } = event.target;
-    handleLocationChange(type, name, value);
+  const handleAddSettlement = () => {
+    console.log('handle add');
+    addItem('settlement', {
+      id: Date.now(),
+      element: '',
+      location: '',
+      photo: '',
+    });
   };
 
-  const onPhotoChange = (event, type) => {
-    const { name, files } = event.target;
-    if (files.length > 0) {
-      handlePhotoChange(type, name, files[0]);
-    }
+  const handleRemoveSettlement = (id) => {
+    removeItem('settlement', id);
   };
+
+  const handleChange = (id, field, value) => {
+    const udpatedSettlement = {
+      ...settlement.find((settlment) => settlment.id === id),
+      [field]: value,
+    };
+    updateItem('settlement', id, udpatedSettlement);
+  };
+
   return (
     <>
-      <TableCell className="font-medium border-r">Settlement</TableCell>
-      <TableCell className="font-medium border-r space-y-4 p-0 ">
-        <p className="py-2 px-4  border-b-2">Foundation</p>
-        <p className="py-2 px-4 border-b-2">Joint at plinth</p>
-        <p className="py-2 px-4 border-b-2">Column</p>
-        <p className="py-2 px-4 border-b-2">Wall</p>
-      </TableCell>
-      <TableCell className="space-y-4">
-        <SelectGrade
-          value={settlement.foundation.grade}
-          onChange={(value) =>
-            handleGradeChange('settlement', 'foundation', value)
-          }
-        />
-        <SelectGrade
-          value={settlement['joint at plinth'].grade}
-          onChange={(value) =>
-            handleGradeChange('settlement', 'joint at plinth', value)
-          }
-        />
-        <SelectGrade
-          value={settlement.column.grade}
-          onChange={(value) => handleGradeChange('settlement', 'column', value)}
-        />
-        <SelectGrade
-          value={settlement.wall.grade}
-          onChange={(value) => handleGradeChange('settlement', 'wall', value)}
-        />
-      </TableCell>
-      <TableCell className="text-right space-y-4">
-        <Input
-          type="text"
-          name="foundation"
-          placeholder="Enter location"
-          onChange={(e) => onLocationChange(e, 'settlement')}
-        />
-        <Input
-          type="text"
-          name="joint at plinth"
-          placeholder="Enter location"
-          onChange={(e) => onLocationChange(e, 'settlement')}
-        />
-        <Input
-          type="text"
-          name="column"
-          placeholder="Enter location"
-          onChange={(e) => onLocationChange(e, 'settlement')}
-        />
-        <Input
-          type="text"
-          name="wall"
-          placeholder="Enter location"
-          onChange={(e) => onLocationChange(e, 'settlement')}
-        />
-      </TableCell>
+      {settlement.map((settlement) => (
+        <React.Fragment key={settlement.id}>
+          <TableRow>
+            <TableCell className="font-medium border-r">Settlement</TableCell>
+            <TableCell>
+              <Input
+                type="text"
+                value={settlement.element}
+                onChange={(e) =>
+                  handleChange(settlement.id, 'element', e.target.value)
+                }
+              />
+            </TableCell>
 
-      <TableCell className="space-y-4">
-        <Input
-          type="file"
-          name="foundation"
-          onChange={(e) => onPhotoChange(e, 'settlement')}
-        />
-        <Input
-          type="file"
-          name="joint at plinth"
-          onChange={(e) => onPhotoChange(e, 'settlement')}
-        />
-        <Input
-          type="file"
-          name="column"
-          onChange={(e) => onPhotoChange(e, 'settlement')}
-        />
-        <Input
-          type="file"
-          name="wall"
-          onChange={(e) => onPhotoChange(e, 'settlement')}
-        />
-      </TableCell>
+            <TableCell>
+              <Input
+                type="text"
+                value={settlement.location}
+                onChange={(e) =>
+                  handleChange(settlement.id, 'location', e.target.value)
+                }
+              />
+            </TableCell>
+            <TableCell>
+              <Input
+                type="file"
+                name="photo"
+                onChange={(e) => onPhotoChange(settlement.id, e)}
+              />
+            </TableCell>
+            {/* Add more input fields for, location, photo */}
+            <TableCell>
+              <Button
+                variant="outline"
+                onClick={() => handleRemoveSettlement(settlement.id)}
+              >
+                Remove
+              </Button>
+            </TableCell>
+          </TableRow>
+        </React.Fragment>
+      ))}
+      {/* <TableCell> */}
+      <Button
+        className="my-2"
+        type="button"
+        variant="outline"
+        onClick={handleAddSettlement}
+      >
+        + Add Settlement
+      </Button>
     </>
   );
 }

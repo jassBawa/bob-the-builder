@@ -10,32 +10,31 @@ import {
 import {
   Table,
   TableBody,
-  TableCaption,
   TableHead,
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import useFormData from '@/hooks/useFormData';
-import useMultiForm from '@/hooks/useMultiForm';
-import CorrosionForm from '../officer/structuralForms/CorrosionForm';
-import CracksForm from '../officer/structuralForms/CracksForm';
-import SettlementForm from '../officer/structuralForms/SettlementForm';
-import DeflectionForm from '../officer/structuralForms/DeflectionForm';
-import ConditionOfForm from '../officer/structuralForms/ConditionOfForm';
-import { usePathname, useRouter } from 'next/navigation';
+import { db } from '@/firebase';
 import useCurrentUser from '@/hooks/useCurrentUser';
+import useGeneralObservations from '@/hooks/useGeneralObservations';
+import useMultiForm from '@/hooks/useMultiForm';
+import useStructuralObservations from '@/hooks/useStructuralObservations';
 import {
   collection,
   doc,
-  getDoc,
   getDocs,
   query,
   setDoc,
   where,
 } from 'firebase/firestore';
-import { db } from '@/firebase';
-import { toast } from 'sonner';
+import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
+import CorrosionForm from '../officer/structuralForms/CorrosionForm';
+import CracksForm from '../officer/structuralForms/CracksForm';
+import DeflectionForm from '../officer/structuralForms/DeflectionForm';
+import SettlementForm from '../officer/structuralForms/SettlementForm';
+import LeakageAndDampnessForm from './structuralForms/LeakageAndDampnessForm';
 
 export const staticOptions = [
   'Beam',
@@ -49,7 +48,8 @@ export const gradeOptions = ['Good', 'Bad', 'Fair'];
 
 function StructuralObservations() {
   const { prevStep } = useMultiForm();
-  const { structuralObservationsData, generalObservationsData } = useFormData();
+  const { generalObservationsData } = useGeneralObservations();
+  const { structuralObservationsData } = useStructuralObservations();
   const pathName = usePathname();
   const currentUser = useCurrentUser('officer');
   const router = useRouter();
@@ -154,32 +154,16 @@ function StructuralObservations() {
               <TableRow>
                 <TableHead className="w-[100px]">Description</TableHead>
                 <TableHead>Component</TableHead>
-                <TableHead>Grade</TableHead>
                 <TableHead>Location</TableHead>
                 <TableHead>Photos</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              <TableRow>
-                {' '}
-                <CracksForm />{' '}
-              </TableRow>
-
-              {/* Settlement row */}
-              <TableRow>
-                <SettlementForm />
-              </TableRow>
-
-              {/* Corrosion */}
-              <TableRow>
-                <CorrosionForm />
-              </TableRow>
-              <TableRow>
-                <DeflectionForm />
-              </TableRow>
-              <TableRow>
-                <ConditionOfForm />
-              </TableRow>
+              <CracksForm />
+              <CorrosionForm />
+              <SettlementForm />
+              <DeflectionForm />
+              <LeakageAndDampnessForm />
             </TableBody>
           </Table>
         </div>

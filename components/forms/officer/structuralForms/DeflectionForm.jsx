@@ -1,79 +1,103 @@
+import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/Input';
-import { TableCell } from '@/components/ui/table';
+import { TableCell, TableRow } from '@/components/ui/table';
+import useStructuralObservations from '@/hooks/useStructuralObservations';
 import React from 'react';
-import { SelectGrade } from '../../officer/StructuralObservations';
-import useFormData from '@/hooks/useFormData';
 
 function DeflectionForm() {
-  const {
-    structuralObservationsData,
-    handleGradeChange,
-    handleLocationChange,
-    handlePhotoChange,
-  } = useFormData();
+  const { structuralObservationsData, addItem, removeItem, updateItem } =
+    useStructuralObservations();
 
-  const {deflection} = structuralObservationsData;
+  console.log(structuralObservationsData);
+  const { deflection } = structuralObservationsData;
 
-  const onLocationChange = (event, type) => {
-    const { name, value } = event.target;
-    handleLocationChange(type, name, value);
+  const handleAddDeflection = () => {
+    console.log('handle add');
+    addItem('deflection', {
+      id: Date.now(),
+      element: '',
+      location: '',
+      photo: '',
+    });
   };
 
-  const onPhotoChange = (event, type) => {
-    const { name, files } = event.target;
+  const handleRemoveDeflection = (id) => {
+    removeItem('deflection', id);
+  };
+
+  const handleChange = (id, field, value) => {
+    const updatedDeflection = {
+      ...deflection.find((ele) => ele.id === id),
+      [field]: value,
+    };
+    updateItem('deflection', id, updatedDeflection);
+  };
+
+  const onPhotoChange = async (id, event) => {
+    const { files } = event.target;
     if (files.length > 0) {
-      handlePhotoChange(type, name, files[0]);
+      const url = await uploadImages(files[0]);
+      const updatedDeflection = {
+        ...deflection.find((ele) => ele.id === id),
+        photo: url,
+      };
+      updateItem('deflection', id, updatedDeflection);
     }
   };
 
   return (
     <>
-      <TableCell className="font-medium border-r">Deflection</TableCell>
-      <TableCell className="font-medium border-r space-y-4 p-0 ">
-        <p className="py-2 px-4  border-b-2">Beam</p>
-        <p className="py-2 px-4 border-b-2">Slab</p>
+      {deflection.map((deflection) => (
+        <React.Fragment key={deflection.id}>
+          <TableRow>
+            <TableCell className="font-medium border-r">Deflection</TableCell>
+            <TableCell>
+              <Input
+                type="text"
+                value={deflection.element}
+                onChange={(e) =>
+                  handleChange(deflection.id, 'element', e.target.value)
+                }
+              />
+            </TableCell>
 
-      </TableCell>
-      <TableCell className="space-y-4">
-        <SelectGrade
-          value={deflection.beam.grade}
-          onChange={(value) => handleGradeChange('deflection', 'beam', value)}
-        />
-        <SelectGrade
-          value={deflection.slab.grade}
-          onChange={(value) => handleGradeChange('deflection', 'slab', value)}
-        />
-       
-      </TableCell>
-      <TableCell className="text-right space-y-4">
-        <Input
-          type="text"
-          name="beam"
-          placeholder="Enter location"
-          onChange={(e) => onLocationChange(e, 'deflection')}
-        />
-        <Input
-          type="text"
-          name="slab"
-          placeholder="Enter location"
-          onChange={(e) => onLocationChange(e, 'deflection')}
-        />
-      
-      </TableCell>
-
-      <TableCell className="space-y-4">
-        <Input
-          type="file"
-          name="beam"
-          onChange={(e) => onPhotoChange(e, 'deflection')}
-        />
-        <Input
-          type="file"
-          name="slab"
-          onChange={(e) => onPhotoChange(e, 'deflection')}
-        />
-      
-      </TableCell>
+            <TableCell>
+              <Input
+                type="text"
+                value={deflection.location}
+                onChange={(e) =>
+                  handleChange(deflection.id, 'location', e.target.value)
+                }
+              />
+            </TableCell>
+            <TableCell>
+              <Input
+                type="file"
+                name="photo"
+                onChange={(e) => onPhotoChange(deflection.id, e)}
+              />
+            </TableCell>
+            {/* Add more input fields for, location, photo */}
+            <TableCell>
+              <Button
+                variant="outline"
+                onClick={() => handleRemoveDeflection(deflection.id)}
+              >
+                Remove
+              </Button>
+            </TableCell>
+          </TableRow>
+        </React.Fragment>
+      ))}
+      {/* <TableCell> */}
+      <Button
+        className="my-2"
+        type="button"
+        variant="outline"
+        onClick={handleAddDeflection}
+      >
+        + Add Deflection
+      </Button>
     </>
   );
 }

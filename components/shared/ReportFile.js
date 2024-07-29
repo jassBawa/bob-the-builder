@@ -515,7 +515,9 @@ const MyDocument = ({ reportData, role = 'officer' }) => {
           {renderData(sortedNdtdata.strucuturalIntegrity, styles)}
         </View>
         <View style={styles.section}>
-          <Text style={styles.sectionHeader}>Chemical - Carbonation</Text>
+          {ndtData.chemical.carbonation.element && (
+            <Text style={styles.sectionHeader}>Chemical - Carbonation</Text>
+          )}
           <View style={styles.table}>
             {ndtData.chemical.carbonation.element && (
               <View key="element" style={styles.tableRow}>

@@ -1,111 +1,103 @@
+import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/Input';
-import { TableCell } from '@/components/ui/table';
-import useFormData from '@/hooks/useFormData';
-import { SelectGrade } from '../../officer/StructuralObservations';
+import { TableCell, TableRow } from '@/components/ui/table';
+import React from 'react';
 
 function ConditionOfForm() {
-  const {
-    structuralObservationsData,
-    handleGradeChange,
-    handleLocationChange,
-    handlePhotoChange,
-  } = useFormData();
+  const { structuralObservationsData, addItem, removeItem, updateItem } =
+    useStructuralObservations();
 
-  const { conditionOf } = structuralObservationsData;
+  console.log(structuralObservationsData);
+  const cracks = structuralObservationsData.cracks;
 
-  const onLocationChange = (event, type) => {
-    const { name, value } = event.target;
-    handleLocationChange(type, name, value);
+  const handleAddCrack = () => {
+    console.log('handle add');
+    addItem('cracks', {
+      id: Date.now(),
+      element: '',
+      location: '',
+      photo: '',
+    });
   };
 
-  const onPhotoChange = (event, type) => {
-    const { name, files } = event.target;
+  const handleRemoveCrack = (id) => {
+    removeItem('cracks', id);
+  };
+
+  const handleChange = (id, field, value) => {
+    const updatedCrack = {
+      ...cracks.find((crack) => crack.id === id),
+      [field]: value,
+    };
+    updateItem('cracks', id, updatedCrack);
+  };
+
+  const onPhotoChange = async (id, event) => {
+    const { files } = event.target;
     if (files.length > 0) {
-      handlePhotoChange(type, name, files[0]);
+      const url = await uploadImages(files[0]);
+      const updatedCrack = {
+        ...cracks.find((crack) => crack.id === id),
+        photo: url,
+      };
+      updateItem('cracks', id, updatedCrack);
     }
   };
+
   return (
     <>
-      <TableCell className="font-medium border-r">Condition Of</TableCell>
-      <TableCell className="font-medium border-r space-y-4 p-0 ">
-        <p className="py-2 px-4  border-b-2">Stairs</p>
-        <p className="py-2 px-4 border-b-2">Lifts/Shafts</p>
-        <p className="py-2 px-4 border-b-2">floors</p>
-        <p className="py-2 px-4 border-b-2">duct</p>
-      </TableCell>
-      <TableCell className="space-y-4">
-        <SelectGrade
-          value={conditionOf.stairs.grade}
-          onChange={(value) =>
-            handleGradeChange('conditionOf', 'stairs', value)
-          }
-        />
-        <SelectGrade
-          value={conditionOf['lifts/shafts'].grade}
-          onChange={(value) =>
-            handleGradeChange('conditionOf', 'lifts/shafts', value)
-          }
-        />
-        <SelectGrade
-          value={conditionOf.floors.grade}
-          onChange={(value) =>
-            handleGradeChange('conditionOf', 'floors', value)
-          }
-        />
-        <SelectGrade
-          value={conditionOf.duct.grade}
-          onChange={(value) => handleGradeChange('conditionOf', 'duct', value)}
-        />
-      </TableCell>
-      <TableCell className="text-right space-y-4">
-        <Input
-          type="text"
-          name="stairs"
-          placeholder="Enter location"
-          onChange={(e) => onLocationChange(e, 'conditionOf')}
-        />
-        <Input
-          type="text"
-          name="lifts/shafts"
-          placeholder="Enter location"
-          onChange={(e) => onLocationChange(e, 'conditionOf')}
-        />
-        <Input
-          type="text"
-          name="floors"
-          placeholder="Enter location"
-          onChange={(e) => onLocationChange(e, 'conditionOf')}
-        />
-        <Input
-          type="text"
-          name="duct"
-          placeholder="Enter location"
-          onChange={(e) => onLocationChange(e, 'conditionOf')}
-        />
-      </TableCell>
+      {cracks.map((crack) => (
+        <React.Fragment key={crack.id}>
+          <TableRow>
+            <TableCell className="font-medium border-r">Cracks</TableCell>
+            <TableCell>
+              <Input
+                type="text"
+                value={crack.element}
+                onChange={(e) =>
+                  handleChange(crack.id, 'element', e.target.value)
+                }
+              />
+            </TableCell>
 
-      <TableCell className="space-y-4">
-        <Input
-          type="file"
-          name="stairs"
-          onChange={(e) => onPhotoChange(e, 'conditionOf')}
-        />
-        <Input
-          type="file"
-          name="lifts/shafts"
-          onChange={(e) => onPhotoChange(e, 'conditionOf')}
-        />
-        <Input
-          type="file"
-          name="floors"
-          onChange={(e) => onPhotoChange(e, 'conditionOf')}
-        />
-        <Input
-          type="file"
-          name="duct"
-          onChange={(e) => onPhotoChange(e, 'conditionOf')}
-        />
-      </TableCell>
+            <TableCell>
+              <Input
+                type="text"
+                value={crack.location}
+                onChange={(e) =>
+                  handleChange(crack.id, 'location', e.target.value)
+                }
+              />
+            </TableCell>
+            <TableCell>
+              <Input
+                type="file"
+                name="photo"
+                onChange={(e) => onPhotoChange(crack.id, e)}
+              />
+            </TableCell>
+            {/* Add more input fields for, location, photo */}
+            <TableCell>
+              <Button
+                variant="outline"
+                onClick={() => handleRemoveCrack(crack.id)}
+              >
+                Remove
+              </Button>
+            </TableCell>
+          </TableRow>
+        </React.Fragment>
+      ))}
+      {/* <TableCell> */}
+      <Button
+        variant="outline"
+        className="my-2"
+        type="button"
+        onClick={handleAddCrack}
+      >
+        + Add crack
+      </Button>
+      {/* </TableCell> */}
     </>
   );
 }
