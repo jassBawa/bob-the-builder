@@ -10,12 +10,17 @@ import {
 function CapoResultsTable({ capoData }) {
   const { unsafeGroundData, unsafeFirstFloorData, unsafeSecondFloorData } =
     useCapoData(capoData);
-  console.log(capoData, unsafeGroundData);
   return (
     <div className="border p-2">
-      <h2 className="text-xl font-semibold mt-8">
-        Cut And Pullout Test (ASTM C900) - 06
-      </h2>
+      <div className="my-2">
+        <h2 className="text-xl font-semibold mt-8">
+          Cut And Pullout Test (ASTM C900) - 06
+        </h2>
+        <p className="text-red-400">
+          As per IS:456 - 2000 , minimum grade of concrete specify for
+          structural memmbers are M20
+        </p>
+      </div>
       <Table border="2" className="w-full">
         <TableHeader>
           <TableRow>
@@ -32,9 +37,11 @@ function CapoResultsTable({ capoData }) {
         </TableHeader>
         <TableBody>
           <TableRow className="bg-slate-200 row-span-full">
-            <TableCell colSpan={5} className="text-xl text-semibold">
-              Ground Floor
-            </TableCell>
+            {unsafeGroundData.length > 0 && (
+              <TableCell colspan={6} className="text-xl text-semibold">
+                Ground Floor
+              </TableCell>
+            )}
           </TableRow>
           {unsafeGroundData?.map((data, index) => (
             <TableRow key={index}>
@@ -50,9 +57,11 @@ function CapoResultsTable({ capoData }) {
             </TableRow>
           ))}
           <TableRow className="bg-slate-200">
-            <TableCell colSpan={5} className="text-xl text-semibold">
-              First Floor
-            </TableCell>
+            {unsafeFirstFloorData.length > 0 && (
+              <TableCell colspan={6} className="text-xl text-semibold">
+                First Floor
+              </TableCell>
+            )}
           </TableRow>
           {unsafeFirstFloorData?.map((data, index) => (
             <TableRow key={index}>
@@ -68,9 +77,11 @@ function CapoResultsTable({ capoData }) {
             </TableRow>
           ))}
           <TableRow className="bg-slate-200">
-            <TableCell colSpan={5} className="text-xl text-semibold">
-              Second Floor
-            </TableCell>
+            {unsafeSecondFloorData.length > 0 && (
+              <TableCell colspan={6} className="text-xl text-semibold">
+                Second Floor
+              </TableCell>
+            )}
           </TableRow>
           {unsafeSecondFloorData?.map((data, index) => (
             <TableRow key={index}>

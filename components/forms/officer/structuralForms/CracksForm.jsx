@@ -43,6 +43,7 @@ function CracksForm() {
         photo: url,
       };
       updateItem('cracks', id, updatedCrack);
+      console.log(updatedCrack);
     }
   };
 

@@ -110,7 +110,7 @@ function HalfCellSecondFloorForm() {
         ))}
       </TableCell>
 
-      <TableCell className="space-y-4">
+      {/* <TableCell className="space-y-4">
         {halfCellPotentialData['second'].map((el, index) => (
           <Input
             key={index}
@@ -119,7 +119,7 @@ function HalfCellSecondFloorForm() {
             onChange={(event) => handleResultChange(index, event.target.value)}
           />
         ))}
-      </TableCell>
+      </TableCell> */}
       <TableCell className="space-y-4">
         {halfCellPotentialData['second'].map((el, index) => (
           <InputWithHelper

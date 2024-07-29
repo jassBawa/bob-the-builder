@@ -10,12 +10,17 @@ import {
 function ReboundResultsTable({ reboundData }) {
   const { unsafeGroundData, unsafeFirstFloorData, unsafeSecondFloorData } =
     useReboundHammerData(reboundData);
-  console.log(reboundData, unsafeGroundData);
   return (
     <div className="border p-2 my-4">
-      <h2 className="text-xl font-semibold mt-12">
-        Rebound Hammer (IS 516 Part 5, Section - 4): 2020
-      </h2>
+      <div className="mb-8">
+        <h2 className="text-xl font-semibold mt-12">
+          Rebound Hammer (IS 516 Part 5, Section - 4): 2020
+        </h2>
+        <p className="text-red-400">
+          As per IS:456 - 2000 , minimum grade of concrete specify for
+          structural memmbers are M20
+        </p>
+      </div>
       <Table border="2" className="w-full">
         <TableHeader>
           <TableRow>
@@ -32,9 +37,11 @@ function ReboundResultsTable({ reboundData }) {
         </TableHeader>
         <TableBody>
           <TableRow className="bg-slate-200 row-span-full">
-            <TableCell colSpan={5} className="text-xl text-semibold">
-              Ground Floor
-            </TableCell>
+            {unsafeGroundData.length > 0 && (
+              <TableCell colspan={6} className="text-xl text-semibold">
+                Ground Floor
+              </TableCell>
+            )}
           </TableRow>
           {unsafeGroundData?.map((data, index) => (
             <TableRow key={index}>
@@ -50,9 +57,11 @@ function ReboundResultsTable({ reboundData }) {
             </TableRow>
           ))}
           <TableRow className="bg-slate-200">
-            <TableCell colSpan={5} className="text-xl text-semibold">
-              First Floor
-            </TableCell>
+            {unsafeFirstFloorData.length > 0 && (
+              <TableCell colspan={6} className="text-xl text-semibold">
+                First Floor
+              </TableCell>
+            )}
           </TableRow>
           {unsafeFirstFloorData?.map((data, index) => (
             <TableRow key={index}>
@@ -68,9 +77,11 @@ function ReboundResultsTable({ reboundData }) {
             </TableRow>
           ))}
           <TableRow className="bg-slate-200">
-            <TableCell colSpan={5} className="text-xl text-semibold">
-              Second Floor
-            </TableCell>
+            {unsafeSecondFloorData.length > 0 && (
+              <TableCell colspan={6} className="text-xl text-semibold">
+                Second Floor
+              </TableCell>
+            )}
           </TableRow>
           {unsafeSecondFloorData?.map((data, index) => (
             <TableRow key={index}>
@@ -97,8 +108,6 @@ const useReboundHammerData = (reboundHammer) => {
   const [unsafeGroundData, setUnsafeGroundData] = useState([]);
   const [unsafeFirstFloorData, setUnsafeFirstFloorData] = useState([]);
   const [unsafeSecondFloorData, setUnsafeSecondFloorData] = useState([]);
-  console.log('running');
-
   const getUnsafeDataForFloor = (floor) => {
     if (!reboundHammer || !reboundHammer[floor]) return [];
     return reboundHammer[floor].filter((item) => item.DCStatus === 'unsafe');

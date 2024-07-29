@@ -1,5 +1,6 @@
 'use client';
 import CapoResultsTable from '@/components/results/CapoResultsTable';
+import HalfCellResultsTable from '@/components/results/HalfCellResultsTable';
 import ReboundResultsTable from '@/components/results/ReboundResultsTable';
 import UpvResultsTable from '@/components/results/UpvResultsTable';
 import { db } from '@/firebase';
@@ -13,6 +14,7 @@ const ReportPage = () => {
   const [reboundData, setReboundData] = useState(null);
   const [capoData, setCapoData] = useState(null);
   const [upvData, setUpvData] = useState(null);
+  const [halfCellData, setHalfCellData] = useState(null);
   const pathName = usePathname();
   const officer = useCurrentUser('officer');
   const officerId = useMemo(() => officer?.uid, [officer]);
@@ -38,6 +40,7 @@ const ReportPage = () => {
         setReboundData(data.ndtdata.inSitu.reboundHammer);
         setCapoData(data.ndtdata.inSitu.capo);
         setUpvData(data.ndtdata.inSitu.USPV);
+        setHalfCellData(data.ndtdata.corrosion.halfCellPotential);
         console.log(reboundData);
         setReportData(docSnap.data());
       } else {
@@ -59,6 +62,7 @@ const ReportPage = () => {
           <ReboundResultsTable reboundData={reboundData} />
           <CapoResultsTable capoData={capoData} />
           <UpvResultsTable upvData={upvData} />
+          <HalfCellResultsTable halfCellData={halfCellData} />
         </div>
       ) : (
         'Loading...'

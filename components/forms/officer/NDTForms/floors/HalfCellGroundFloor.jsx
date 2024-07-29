@@ -49,7 +49,6 @@ function HalfCellGroundFloorForm() {
     );
   };
 
-
   // Spacing
   const handleResultChange = (index, value) => {
     updateField(
@@ -114,7 +113,7 @@ function HalfCellGroundFloorForm() {
         ))}
       </TableCell>
 
-      <TableCell className="space-y-4">
+      {/* <TableCell className="space-y-4">
         {halfCellPotentialData['ground'].map((el, index) => (
           <Input
             key={index}
@@ -123,7 +122,7 @@ function HalfCellGroundFloorForm() {
             onChange={(event) => handleResultChange(index, event.target.value)}
           />
         ))}
-      </TableCell>
+      </TableCell> */}
       <TableCell className="space-y-4">
         {halfCellPotentialData['ground'].map((el, index) => (
           <InputWithHelper
@@ -160,10 +159,10 @@ export const InputWithHelper = ({
     // const gradeNumericPart = parseInt(grade.slice(1));
     // console.log(gradeNumericPart);
 
-      if (numericValue < 200) return 'Low';
-      if (numericValue >= 200 && numericValue <= 350) return 'Uncertain';
-      if (numericValue > 350 && numericValue <= 500) return 'High';
-      if (numericValue > 500) return 'Severe';
+    if (numericValue < 200) return 'Low';
+    if (numericValue >= 200 && numericValue <= 350) return 'Uncertain';
+    if (numericValue > 350 && numericValue <= 500) return 'High';
+    if (numericValue > 500) return 'Severe';
 
     return '';
   };
