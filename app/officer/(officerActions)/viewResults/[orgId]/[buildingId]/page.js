@@ -58,7 +58,16 @@ const ReportPage = () => {
     <div>
       {reportData ? (
         <div className="overflow-y-auto m-8 rounded-xl bg-white p-12">
-          <h3 className="text-2xl font-semibold">Results</h3>
+          <h1 className="text-4xl font-semibold text-center">
+            Building - {reportData.buildingData.buildingName}
+          </h1>
+          <h3 className=" mt-4 text-2xl font-semibold">Results*</h3>
+          <p className="text-slate-600 text-sm ">
+            *These auto generated results from platform only highlight weaken
+            components of building, for Strengthening or Retrofitting
+            recommendations will be provided by highly experienced Strucutural
+            Engineer.
+          </p>
           <ReboundResultsTable reboundData={reboundData} />
           <CapoResultsTable capoData={capoData} />
           <UpvResultsTable upvData={upvData} />
