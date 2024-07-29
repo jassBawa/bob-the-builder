@@ -1,34 +1,23 @@
 'use client';
-import React, { useEffect, useMemo, useState } from 'react';
+import CapoResultsTable from '@/components/results/CapoResultsTable';
+import ReboundResultsTable from '@/components/results/ReboundResultsTable';
+import UpvResultsTable from '@/components/results/UpvResultsTable';
 import { db } from '@/firebase';
-import { doc, getDoc } from 'firebase/firestore';
-import downloadPDF from '@/lib/downloadReport';
-import { PDFViewer } from '@react-pdf/renderer';
-import ReportFile from '@/components/shared/ReportFile';
-import { usePathname, useRouter } from 'next/navigation';
 import useCurrentUser from '@/hooks/useCurrentUser';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-} from '@/components/ui/table';
+import { doc, getDoc } from 'firebase/firestore';
+import { usePathname } from 'next/navigation';
+import { useEffect, useMemo, useState } from 'react';
 
 const ReportPage = () => {
   const [reportData, setReportData] = useState(null);
   const [reboundData, setReboundData] = useState(null);
+  const [capoData, setCapoData] = useState(null);
+  const [upvData, setUpvData] = useState(null);
   const pathName = usePathname();
   const officer = useCurrentUser('officer');
   const officerId = useMemo(() => officer?.uid, [officer]);
   const segments = useMemo(() => pathName?.split('/'), [pathName]);
-  const {
-    reboundHammer,
-    unsafeGroundData,
-    unsafeFirstFloorData,
-    unsafeSecondFloorData,
-  } = useReboundHammerData(reportData);
-  console.log(reboundHammer, unsafeFirstFloorData);
+
   // let segments = pathName.split('/');
 
   useEffect(() => {
@@ -45,7 +34,11 @@ const ReportPage = () => {
 
       if (docSnap.exists()) {
         const data = docSnap.data();
+        console.log(data);
         setReboundData(data.ndtdata.inSitu.reboundHammer);
+        setCapoData(data.ndtdata.inSitu.capo);
+        setUpvData(data.ndtdata.inSitu.USPV);
+        console.log(reboundData);
         setReportData(docSnap.data());
       } else {
         console.log('No such document!');
@@ -61,60 +54,11 @@ const ReportPage = () => {
   return (
     <div>
       {reportData ? (
-        <div className="overflow-y-auto m-8 rounded-xl bg-white p-4">
-          <h3>Results</h3>
-          <Table className="w-full">
-            <TableHead>
-              <TableRow>
-                <TableCell className="text-left">Location</TableCell>
-                <TableCell className="text-left">Element</TableCell>
-                <TableCell className="text-left">
-                  Assumed Grade Of Concrete
-                </TableCell>
-                <TableCell className="text-left">
-                  Average Compressive Strength Of Concrete
-                </TableCell>
-                <TableCell className="text-left">DCRatio</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              <TableRow>
-                {unsafeFirstFloorData?.map((data, index) => (
-                  <React.Fragment key={index}>
-                    <TableCell className="text-left">{data.location}</TableCell>
-                    <TableCell className="text-left">{data.element}</TableCell>
-                    <TableCell className="text-left">{data.grade}</TableCell>
-                    <TableCell className="text-left">
-                      {data.rhTestResults}
-                    </TableCell>
-                    <TableCell className="text-left">{data.DCStatus}</TableCell>
-                  </React.Fragment>
-                ))}
-              </TableRow>
-              {/* {unsafeFirstFloorData?.map((data, index) => (
-                <TableRow key={index}>
-                  <TableCell className="text-left">{data.location}</TableCell>
-                  <TableCell className="text-left">{data.element}</TableCell>
-                  <TableCell className="text-left">{data.grade}</TableCell>
-                  <TableCell className="text-left">
-                    {data.rhTestResults}
-                  </TableCell>
-                  <TableCell className="text-left">{data.DCStatus}</TableCell>
-                </TableRow>
-              ))}
-              {unsafeSecondFloorData?.map((data, index) => (
-                <TableRow key={index}>
-                  <TableCell className="text-left">{data.location}</TableCell>
-                  <TableCell className="text-left">{data.element}</TableCell>
-                  <TableCell className="text-left">{data.grade}</TableCell>
-                  <TableCell className="text-left">
-                    {data.rhTestResults}
-                  </TableCell>
-                  <TableCell className="text-left">{data.DCStatus}</TableCell>
-                </TableRow>
-              ))} */}
-            </TableBody>
-          </Table>
+        <div className="overflow-y-auto m-8 rounded-xl bg-white p-12">
+          <h3 className="text-2xl font-semibold">Results</h3>
+          <ReboundResultsTable reboundData={reboundData} />
+          <CapoResultsTable capoData={capoData} />
+          <UpvResultsTable upvData={upvData} />
         </div>
       ) : (
         'Loading...'
@@ -124,26 +68,3 @@ const ReportPage = () => {
 };
 
 export default ReportPage;
-
-const useReboundHammerData = (reportData) => {
-  const reboundHammer = useMemo(
-    () => reportData?.ndtdata?.inSitu.reboundHammer,
-    [reportData]
-  );
-
-  const getUnsafeDataForFloor = (floor) => {
-    if (!reboundHammer || !reboundHammer[floor]) return [];
-    return reboundHammer[floor].filter((item) => item.DCStatus === 'unsafe');
-  };
-
-  const unsafeGroundData = getUnsafeDataForFloor('ground');
-  const unsafeFirstFloorData = getUnsafeDataForFloor('first');
-  const unsafeSecondFloorData = getUnsafeDataForFloor('second');
-
-  return {
-    reboundHammer,
-    unsafeGroundData,
-    unsafeFirstFloorData,
-    unsafeSecondFloorData,
-  };
-};
