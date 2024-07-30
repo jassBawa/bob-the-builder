@@ -17,8 +17,8 @@ function CapoResultsTable({ capoData }) {
           Cut And Pullout Test (ASTM C900) - 06
         </h2>
         <p className="text-red-400">
-          As per IS:456 - 2000 , minimum grade of concrete specify for
-          structural memmbers are M20
+          As per IS 456:2000 , minimum grade of concrete specify for structural
+          memmbers are M20
         </p>
       </div>
       <Table border="2" className="w-full">

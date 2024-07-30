@@ -29,8 +29,8 @@ function USPVForm() {
         </h2>
         <p className="text-red-400">
           {' '}
-          * As per IS:456 - 2000 , minimum grade of concrete specify for
-          structural memmbers are M20
+          * As per IS 456:2000 , minimum grade of concrete specify for
+          structural members is M20
         </p>
       </div>
       <div className="">
@@ -43,7 +43,7 @@ function USPVForm() {
                 <TableHead>Structural Element</TableHead>
                 <TableHead>Grade of concrete</TableHead>
                 <TableHead>Probing method</TableHead>
-                <TableHead>Ultrasonic Pulse Velocity</TableHead>
+                <TableHead>Ultrasonic Pulse Velocity (in km/s)</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
