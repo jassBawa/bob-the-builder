@@ -71,7 +71,7 @@ function CapoResultsTable({ capoData }) {
                 <TableCell className="text-left">{data.element}</TableCell>
                 <TableCell className="text-left">{data.grade}</TableCell>
                 <TableCell className="text-left">
-                  {data.rhTestResults}
+                  {data.cubeCompressiveStrength}
                 </TableCell>
                 <TableCell className="text-left">{data.DCStatus}</TableCell>
               </React.Fragment>
@@ -91,7 +91,7 @@ function CapoResultsTable({ capoData }) {
                 <TableCell className="text-left">{data.element}</TableCell>
                 <TableCell className="text-left">{data.grade}</TableCell>
                 <TableCell className="text-left">
-                  {data.rhTestResults}
+                  {data.cubeCompressiveStrength}
                 </TableCell>
                 <TableCell className="text-left">{data.DCStatus}</TableCell>
               </React.Fragment>
