@@ -3,9 +3,11 @@ import { TableCell } from '@/components/ui/table';
 import useNdtStore from '@/hooks/useNdtData';
 import { useEffect } from 'react';
 import { SelectElement, SelectGrade } from './ReboundHammerGroundFloorForm';
+import useBuildingData from '@/hooks/useBuildingData';
 
 function ReboundHammerSecondFloorForm() {
   const { ndtdata, updateField } = useNdtStore();
+  const { generalObservationsData } = useBuildingData();
   const reboundHammerData = ndtdata.inSitu.reboundHammer;
 
   const handleLocationChange = (index, e) => {
@@ -27,9 +29,9 @@ function ReboundHammerSecondFloorForm() {
   };
 
   // Grade
-  const handleGradeChange = (index, value) => {
-    updateField('inSitu', 'reboundHammer', 'second', index, 'grade', value);
-  };
+  // const handleGradeChange = (index, value) => {
+  //   updateField('inSitu', 'reboundHammer', 'second', index, 'grade', value);
+  // };
 
   // Grade Results
   const handleGradeResultsChange = (index, event) => {
@@ -41,6 +43,20 @@ function ReboundHammerSecondFloorForm() {
       index,
       'rhTestResults',
       newValue
+    );
+
+    const originalGrade = generalObservationsData.grade;
+    const originalGradeNum = originalGrade.match(/\d+/)[0]; // m20
+    const safetyStatus = originalGradeNum >= newValue ? 'unsafe' : 'safe';
+    console.log(originalGradeNum, safetyStatus);
+
+    updateField(
+      'inSitu',
+      'reboundHammer',
+      'second',
+      index,
+      'remarks',
+      safetyStatus
     );
   };
 
@@ -74,7 +90,7 @@ function ReboundHammerSecondFloorForm() {
         ))}
       </TableCell>
 
-      <TableCell className="space-y-4">
+      {/* <TableCell className="space-y-4">
         {reboundHammerData['second'].map((el, index) => (
           <SelectGrade
             key={index}
@@ -82,7 +98,7 @@ function ReboundHammerSecondFloorForm() {
             value={el.grade}
           />
         ))}
-      </TableCell>
+      </TableCell> */}
       <TableCell className="space-y-4">
         {reboundHammerData['second'].map((el, index) => (
           <Input
@@ -98,4 +114,3 @@ function ReboundHammerSecondFloorForm() {
 }
 
 export default ReboundHammerSecondFloorForm;
-

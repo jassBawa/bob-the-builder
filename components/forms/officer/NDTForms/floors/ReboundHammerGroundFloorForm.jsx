@@ -9,8 +9,10 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import useNdtStore from '@/hooks/useNdtData';
+import useBuildingData from '@/hooks/useBuildingData';
 
 function ReboundHammerGroundFloorForm() {
+  const { generalObservationsData } = useBuildingData();
   const { ndtdata, updateField } = useNdtStore();
   const reboundHammerData = ndtdata.inSitu.reboundHammer;
 
@@ -33,9 +35,9 @@ function ReboundHammerGroundFloorForm() {
   };
 
   // Grade
-  const handleGradeChange = (index, value) => {
-    updateField('inSitu', 'reboundHammer', 'ground', index, 'grade', value);
-  };
+  // const handleGradeChange = (index, value) => {
+  //   updateField('inSitu', 'reboundHammer', 'ground', index, 'grade', value);
+  // };
 
   // Grade Results
   const handleGradeResultsChange = (index, event) => {
@@ -48,20 +50,18 @@ function ReboundHammerGroundFloorForm() {
       'rhTestResults',
       newValue
     );
-    console.log(reboundHammerData['ground'][index]['grade']);
-    const tempGrade = reboundHammerData['ground'][index]['grade'];
-    const numberMatch = tempGrade.match(/\d+/);
-    const extractedNumber = numberMatch ? Number(numberMatch[0]) : null; // Handle case where no number is found
-    const compressiveStrength = extractedNumber / (newValue - newValue * 0.25);
-    const safetyStatus = compressiveStrength > 1.5 ? 'unsafe' : 'safe';
 
-    console.log(compressiveStrength);
+    const originalGrade = generalObservationsData.grade;
+    const originalGradeNum = originalGrade.match(/\d+/)[0]; // m20
+    const safetyStatus = originalGradeNum >= newValue ? 'unsafe' : 'safe';
+    console.log(originalGradeNum, safetyStatus);
+
     updateField(
       'inSitu',
       'reboundHammer',
       'ground',
       index,
-      'DCStatus',
+      'remarks',
       safetyStatus
     );
   };
@@ -92,16 +92,6 @@ function ReboundHammerGroundFloorForm() {
             key={index}
             value={el.element}
             onChange={(value) => handleElementChange(index, value)}
-          />
-        ))}
-      </TableCell>
-
-      <TableCell className="space-y-4">
-        {reboundHammerData['ground'].map((el, index) => (
-          <SelectGrade
-            key={index}
-            onChange={(value) => handleGradeChange(index, value)}
-            value={el.grade}
           />
         ))}
       </TableCell>

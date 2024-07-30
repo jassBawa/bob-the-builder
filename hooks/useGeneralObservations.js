@@ -6,6 +6,7 @@ const useGeneralObservations = create((set) => ({
     typeOfStructure: '',
     ageOfBuilding: '',
     numberOfStories: '',
+    grade: '',
   },
   setGeneralObservationsData: (data) => set({ generalObservationsData: data }),
 }));

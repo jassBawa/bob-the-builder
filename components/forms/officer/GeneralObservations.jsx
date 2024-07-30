@@ -80,8 +80,19 @@ function GeneralObservations() {
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           />
         </div>
+        <div className="">
+          <Label>Grade of Concrete</Label>
+          <Input
+            type="text"
+            name="grade"
+            value={formData.grade}
+            onChange={handleChange}
+            placeholder="grade"
+            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+          />
+        </div>
       </div>
-      <Button type="button" onClick={handleSubmit}>
+      <Button type="button" onClick={handleSubmit} className="mt-4">
         Next
       </Button>
     </div>

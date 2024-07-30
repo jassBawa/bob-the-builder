@@ -3,8 +3,10 @@ import { TableCell } from '@/components/ui/table';
 import useNdtStore from '@/hooks/useNdtData';
 import { useEffect } from 'react';
 import { SelectElement, SelectGrade } from './ReboundHammerGroundFloorForm';
+import useBuildingData from '@/hooks/useBuildingData';
 
 function ReboundHammerFirstFloorForm() {
+  const { generalObservationsData } = useBuildingData();
   const { ndtdata, updateField } = useNdtStore();
   const reboundHammerData = ndtdata.inSitu.reboundHammer;
 
@@ -27,9 +29,9 @@ function ReboundHammerFirstFloorForm() {
   };
 
   // Grade
-  const handleGradeChange = (index, value) => {
-    updateField('inSitu', 'reboundHammer', 'first', index, 'grade', value);
-  };
+  // const handleGradeChange = (index, value) => {
+  //   updateField('inSitu', 'reboundHammer', 'first', index, 'grade', value);
+  // };
 
   // Grade Results
   const handleGradeResultsChange = (index, event) => {
@@ -41,6 +43,20 @@ function ReboundHammerFirstFloorForm() {
       index,
       'rhTestResults',
       newValue
+    );
+
+    const originalGrade = generalObservationsData.grade;
+    const originalGradeNum = originalGrade.match(/\d+/)[0]; // m20
+    const safetyStatus = originalGradeNum >= newValue ? 'unsafe' : 'safe';
+    console.log(originalGradeNum, safetyStatus);
+
+    updateField(
+      'inSitu',
+      'reboundHammer',
+      'first',
+      index,
+      'remarks',
+      safetyStatus
     );
   };
 
@@ -76,15 +92,6 @@ function ReboundHammerFirstFloorForm() {
 
       <TableCell className="space-y-4">
         {reboundHammerData['first'].map((el, index) => (
-          <SelectGrade
-            key={index}
-            onChange={(value) => handleGradeChange(index, value)}
-            value={el.grade}
-          />
-        ))}
-      </TableCell>
-      <TableCell className="space-y-4">
-        {reboundHammerData['first'].map((el, index) => (
           <Input
             key={index}
             value={el.rhTestResults}
@@ -98,4 +105,3 @@ function ReboundHammerFirstFloorForm() {
 }
 
 export default ReboundHammerFirstFloorForm;
-

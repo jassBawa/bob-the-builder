@@ -3,11 +3,11 @@ import { create } from 'zustand';
 
 const useStructuralObservations = create((set) => ({
   structuralObservationsData: {
-    cracks: [{ id: '123', element: '', location: '', photo: '' }],
-    settlement: [{ id: '33', element: '', location: '', photo: '' }],
-    corrosion: [{ id: '13', element: '', location: '', photo: '' }],
-    leakageAndDampness: [{ id: '42', element: '', location: '', photo: '' }],
-    deflection: [{ id: '42', element: '', location: '', photo: '' }],
+    cracks: [],
+    settlement: [],
+    corrosion: [],
+    leakageAndDampness: [],
+    deflection: [],
     // conditionOf: [{ id: '1', element: '', location: '', photo: '' }],
   },
 

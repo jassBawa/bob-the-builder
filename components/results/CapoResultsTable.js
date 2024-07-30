@@ -17,10 +17,6 @@ function CapoResultsTable({ capoData }) {
         <h2 className="text-xl font-semibold mt-8">
           Cut And Pullout Test (ASTM C900) - 06
         </h2>
-        <p className="text-red-400">
-          As per IS 456:2000, minimum grade of concrete specify for structural
-          member is M20
-        </p>
       </div>
       <Table border="2" className="w-full">
         <TableHeader>
@@ -53,7 +49,7 @@ function CapoResultsTable({ capoData }) {
                 <TableCell className="text-left">
                   {data.cubeCompressiveStrength}
                 </TableCell>
-                <TableCell className="text-left">{data.DCStatus}</TableCell>
+                <TableCell className="text-left">{data.remarks}</TableCell>
               </React.Fragment>
             </TableRow>
           ))}
@@ -73,7 +69,7 @@ function CapoResultsTable({ capoData }) {
                 <TableCell className="text-left">
                   {data.cubeCompressiveStrength}
                 </TableCell>
-                <TableCell className="text-left">{data.DCStatus}</TableCell>
+                <TableCell className="text-left">{data.remarks}</TableCell>
               </React.Fragment>
             </TableRow>
           ))}
@@ -93,7 +89,7 @@ function CapoResultsTable({ capoData }) {
                 <TableCell className="text-left">
                   {data.cubeCompressiveStrength}
                 </TableCell>
-                <TableCell className="text-left">{data.DCStatus}</TableCell>
+                <TableCell className="text-left">{data.remarks}</TableCell>
               </React.Fragment>
             </TableRow>
           ))}
@@ -112,7 +108,7 @@ const useCapoData = (reboundHammer) => {
 
   const getUnsafeDataForFloor = (floor) => {
     if (!reboundHammer || !reboundHammer[floor]) return [];
-    return reboundHammer[floor].filter((item) => item.DCStatus === 'unsafe');
+    return reboundHammer[floor].filter((item) => item.remarks === 'unsafe');
   };
 
   useEffect(() => {

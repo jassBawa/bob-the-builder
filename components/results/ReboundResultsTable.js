@@ -16,10 +16,6 @@ function ReboundResultsTable({ reboundData }) {
         <h2 className="text-xl font-semibold mt-12">
           Rebound Hammer (IS 516 Part 5, Section - 4): 2020
         </h2>
-        <p className="text-red-400">
-          As per IS 456:2000, minimum grade of concrete specify for structural
-          member is M20
-        </p>
       </div>
       <Table border="2" className="w-full">
         <TableHeader>
@@ -52,7 +48,7 @@ function ReboundResultsTable({ reboundData }) {
                 <TableCell className="text-left">
                   {data.rhTestResults}MPa
                 </TableCell>
-                <TableCell className="text-left">{data.DCStatus}</TableCell>
+                <TableCell className="text-left">{data.remarks}</TableCell>
               </React.Fragment>
             </TableRow>
           ))}
@@ -72,7 +68,7 @@ function ReboundResultsTable({ reboundData }) {
                 <TableCell className="text-left">
                   {data.rhTestResults}MPa
                 </TableCell>
-                <TableCell className="text-left">{data.DCStatus}</TableCell>
+                <TableCell className="text-left">{data.remarks}</TableCell>
               </React.Fragment>
             </TableRow>
           ))}
@@ -92,7 +88,7 @@ function ReboundResultsTable({ reboundData }) {
                 <TableCell className="text-left">
                   {data.rhTestResults}MPa
                 </TableCell>
-                <TableCell className="text-left">{data.DCStatus}</TableCell>
+                <TableCell className="text-left">{data.remarks}</TableCell>
               </React.Fragment>
             </TableRow>
           ))}
@@ -110,7 +106,7 @@ const useReboundHammerData = (reboundHammer) => {
   const [unsafeSecondFloorData, setUnsafeSecondFloorData] = useState([]);
   const getUnsafeDataForFloor = (floor) => {
     if (!reboundHammer || !reboundHammer[floor]) return [];
-    return reboundHammer[floor].filter((item) => item.DCStatus === 'unsafe');
+    return reboundHammer[floor].filter((item) => item.remarks === 'unsafe');
   };
 
   useEffect(() => {

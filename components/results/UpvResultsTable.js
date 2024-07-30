@@ -17,10 +17,6 @@ function UpvResultsTable({ upvData }) {
         <h2 className="text-xl font-semibold mt-12">
           Ultrasonic Pulse Velocity (IS 516 Part 5, Section 1) - 2018
         </h2>
-        <p className="text-red-400">
-          As per IS 456:2000, minimum grade of concrete specify for structural
-          member is M20
-        </p>
       </div>
       <Table border="2" className="w-full">
         <TableHeader>

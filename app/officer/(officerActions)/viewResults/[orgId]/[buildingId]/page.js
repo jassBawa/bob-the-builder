@@ -37,10 +37,10 @@ const ReportPage = () => {
       if (docSnap.exists()) {
         const data = docSnap.data();
         console.log(data);
-        setReboundData(data.ndtdata.inSitu.reboundHammer);
-        setCapoData(data.ndtdata.inSitu.capo);
-        setUpvData(data.ndtdata.inSitu.USPV);
-        setHalfCellData(data.ndtdata.corrosion.halfCellPotential);
+        setReboundData(data?.ndtdata?.inSitu?.reboundHammer);
+        setCapoData(data?.ndtdata?.inSitu?.capo);
+        setUpvData(data?.ndtdata?.inSitu?.USPV);
+        setHalfCellData(data?.ndtdata?.corrosion?.halfCellPotential);
         console.log(reboundData);
         setReportData(docSnap.data());
       } else {

@@ -5,8 +5,10 @@ import { TableCell } from '@/components/ui/table';
 import { SelectElement } from './ReboundHammerGroundFloorForm';
 import useNdtStore from '@/hooks/useNdtData';
 import { SelectGrade } from './CapoGroundFloor';
+import useBuildingData from '@/hooks/useBuildingData';
 
 function CapoSecondFloor() {
+  const { generalObservationsData } = useBuildingData();
   const { ndtdata, updateField } = useNdtStore();
   const capoData = ndtdata.inSitu.capo;
 
@@ -22,9 +24,9 @@ function CapoSecondFloor() {
   };
 
   // Grade
-  const handleGradeChange = (index, value) => {
-    updateField('inSitu', 'capo', 'ground', index, 'grade', value);
-  };
+  // const handleGradeChange = (index, value) => {
+  //   updateField('inSitu', 'capo', 'ground', index, 'grade', value);
+  // };
 
   // Grade Results
   const handleCubeChange = (index, value) => {
@@ -37,14 +39,12 @@ function CapoSecondFloor() {
       value
     );
 
-    const tempGrade = capoData['second'][index]['grade'];
-    const numberMatch = tempGrade.match(/\d+/);
-    const extractedNumber = numberMatch ? Number(numberMatch[0]) : null; // Handle case where no number is found
-    const compressiveStrength = extractedNumber / value;
-    const safetyStatus = compressiveStrength > 1.5 ? 'unsafe' : 'safe';
+    const originalGrade = generalObservationsData.grade;
+    const originalGradeNum = originalGrade.match(/\d+/)[0]; // m20
+    const safetyStatus = originalGradeNum >= value ? 'unsafe' : 'safe';
+    console.log(originalGradeNum, safetyStatus);
 
-    console.log(compressiveStrength);
-    updateField('inSitu', 'capo', 'second', index, 'DCStatus', safetyStatus);
+    updateField('inSitu', 'capo', 'second', index, 'remarks', safetyStatus);
   };
 
   useEffect(() => {
@@ -75,7 +75,7 @@ function CapoSecondFloor() {
           />
         ))}
       </TableCell>
-      <TableCell className="text-right space-y-4">
+      {/* <TableCell className="text-right space-y-4">
         {capoData['second'].map((el, index) => (
           <SelectGrade
             key={index}
@@ -83,7 +83,7 @@ function CapoSecondFloor() {
             value={el.grade}
           />
         ))}
-      </TableCell>
+      </TableCell> */}
 
       <TableCell className="space-y-4">
         {capoData['second'].map((el, index) => (

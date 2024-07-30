@@ -39,11 +39,6 @@ function ReboundHammerForm() {
             </Tooltip>
           </TooltipProvider>
         </div>
-        <p className="text-red-400">
-          {' '}
-          As per IS 456:2000, minimum grade of concrete specify for structural
-          member is M20
-        </p>
       </div>
 
       <div className="mt-8 grid gap-8">
@@ -53,22 +48,6 @@ function ReboundHammerForm() {
               <TableHead className="w-[100px]">Floor level</TableHead>
               <TableHead>Location</TableHead>
               <TableHead>Structural Element</TableHead>
-              <TableHead className="flex gap-2">
-                Assume Grade of concrete{' '}
-                {/* <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger className="ml-2 bg-amber-400 rounded-full w-5 h-5 flex items-center justify-center p-2 text-xs">
-                      i
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p className="max-w-xs">
-                        As per IS:456 - 2000 , minimum grade of concrete specify
-                        for structural memmbers are M20
-                      </p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider> */}
-              </TableHead>
               <TableHead>Average Compressive Strength Of Concrete</TableHead>
             </TableRow>
           </TableHeader>
