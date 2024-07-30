@@ -8,7 +8,7 @@ const useStructuralObservations = create((set) => ({
     corrosion: [{ id: '13', element: '', location: '', photo: '' }],
     leakageAndDampness: [{ id: '42', element: '', location: '', photo: '' }],
     deflection: [{ id: '42', element: '', location: '', photo: '' }],
-    conditionOf: [{ id: '1', element: '', location: '', photo: '' }],
+    // conditionOf: [{ id: '1', element: '', location: '', photo: '' }],
   },
 
   addItem: (observationType, newItem) => {

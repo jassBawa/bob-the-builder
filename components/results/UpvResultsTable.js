@@ -18,8 +18,8 @@ function UpvResultsTable({ upvData }) {
           Ultrasonic Pulse Velocity (IS 516 Part 5, Section 1) - 2018
         </h2>
         <p className="text-red-400">
-          As per IS:456 - 2000 , minimum grade of concrete specify for
-          structural memmbers are M20
+          As per IS 456:2000, minimum grade of concrete specify for structural
+          member is M20
         </p>
       </div>
       <Table border="2" className="w-full">
@@ -53,7 +53,7 @@ function UpvResultsTable({ upvData }) {
                   {data.probingMethod}
                 </TableCell>
                 <TableCell className="text-left">
-                  -{data.upvValues}(km/s)
+                  {data.upvValues}(km/s)
                 </TableCell>
                 <TableCell className="text-left">{data.remarks}</TableCell>
               </React.Fragment>
@@ -76,7 +76,7 @@ function UpvResultsTable({ upvData }) {
                   {data.probingMethod}
                 </TableCell>
                 <TableCell className="text-left">
-                  -{data.upvValues}(km/s)
+                  {data.upvValues}(km/s)
                 </TableCell>
                 <TableCell className="text-left">{data.remarks}</TableCell>
               </React.Fragment>
@@ -99,7 +99,7 @@ function UpvResultsTable({ upvData }) {
                   {data.probingMethod}
                 </TableCell>
                 <TableCell className="text-left">
-                  -{data.upvValues}(km/s)
+                  {data.upvValues}(km/s)
                 </TableCell>
                 <TableCell className="text-left">{data.remarks}</TableCell>
               </React.Fragment>

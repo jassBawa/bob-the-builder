@@ -17,8 +17,8 @@ function ReboundResultsTable({ reboundData }) {
           Rebound Hammer (IS 516 Part 5, Section - 4): 2020
         </h2>
         <p className="text-red-400">
-          As per IS:456 - 2000 , minimum grade of concrete specify for
-          structural memmbers are M20
+          As per IS 456:2000, minimum grade of concrete specify for structural
+          member is M20
         </p>
       </div>
       <Table border="2" className="w-full">
@@ -30,7 +30,7 @@ function ReboundResultsTable({ reboundData }) {
               Assumed Grade Of Concrete
             </TableCell>
             <TableCell className="text-left">
-              Average Compressive Strength Of Concrete
+              Average Compressive Strength Of Concrete (in MPa)
             </TableCell>
             <TableCell className="text-left">DCRatio</TableCell>
           </TableRow>
@@ -50,7 +50,7 @@ function ReboundResultsTable({ reboundData }) {
                 <TableCell className="text-left">{data.element}</TableCell>
                 <TableCell className="text-left">{data.grade}</TableCell>
                 <TableCell className="text-left">
-                  {data.rhTestResults}
+                  {data.rhTestResults}MPa
                 </TableCell>
                 <TableCell className="text-left">{data.DCStatus}</TableCell>
               </React.Fragment>
@@ -70,7 +70,7 @@ function ReboundResultsTable({ reboundData }) {
                 <TableCell className="text-left">{data.element}</TableCell>
                 <TableCell className="text-left">{data.grade}</TableCell>
                 <TableCell className="text-left">
-                  {data.rhTestResults}
+                  {data.rhTestResults}MPa
                 </TableCell>
                 <TableCell className="text-left">{data.DCStatus}</TableCell>
               </React.Fragment>
@@ -90,7 +90,7 @@ function ReboundResultsTable({ reboundData }) {
                 <TableCell className="text-left">{data.element}</TableCell>
                 <TableCell className="text-left">{data.grade}</TableCell>
                 <TableCell className="text-left">
-                  {data.rhTestResults}
+                  {data.rhTestResults}MPa
                 </TableCell>
                 <TableCell className="text-left">{data.DCStatus}</TableCell>
               </React.Fragment>

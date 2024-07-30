@@ -64,7 +64,7 @@ const ReportPage = () => {
           <h3 className=" mt-4 text-2xl font-semibold">Results*</h3>
           <p className="text-slate-600 text-sm ">
             *These auto generated results from platform only highlight weaken
-            components of building, for Strengthening or Retrofitting
+            components of building. For Strengthening or Retrofitting
             recommendations will be provided by highly experienced Strucutural
             Engineer.
           </p>
