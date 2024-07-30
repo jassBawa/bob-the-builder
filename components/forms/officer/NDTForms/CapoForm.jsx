@@ -17,9 +17,8 @@ function CapoForm() {
           Cut And Pullout Test (ASTM C900) - 06
         </h2>
         <p className="text-red-400">
-          {' '}
-          * As per IS:456 - 2000 , minimum grade of concrete specify for
-          structural memmbers are M20
+          * As per IS 456:2000 , minimum grade of concrete specify for
+          structural members is M20
         </p>
       </div>
       <div className="">
@@ -31,7 +30,7 @@ function CapoForm() {
                 <TableHead>Location</TableHead>
                 <TableHead>Structural Element</TableHead>
                 <TableHead>Assume Grade Of Concrete</TableHead>
-                <TableHead>Cube Compressive Strength</TableHead>
+                <TableHead>Cube Compressive Strength (in MPa) </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>

@@ -41,8 +41,8 @@ function ReboundHammerForm() {
         </div>
         <p className="text-red-400">
           {' '}
-          * As per IS:456 - 2000 , minimum grade of concrete specify for
-          structural memmbers are M20
+          * As per IS 456:2000 , minimum grade of concrete specify for
+          structural members is M20
         </p>
       </div>
 
