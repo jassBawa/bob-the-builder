@@ -8,9 +8,9 @@ import {
 } from '@/components/ui/table';
 
 function HalfCellResultsTable({ halfCellData }) {
-  const { unsafeGroundData, unsafeFirstFloorData, unsafeSecondFloorData } =
-    useCapoData(halfCellData);
-  //   console.log(halfCellData, unsafeGroundData);
+  const { groundData, firstFloorData, secondFloorData } =
+    useHalfCellTableData(halfCellData);
+  //   console.log(halfCellData, groundData);
   return (
     <div className="border p-2 my-4">
       <div className="my-2">
@@ -32,14 +32,14 @@ function HalfCellResultsTable({ halfCellData }) {
         </TableHeader>
         <TableBody>
           <TableRow className="bg-slate-200 row-span-full">
-            {unsafeGroundData.length > 0 && (
+            {groundData.length > 0 && (
               <TableCell colspan={6} className="text-xl text-semibold">
                 Ground Floor
               </TableCell>
             )}
           </TableRow>
 
-          {unsafeGroundData?.map((data, index) => (
+          {groundData?.map((data, index) => (
             <TableRow key={index}>
               <React.Fragment>
                 <TableCell className="text-left">{data.location}</TableCell>
@@ -52,46 +52,38 @@ function HalfCellResultsTable({ halfCellData }) {
             </TableRow>
           ))}
           <TableRow className="bg-slate-200">
-            {unsafeFirstFloorData.length > 0 && (
+            {firstFloorData.length > 0 && (
               <TableCell colspan={6} className="text-xl text-semibold">
                 First Floor
               </TableCell>
             )}
           </TableRow>
-          {unsafeSecondFloorData?.map((data, index) => (
+          {firstFloorData?.map((data, index) => (
             <TableRow key={index}>
               <React.Fragment>
                 <TableCell className="text-left">{data.location}</TableCell>
                 <TableCell className="text-left">{data.element}</TableCell>
-                <TableCell className="text-left">{data.grade}</TableCell>
                 <TableCell className="text-left">
-                  {data.probingMethod}
-                </TableCell>
-                <TableCell className="text-left">
-                  -{data.upvValues}(km/s)
+                  -{data.measurePotentital}
                 </TableCell>
                 <TableCell className="text-left">{data.remarks}</TableCell>
               </React.Fragment>
             </TableRow>
           ))}
           <TableRow className="bg-slate-200">
-            {unsafeSecondFloorData.length > 0 && (
+            {secondFloorData.length > 0 && (
               <TableCell colspan={6} className="text-xl text-semibold">
                 Second Floor
               </TableCell>
             )}
           </TableRow>
-          {unsafeSecondFloorData?.map((data, index) => (
+          {secondFloorData?.map((data, index) => (
             <TableRow key={index}>
               <React.Fragment>
                 <TableCell className="text-left">{data.location}</TableCell>
                 <TableCell className="text-left">{data.element}</TableCell>
-                <TableCell className="text-left">{data.grade}</TableCell>
                 <TableCell className="text-left">
-                  {data.probingMethod}
-                </TableCell>
-                <TableCell className="text-left">
-                  -{data.measurePotentital}(km/s)
+                  -{data.measurePotentital}
                 </TableCell>
                 <TableCell className="text-left">{data.remarks}</TableCell>
               </React.Fragment>
@@ -105,25 +97,30 @@ function HalfCellResultsTable({ halfCellData }) {
 
 export default HalfCellResultsTable;
 
-const useCapoData = (reboundHammer) => {
-  const [unsafeGroundData, setUnsafeGroundData] = useState([]);
-  const [unsafeFirstFloorData, setUnsafeFirstFloorData] = useState([]);
-  const [unsafeSecondFloorData, setUnsafeSecondFloorData] = useState([]);
+const useHalfCellTableData = (halfCellData) => {
+  const [groundData, setGroundData] = useState([]);
+  const [firstFloorData, setFirstFloorData] = useState([]);
+  const [secondFloorData, setSecondFloorData] = useState([]);
 
-  const getUnsafeDataForFloor = (floor) => {
-    if (!reboundHammer || !reboundHammer[floor]) return [];
-    return reboundHammer[floor].filter((item) => item.remarks == 'Severe');
+  const getDataForFloor = (floor) => {
+    if (!halfCellData || !halfCellData[floor]) return [];
+    return halfCellData[floor].filter(
+      (item) =>
+        item.measurePotentital && parseFloat(item.measurePotentital) < 200
+    );
   };
 
   useEffect(() => {
-    setUnsafeGroundData(getUnsafeDataForFloor('ground'));
-    setUnsafeFirstFloorData(getUnsafeDataForFloor('first'));
-    setUnsafeSecondFloorData(getUnsafeDataForFloor('second'));
-  }, [reboundHammer]);
+    if (halfCellData) {
+      setGroundData(getDataForFloor('ground'));
+      setFirstFloorData(getDataForFloor('first'));
+      setSecondFloorData(getDataForFloor('second'));
+    }
+  }, [halfCellData]);
 
   return {
-    unsafeGroundData,
-    unsafeFirstFloorData,
-    unsafeSecondFloorData,
+    groundData,
+    firstFloorData,
+    secondFloorData,
   };
 };

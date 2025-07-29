@@ -182,39 +182,28 @@ const MyDocument = ({ reportData, role = 'officer' }) => {
                   (fieldValue) => hasData(fieldValue)
                 );
 
+                if (!hasFieldValues) {
+                  return null;
+                }
+
                 return (
                   <View key={subKey} style={styles.table}>
                     {subKey && <Text style={styles.subtopic}>{subKey}</Text>}
-                    {hasFieldValues ? (
-                      Object.entries(subValue).map(([field, fieldValue]) => {
-                        if (hasData(fieldValue)) {
-                          return renderTableRow(field, fieldValue, styles);
-                        }
-                        return null;
-                      })
-                    ) : (
-                      <Text style={styles.notApplicable}>Not available</Text>
-                    )}
+                    {Object.entries(subValue).map(([field, fieldValue]) => {
+                      if (hasData(fieldValue)) {
+                        return renderTableRow(field, fieldValue, styles);
+                      }
+                      return null;
+                    })}
                   </View>
                 );
               }
-              return (
-                <View key={subKey} style={styles.table}>
-                  {subKey && <Text style={styles.subtopic}>{subKey}</Text>}
-                  <Text style={styles.notApplicable}>Not available</Text>
-                </View>
-              );
+              return null;
             })}
           </View>
         );
-      } else {
-        return (
-          <View key={key} style={styles.table}>
-            <Text style={styles.sectionHeader}>{key}</Text>
-            <Text style={styles.notApplicable}>Not available</Text>
-          </View>
-        );
       }
+      return null;
     });
   };
 
@@ -514,79 +503,21 @@ const MyDocument = ({ reportData, role = 'officer' }) => {
           {renderData(sortedNdtdata.inSitu, styles)}
           {renderData(sortedNdtdata.strucuturalIntegrity, styles)}
         </View>
-        <View style={styles.section}>
-          {ndtData.chemical.carbonation.element && (
+        {hasData(ndtData.chemical.carbonation) && (
+          <View style={styles.section}>
             <Text style={styles.sectionHeader}>Chemical - Carbonation</Text>
-          )}
-          <View style={styles.table}>
-            {ndtData.chemical.carbonation.element && (
-              <View key="element" style={styles.tableRow}>
-                <Text style={styles.tableColHeader}>Element</Text>
-                <Text style={styles.tableCol}>
-                  {ndtData.chemical.carbonation.element}
-                </Text>
-              </View>
-            )}
-            {ndtData.chemical.carbonation.grade && (
-              <View key="grade" style={styles.tableRow}>
-                <Text style={styles.tableColHeader}>Grade</Text>
-                <Text style={styles.tableCol}>
-                  {ndtData.chemical.carbonation.grade}
-                </Text>
-              </View>
-            )}
-            {ndtData.chemical.carbonation.floor && (
-              <View key="floor" style={styles.tableRow}>
-                <Text style={styles.tableColHeader}>Floor</Text>
-                <Text style={styles.tableCol}>
-                  {ndtData.chemical.carbonation.floor}
-                </Text>
-              </View>
-            )}
-            {ndtData.chemical.carbonation.location && (
-              <View key="location" style={styles.tableRow}>
-                <Text style={styles.tableColHeader}>Location</Text>
-                <Text style={styles.tableCol}>
-                  {ndtData.chemical.carbonation.location}
-                </Text>
-              </View>
-            )}
-            {ndtData.chemical.carbonation.meanDepth && (
-              <View key="meanDepth" style={styles.tableRow}>
-                <Text style={styles.tableColHeader}>Mean Depth</Text>
-                <Text style={styles.tableCol}>
-                  {ndtData.chemical.carbonation.meanDepth}
-                </Text>
-              </View>
-            )}
-            {ndtData.chemical.carbonation.ageOfStrcutural && (
-              <View key="ageOfStrcutural" style={styles.tableRow}>
-                <Text style={styles.tableColHeader}>Age Of Structural</Text>
-                <Text style={styles.tableCol}>
-                  {ndtData.chemical.carbonation.ageOfStrcutural}
-                </Text>
-              </View>
-            )}
-            {ndtData.chemical.carbonation.captionPhoto && (
-              <View key="captionPhoto" style={styles.tableRow}>
-                <Text style={styles.tableColHeader}>Caption Photo</Text>
-                <Image
-                  style={styles.tableCol}
-                  src={ndtData.chemical.carbonation.captionPhoto}
-                  alt="field"
-                />
-              </View>
-            )}
-            {ndtData.chemical.carbonation.remarks && (
-              <View key="remarks" style={styles.tableRow}>
-                <Text style={styles.tableColHeader}>Remarks</Text>
-                <Text style={styles.tableCol}>
-                  {ndtData.chemical.carbonation.remarks}
-                </Text>
-              </View>
-            )}
+            <View style={styles.table}>
+              {Object.entries(ndtData.chemical.carbonation).map(
+                ([key, value]) => {
+                  if (hasData(value)) {
+                    return renderTableRow(key, value);
+                  }
+                  return null;
+                }
+              )}
+            </View>
           </View>
-        </View>
+        )}
       </Page>
     </Document>
   );
@@ -648,49 +579,45 @@ const sortObjectKeysRecursively = (obj) => {
 // Sorted ndtdata
 
 const renderData = (ndtdata, styles) => {
+  if (!ndtdata) {
+    return null;
+  }
   return Object.entries(ndtdata).map(([topic, subtopics]) => {
-    return (
-      <View key={topic} style={styles.section}>
-        {topic && <Text style={styles.sectionHeader}>{topic}</Text>}
-        {Object.entries(subtopics).map(([subtopic, levels]) => {
-          const hasDataToShow = Object.values(levels).some((levelData) => {
-            if (Array.isArray(levelData)) {
-              return levelData.some((item) => hasData(item));
-            } else {
-              return hasData(levelData);
-            }
-          });
+    const renderedSubtopics = Object.entries(subtopics)
+      .map(([subtopic, levels]) => {
+        const hasDataToShow = Object.values(levels).some((levelData) => {
+          if (Array.isArray(levelData)) {
+            return levelData.some((item) => hasData(item));
+          } else {
+            return hasData(levelData);
+          }
+        });
 
-          return (
-            <View key={`${topic}-${subtopic}`} style={styles.table}>
-              {subtopic && <Text style={styles.subtopic}>{subtopic}</Text>}
+        if (!hasDataToShow) {
+          return null;
+        }
 
-              {hasDataToShow ? (
-                Object.entries(levels).map(([level, data]) => {
-                  if (Array.isArray(data)) {
-                    return (
-                      <View key={`${topic}-${subtopic}-${level}`}>
-                        {data.map((item, index) => (
-                          <View key={`${topic}-${subtopic}-${level}-${index}`}>
-                            {Object.entries(item).map(([field, fieldValue]) => {
-                              if (hasData(fieldValue)) {
-                                return renderTableRow(
-                                  field,
-                                  fieldValue,
-                                  styles
-                                );
-                              }
-                              return null;
-                            })}
-                          </View>
-                        ))}
-                      </View>
-                    );
-                  } else {
-                    if (hasData(data)) {
+        return (
+          <View key={`${topic}-${subtopic}`} style={styles.table}>
+            {subtopic && <Text style={styles.subtopic}>{subtopic}</Text>}
+            {Object.entries(levels).map(([level, data]) => {
+              if (Array.isArray(data)) {
+                return (
+                  <View key={`${topic}-${subtopic}-${level}`}>
+                    {data.map((item, index) => {
+                      if (!hasData(item)) {
+                        return null;
+                      }
                       return (
-                        <View key={`${topic}-${subtopic}-${level}`}>
-                          {Object.entries(data).map(([field, fieldValue]) => {
+                        <View
+                          key={`${topic}-${subtopic}-${level}-${index}`}
+                          style={{
+                            borderBottom: '1px solid black',
+                            paddingBottom: 5,
+                            marginBottom: 5,
+                          }}
+                        >
+                          {Object.entries(item).map(([field, fieldValue]) => {
                             if (hasData(fieldValue)) {
                               return renderTableRow(field, fieldValue, styles);
                             }
@@ -698,16 +625,38 @@ const renderData = (ndtdata, styles) => {
                           })}
                         </View>
                       );
-                    }
-                    return null;
-                  }
-                })
-              ) : (
-                <Text style={styles.notApplicable}>Not available</Text>
-              )}
-            </View>
-          );
-        })}
+                    })}
+                  </View>
+                );
+              } else {
+                if (hasData(data)) {
+                  return (
+                    <View key={`${topic}-${subtopic}-${level}`}>
+                      {Object.entries(data).map(([field, fieldValue]) => {
+                        if (hasData(fieldValue)) {
+                          return renderTableRow(field, fieldValue, styles);
+                        }
+                        return null;
+                      })}
+                    </View>
+                  );
+                }
+                return null;
+              }
+            })}
+          </View>
+        );
+      })
+      .filter(Boolean);
+
+    if (renderedSubtopics.length === 0) {
+      return null;
+    }
+
+    return (
+      <View key={topic} style={styles.section}>
+        <Text style={styles.sectionHeader}>{topic}</Text>
+        {renderedSubtopics}
       </View>
     );
   });

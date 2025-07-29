@@ -12,6 +12,7 @@ import { useEffect, useMemo, useState } from 'react';
 const ReportPage = () => {
   const [reportData, setReportData] = useState(null);
   const [reboundData, setReboundData] = useState(null);
+  const [generalObservationsData, setGeneralObservationsData] = useState(null);
   const [capoData, setCapoData] = useState(null);
   const [upvData, setUpvData] = useState(null);
   const [halfCellData, setHalfCellData] = useState(null);
@@ -38,10 +39,10 @@ const ReportPage = () => {
         const data = docSnap.data();
         console.log(data);
         setReboundData(data?.ndtdata?.inSitu?.reboundHammer);
+        setGeneralObservationsData(data?.generalObservationsData);
         setCapoData(data?.ndtdata?.inSitu?.capo);
         setUpvData(data?.ndtdata?.inSitu?.USPV);
         setHalfCellData(data?.ndtdata?.corrosion?.halfCellPotential);
-        console.log(reboundData);
         setReportData(docSnap.data());
       } else {
         console.log('No such document!');
@@ -63,15 +64,25 @@ const ReportPage = () => {
           </h1>
           <h3 className=" mt-4 text-2xl font-semibold">Results*</h3>
           <p className="text-slate-600 text-sm ">
-            *These auto generated results from platform only highlight weaken
+            *These auto generated results from platform only highlight critical
             components of building. For Strengthening or Retrofitting
-            recommendations will be provided by highly experienced Strucutural
+            recommendations will be provided by experienced Strucutural
             Engineer.
           </p>
-          <ReboundResultsTable reboundData={reboundData} />
-          <CapoResultsTable capoData={capoData} />
-          <UpvResultsTable upvData={upvData} />
-          <HalfCellResultsTable halfCellData={halfCellData} />
+          <div className="container mx-auto py-8">
+            <h1 className="text-2xl font-bold mb-4">NDT Test Results</h1>
+
+            <ReboundResultsTable
+              reboundData={reboundData}
+              generalObservationsData={generalObservationsData}
+            />
+            <CapoResultsTable
+              capoData={capoData}
+              generalObservationsData={generalObservationsData}
+            />
+            <UpvResultsTable upvData={upvData} />
+            <HalfCellResultsTable halfCellData={halfCellData} />
+          </div>
         </div>
       ) : (
         'Loading...'

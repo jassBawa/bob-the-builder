@@ -10,7 +10,6 @@ import {
 function UpvResultsTable({ upvData }) {
   const { unsafeGroundData, unsafeFirstFloorData, unsafeSecondFloorData } =
     useCapoData(upvData);
-  console.log(upvData, unsafeGroundData);
   return (
     <div className="border p-2 my-4">
       <div className="my-2">

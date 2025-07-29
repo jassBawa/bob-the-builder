@@ -7,10 +7,11 @@ import {
   TableRow,
 } from '@/components/ui/table';
 
-function CapoResultsTable({ capoData }) {
-  console.log(capoData);
-  const { unsafeGroundData, unsafeFirstFloorData, unsafeSecondFloorData } =
-    useCapoData(capoData);
+function CapoResultsTable({ capoData, generalObservationsData }) {
+  const { groundData, firstFloorData, secondFloorData } = useCapoTableData(
+    capoData,
+    generalObservationsData
+  );
   return (
     <div className="border p-2">
       <div className="my-2">
@@ -24,72 +25,62 @@ function CapoResultsTable({ capoData }) {
             <TableCell className="text-left">Location</TableCell>
             <TableCell className="text-left">Element</TableCell>
             <TableCell className="text-left">
-              Assumed Grade Of Concrete
-            </TableCell>
-            <TableCell className="text-left">
               Average Compressive Strength Of Concrete
             </TableCell>
-            <TableCell className="text-left">DCRatio</TableCell>
           </TableRow>
         </TableHeader>
         <TableBody>
           <TableRow className="bg-slate-200 row-span-full">
-            {unsafeGroundData.length > 0 && (
+            {groundData.length > 0 && (
               <TableCell colspan={6} className="text-xl text-semibold">
                 Ground Floor
               </TableCell>
             )}
           </TableRow>
-          {unsafeGroundData?.map((data, index) => (
+          {groundData?.map((data, index) => (
             <TableRow key={index}>
               <React.Fragment>
                 <TableCell className="text-left">{data.location}</TableCell>
                 <TableCell className="text-left">{data.element}</TableCell>
-                <TableCell className="text-left">{data.grade}</TableCell>
                 <TableCell className="text-left">
                   {data.cubeCompressiveStrength}
                 </TableCell>
-                <TableCell className="text-left">{data.remarks}</TableCell>
               </React.Fragment>
             </TableRow>
           ))}
           <TableRow className="bg-slate-200">
-            {unsafeFirstFloorData.length > 0 && (
+            {firstFloorData.length > 0 && (
               <TableCell colspan={6} className="text-xl text-semibold">
                 First Floor
               </TableCell>
             )}
           </TableRow>
-          {unsafeFirstFloorData?.map((data, index) => (
+          {firstFloorData?.map((data, index) => (
             <TableRow key={index}>
               <React.Fragment>
                 <TableCell className="text-left">{data.location}</TableCell>
                 <TableCell className="text-left">{data.element}</TableCell>
-                <TableCell className="text-left">{data.grade}</TableCell>
                 <TableCell className="text-left">
                   {data.cubeCompressiveStrength}
                 </TableCell>
-                <TableCell className="text-left">{data.remarks}</TableCell>
               </React.Fragment>
             </TableRow>
           ))}
           <TableRow className="bg-slate-200">
-            {unsafeSecondFloorData.length > 0 && (
+            {secondFloorData.length > 0 && (
               <TableCell colspan={6} className="text-xl text-semibold">
                 Second Floor
               </TableCell>
             )}
           </TableRow>
-          {unsafeSecondFloorData?.map((data, index) => (
+          {secondFloorData?.map((data, index) => (
             <TableRow key={index}>
               <React.Fragment>
                 <TableCell className="text-left">{data.location}</TableCell>
                 <TableCell className="text-left">{data.element}</TableCell>
-                <TableCell className="text-left">{data.grade}</TableCell>
                 <TableCell className="text-left">
                   {data.cubeCompressiveStrength}
                 </TableCell>
-                <TableCell className="text-left">{data.remarks}</TableCell>
               </React.Fragment>
             </TableRow>
           ))}
@@ -101,25 +92,32 @@ function CapoResultsTable({ capoData }) {
 
 export default CapoResultsTable;
 
-const useCapoData = (reboundHammer) => {
-  const [unsafeGroundData, setUnsafeGroundData] = useState([]);
-  const [unsafeFirstFloorData, setUnsafeFirstFloorData] = useState([]);
-  const [unsafeSecondFloorData, setUnsafeSecondFloorData] = useState([]);
-
-  const getUnsafeDataForFloor = (floor) => {
-    if (!reboundHammer || !reboundHammer[floor]) return [];
-    return reboundHammer[floor].filter((item) => item.remarks === 'unsafe');
-  };
+const useCapoTableData = (capoData, generalObservationsData) => {
+  const [groundData, setGroundData] = useState([]);
+  const [firstFloorData, setFirstFloorData] = useState([]);
+  const [secondFloorData, setSecondFloorData] = useState([]);
 
   useEffect(() => {
-    setUnsafeGroundData(getUnsafeDataForFloor('ground'));
-    setUnsafeFirstFloorData(getUnsafeDataForFloor('first'));
-    setUnsafeSecondFloorData(getUnsafeDataForFloor('second'));
-  }, [reboundHammer]);
+    if (!capoData || !generalObservationsData?.grade) return;
+
+    const getDataForFloor = (floor) => {
+      if (!capoData || !capoData[floor]) return [];
+      return capoData[floor].filter(
+        (item) =>
+          item.cubeCompressiveStrength &&
+          parseFloat(item.cubeCompressiveStrength) <=
+            parseFloat(generalObservationsData.grade)
+      );
+    };
+
+    setGroundData(getDataForFloor('ground'));
+    setFirstFloorData(getDataForFloor('first'));
+    setSecondFloorData(getDataForFloor('second'));
+  }, [capoData, generalObservationsData]);
 
   return {
-    unsafeGroundData,
-    unsafeFirstFloorData,
-    unsafeSecondFloorData,
+    groundData,
+    firstFloorData,
+    secondFloorData,
   };
 };
