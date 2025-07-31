@@ -106,7 +106,7 @@ const useHalfCellTableData = (halfCellData) => {
     if (!halfCellData || !halfCellData[floor]) return [];
     return halfCellData[floor].filter(
       (item) =>
-        item.measurePotentital && parseFloat(item.measurePotentital) < 200
+        item.measurePotentital && parseFloat(item.measurePotentital) > 200
     );
   };
 
